@@ -1,6 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
+name: mattdekok.dev CI
 
 # Controls when the action will run. 
 on:
@@ -23,6 +21,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+      - run: cd functions
       - run: npm ci
       - run: npm test
       - run: npm run build
