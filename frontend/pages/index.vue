@@ -6,6 +6,40 @@
           <h2>Matt DeKok</h2>
           <h4>Full Stack Web Developer</h4>
         </div>
+        <div class="hex-menu">
+          <div class="hex-row">
+            <div class="hex-menu-item">
+              <router-link class="item-content" to="/about">
+                About Me
+              </router-link>
+            </div>
+            <div class="hex-menu-item even">
+              <router-link class="item-content" to="/experience">
+                Experience
+              </router-link>
+            </div>
+            <div class="hex-menu-item">
+              <router-link class="item-content" to="/skills">
+                Skills
+              </router-link>
+            </div>
+          </div>
+          <div class="hex-row">
+            <div class="hex-menu-item">
+              <router-link class="item-content" to="/projects">
+                Projects
+              </router-link>
+            </div>
+            <div class="hex-menu-item even empty">
+              <div class="item-content"></div>
+            </div>
+            <div class="hex-menu-item">
+              <router-link class="item-content" to="/donate">
+                Donate
+              </router-link>
+            </div>
+          </div>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -50,6 +84,15 @@ export default {
   @media (max-width: 600px) {
     text-align: left;
     margin-top: 20vh;
+  }
+}
+
+.hex-row {
+  justify-content: flex-end;
+  margin-left: 0;
+  @media (max-width: 960px) {
+    justify-content: center;
+    margin-left: -15px;
   }
 }
 </style>
