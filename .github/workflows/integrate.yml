@@ -25,5 +25,8 @@ jobs:
         with:
           node-version: 12
       
+      - name: Generate Frontend
+        run: cd frontend && npm ci && npm run generate
+
       - name: Build Functions
         run: cd functions && npm ci && npm run build
