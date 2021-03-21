@@ -60,11 +60,25 @@ export default {
   @media (min-width: 960px) {
     background-size: contain;
   }
+  @media (min-width: 600px) and (max-width: 960px) {
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 80vh;
+      background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    }
+  }
 }
 
 .intro {
   text-align: center;
   text-shadow: 2px 2px black, 1px 1px 5px black;
+  position: relative;
+  z-index: 1;
   h2 {
     font-size: 200%;
   }

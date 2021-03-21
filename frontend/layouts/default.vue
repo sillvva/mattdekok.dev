@@ -88,7 +88,7 @@ export default {
 <style lang="scss">
 .menu-button {
   @media (min-width: 960px) {
-    display: none;
+    display: none !important;
   }
 }
 .menu {
