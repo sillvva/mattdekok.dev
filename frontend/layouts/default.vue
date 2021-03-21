@@ -11,6 +11,7 @@
       fixed
       color="white"
       class="menu-button"
+      v-if="!drawer"
       @click="drawer = !drawer"
     >
       <v-icon>mdi-menu</v-icon>
