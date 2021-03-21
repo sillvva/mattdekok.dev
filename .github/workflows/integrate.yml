@@ -17,9 +17,13 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: cd functions && npm ci && npm test
-      - run: npm run build
+      
+      - name: Build Functions
+      - run: cd functions && npm ci && npm run build
