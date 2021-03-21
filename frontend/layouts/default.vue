@@ -11,6 +11,7 @@
       fixed
       color="white"
       class="menu-button"
+      v-if="!drawer"
       @click="drawer = !drawer"
     >
       <v-icon>mdi-menu</v-icon>
@@ -88,7 +89,7 @@ export default {
 <style lang="scss">
 .menu-button {
   @media (min-width: 960px) {
-    display: none;
+    display: none !important;
   }
 }
 .menu {

@@ -47,6 +47,11 @@
 
 <script>
 export default {
+  head() {
+    return {
+      title: "Intro",
+    };
+  },
   components: {},
 };
 </script>
@@ -60,11 +65,26 @@ export default {
   @media (min-width: 960px) {
     background-size: contain;
   }
+  @media (min-width: 600px) and (max-width: 960px) {
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 80vh;
+      background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    }
+  }
 }
 
 .intro {
+  font-family: "Montserrat", sans-serif;
   text-align: center;
   text-shadow: 2px 2px black, 1px 1px 5px black;
+  position: relative;
+  z-index: 1;
   h2 {
     font-size: 200%;
   }
@@ -78,6 +98,14 @@ export default {
   @media (min-width: 960px) {
     text-align: right;
   }
+  @media (min-width: 1264px) {
+    h2 {
+      font-size: 300%;
+    }
+    h4 {
+      font-size: 225%;
+    }
+  }
   @media (max-width: 960px) {
     margin-top: 40vh;
   }
@@ -87,12 +115,38 @@ export default {
   }
 }
 
-.hex-row {
-  justify-content: flex-end;
-  margin-left: 0;
+.hex-menu {
+  .hex-row {
+    justify-content: flex-end;
+    margin-left: 0;
+    @media (min-width: 1264px) {
+      .hex-menu-item {
+        height: 156px;
+        margin-bottom: -75px;
+        margin-left: -15px;
+        .item-content {
+          height: 156px;
+          width: 90px;
+          font-size: 1.8em;
+        }
+        &::before {
+          border-width: 78px 45px 78px 0;
+        }
+        &::after {
+          border-width: 78px 0 78px 45px;
+        }
+        &.even {
+          margin-top: 80px;
+        }
+      }
+    }
+    @media (max-width: 960px) {
+      justify-content: center;
+      margin-left: -15px;
+    }
+  }
   @media (max-width: 960px) {
-    justify-content: center;
-    margin-left: -15px;
+    margin-top: 5px;
   }
 }
 </style>
