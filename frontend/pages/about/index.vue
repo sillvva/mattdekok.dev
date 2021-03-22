@@ -10,7 +10,6 @@
           <div class="article-section">
             <v-row>
               <v-col cols="12" sm="6">
-                <h2>About Me</h2>
                 <p>
                   Experienced web developer with a demonstrated history of
                   working in the wireless industry. Skilled in PHP, Node.JS,
