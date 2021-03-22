@@ -1,12 +1,14 @@
 <template>
   <v-container fill-height fluid class="me-bg">
     <v-row justify="center" align="center">
-      <v-col sm="9" md="8" xl="6">
+      <v-col md="10" lg="9" xl="6">
         <div class="intro">
           <h2>Matt DeKok</h2>
           <h4>Full Stack Web Developer</h4>
         </div>
-        <hex-menu :maxLength="3" :items="items" :classes="['home-styles']"></hex-menu>
+        <div class="menu-container">
+          <hex-menu :maxLength="3" :items="items" :classes="['home-styles']"></hex-menu>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -29,7 +31,6 @@ export default {
         { link: '/experience', label: 'Experience' },
         { link: '/skills', label: 'Skills' },
         { link: '/projects', label: 'Projects' },
-        { empty: true },
         { link: '/donate', label: 'Donate' }
       ]
     }
@@ -37,7 +38,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .me-bg {
   background-image: url("/images/me.png");
   background-position: bottom left;
@@ -46,7 +47,7 @@ export default {
   @media (min-width: 960px) {
     background-size: contain;
   }
-  @media (min-width: 600px) and (max-width: 960px) {
+  @media (max-width: 960px) {
     &::after {
       content: "";
       position: absolute;
@@ -88,48 +89,31 @@ export default {
     }
   }
   @media (max-width: 960px) {
-    margin-top: 40vh;
-  }
-  @media (max-width: 600px) {
-    text-align: left;
-    margin-top: 20vh;
+    margin-top: 0;
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    right: 0;
   }
 }
 </style>
 
 <style lang="scss">
-.hex-menu.home-styles {
-  .hex-row {
-    justify-content: flex-end;
-    margin-left: 0;
-    @media (min-width: 1400px) {
-      .hex-menu-item {
-        height: 156px;
-        margin-bottom: -75px;
-        margin-left: -15px;
-        .item-content {
-          height: 156px;
-          width: 90px;
-          font-size: 1.8em;
-        }
-        &::before {
-          border-width: 78px 45px 78px 0;
-        }
-        &::after {
-          border-width: 78px 0 78px 45px;
-        }
-        &.even {
-          margin-top: 80px;
-        }
-      }
+.menu-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  .home-styles {
+    --scale: 0.6;
+    @media (min-width: 1264px) {
+      --scale: 0.8;
     }
-    @media (max-width: 960px) {
-      justify-content: center;
-      margin-left: -15px;
+    @media (min-width: 1400px) {
+      --scale: 0.9;
     }
   }
   @media (max-width: 960px) {
-    margin-top: 5px;
+    display: none;
   }
 }
 </style>

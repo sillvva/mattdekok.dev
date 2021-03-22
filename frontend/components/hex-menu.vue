@@ -1,14 +1,14 @@
 <template>
-  <div :class="['hex-menu', ...classes]">
-    <div class="hex-row" v-for="(row, r) in rows" :key="`hex-row-${r}`">
+  <div :class="['hex-wrapper', ...classes]">
+    <div :class="['hex-row', r % 2 === 1 && !classes.includes('rotated') && 'shift']" v-for="(row, r) in rows" :key="`hex-row-${r}`">
       <hex-menu-item
         v-for="(item, i) in row"
         :key="`hex-item-${i}`"
         :link="item.link"
         :label="item.label"
-        :even="item.even"
         :empty="item.empty"
         :active="item.active"
+        :rotated="classes.includes('rotated')"
       ></hex-menu-item>
     </div>
   </div>
@@ -18,7 +18,7 @@
 import "../components/hex-menu-item.vue";
 
 export default {
-  components: ['hex-menu-item'],
+  components: ["hex-menu-item"],
   props: {
     items: {
       type: Array,
@@ -32,13 +32,13 @@ export default {
     reversed: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     classes: {
       type: Array,
       required: false,
-      default: []
-    }
+      default: [],
+    },
   },
   data() {
     return {
@@ -47,26 +47,18 @@ export default {
   },
   methods: {
     getRows() {
-      const numRows =
-        this.maxLength <= 0 ? 1 : Math.ceil(this.items.length / this.maxLength);
-      if (numRows === 1) {
-        return [
-          this.items.map((item, i) => ({
-            ...item,
-            even: i % 2 === (this.reversed ? 0 : 1),
-          }))
-        ];
-      }
       const rows = [[]];
       this.items.forEach((item) => {
         const rowIndex = rows.length - 1;
-        let rowItemIndex = rows[rowIndex].length;
         rows[rowIndex].push({
           ...item,
-          ...(item.empty && { link: '', label: '' }),
-          even: rowItemIndex % 2 === (this.reversed ? 0 : 1),
+          ...(item.empty && { link: "", label: "" })
         });
-        if (this.maxLength >= 0 && rows[rowIndex].length === this.maxLength) {
+        let rotDiff = 0;
+        if (!this.classes.includes('rotated') && rows.length % 2 === 0) {
+          rotDiff = 1;
+        }
+        if (this.maxLength >= 0 && rows[rowIndex].length === this.maxLength - rotDiff) {
           rows.push([]);
         }
       });
@@ -77,21 +69,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.hex-menu {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  @media (max-width: 600px) {
-    display: none;
+.hex-wrapper {
+  display: inline-block;
+  --scale: 0.8;
+  margin: 50px 0;
+  &.rotated {
+    margin: 20px 0 calc(120px * var(--scale));
   }
   .hex-row {
-    flex-basis: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-left: -15px;
+    &.shift {
+      margin-left: calc(98px * var(--scale));
+    }
+  }
+  @media (max-width: 1264px) {
+    --scale: 0.6;
+  }
+  @media (max-width: 960px) {
+    &:not(.drawer-wrapper) {
+      display: none;
+    }
   }
 }
 </style>

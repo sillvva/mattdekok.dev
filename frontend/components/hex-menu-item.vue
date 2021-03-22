@@ -1,15 +1,18 @@
 <template>
-  <div
-    :class="
-      ['hex-menu-item', empty && 'empty', even && 'even', active && 'active']
-        .filter((i) => !!i)
-        .join(' ')
-    "
+  <nuxt-link
+    :class="[
+      'hex-menu-item',
+      empty && 'empty',
+      active && 'active',
+      rotated && 'rotated',
+    ]"
+    :to="link"
   >
-    <nuxt-link class="item-content" :to="link">
-      <span class="item-label">{{ label }}</span>
-    </nuxt-link>
-  </div>
+    <span class="item-label">{{ label }}</span>
+    <div class="face face1"></div>
+    <div class="face face2"></div>
+    <div class="face face3"></div>
+  </nuxt-link>
 </template>
 
 <script>
@@ -28,12 +31,12 @@ export default {
       required: false,
       default: false,
     },
-    even: {
+    active: {
       type: Boolean,
       required: false,
       default: false,
     },
-    active: {
+    rotated: {
       type: Boolean,
       required: false,
       default: false,
@@ -44,98 +47,86 @@ export default {
 
 <style lang="scss" scoped>
 .hex-menu-item {
-  display: flex;
-  flex-direction: row;
-  height: 105px;
-  margin-right: -26px;
-  margin-bottom: -50px;
+  --baseYMargin: 30px;
+  --baseXMargin: 4px;
+  float: left;
   position: relative;
+  margin: calc(var(--baseYMargin) * var(--scale)) calc(var(--baseXMargin) * var(--scale));
+  margin-left: calc(2px * var(--scale));
+  width: calc(190px * var(--scale));
+  height: calc(110px * var(--scale));
   z-index: 1;
-  &.active a {
+  text-decoration: none;
+  text-align: center;
+  &:hover:not(.active):not(.empty) {
+    animation: shake 500ms ease-in-out forwards;
+  }
+  &.active, &.empty {
     cursor: default;
   }
-  &:hover:not(.active) {
-    animation: shake 500ms ease-in-out forwards;
-    z-index: 2;
+  &.empty {
+    .face {
+      background-color: transparent;
+    }
   }
-  &:hover,
-  &.active {
-    .item-content {
+  &:hover:not(.empty), &.active {
+    z-index: 2;
+    .face {
       background-color: #69c;
     }
-    &::before,
-    &::after {
-      border-right-color: #69c;
-      border-left-color: #69c;
-    }
   }
-  &.even {
-    margin-top: 53px;
-  }
-  &::before {
-    content: "";
-    width: 0;
-    height: 104px;
-    border-right: 30px solid #6c6;
-    border-top: 52px solid transparent;
-    border-bottom: 52px solid transparent;
-    z-index: 0;
-  }
-  .item-content {
-    width: 60px;
-    height: 104px;
-    background: #6c6;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    overflow: visible;
+  .item-label {
+    line-height: calc(110px * var(--scale));
+    font-family: sans-serif;
     white-space: nowrap;
-    font-size: 1.2em;
+    font-size: calc(1.8em * var(--scale));
     font-weight: 600;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    // .item-label {
-    //   display: flex;
-    //   align-items: center;
-    //   justify-content: center;
-    //   height: 50%;
-    //   width: 104px;
-    //   border-radius: 50%;
-    //   position: absolute;
-    //   background: blue;
-    // }
-  }
-  &::after {
-    content: "";
-    width: 0;
-    height: 104px;
-    border-left: 30px solid #6c6;
-    border-top: 52px solid transparent;
-    border-bottom: 52px solid transparent;
-    z-index: 0;
-  }
-  &.empty {
-    .item-content,
-    &::before,
-    &::after {
-      background: transparent;
-      border-left-color: transparent;
-      border-right-color: transparent;
-    }
-  }
-  a {
     color: white;
-    text-decoration: none;
+  }
+  .face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: inherit;
+    background: #6c6;
+    z-index: -1;
+    backface-visibility: hidden;
+    transition: background-color 500ms ease, -webkit-transform 1s ease-in-out;
+  }
+  .face1 {
+    transform: rotate(60deg);
+  }
+  .face2 {
+    transform: rotate(0);
+  }
+  .face3 {
+    transform: rotate(-60deg);
+  }
+  &.rotated {
+    --baseYMargin: calc(75px * var(--scale));
+    --baseXMargin: calc(-30px * var(--scale));
+    &:nth-child(2n) {
+      top: calc(100px * var(--scale));
+    }
+    .face1 {
+      transform: rotate(30deg);
+    }
+    .face2 {
+      transform: rotate(90deg);
+    }
+    .face3 {
+      transform: rotate(-30deg);
+    }
   }
 }
 
 @keyframes shake {
-  0% {
-    transform: scale(1);
-  }
   40% {
-    transform: scale(1.5);
+    transform: scale(1.5) ;
   }
   60% {
     transform: rotate(-5deg);
