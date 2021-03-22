@@ -21,6 +21,7 @@
       absolute
       temporary
       class="menu"
+      style="position: fixed;"
       @click="drawer = !drawer"
     >
       <v-list>
@@ -87,6 +88,52 @@ export default {
 </script>
 
 <style lang="scss">
+:root {
+    --background: #f5f5f5;
+    --text: #2a2a2a;
+    --altText: #f5f5f5;
+    --headingWeight: 700;
+    --menu: #2a2a2a;
+    --menuText: #f5f5f5;
+    --page1: #f5f5f5;
+    --page2: #d9c09e;
+    --page3: #f5aeae;
+    --page4: #aad7f0;
+    --page5: darkseagreen;
+    --article: #cccccc;
+    --PayPal1: #003087;
+    --PayPal2: #009cde;
+    --Stripe: #32325d;
+    --toast: #111111;
+    --link: #007bff;
+    --GitHub: #0D0D0D;
+    --LinkedIn: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #4a4a4a;
+        --text: #f5f5f5;
+        --altText: #4a4a4a;
+        --headingWeight: 500;
+        --menu: #2a2a2a;
+        --menuText: #f5f5f5;
+        --page1: #585858;
+        --page2: #4f4f4f;
+        --page3: #484848;
+        --page4: #3f3f3f;
+        --page5: #383838;
+        --article: #2f2f2f;
+        --PayPal1: #007bff;
+        --PayPal2: #cccccc;
+        --Stripe: #007bff;
+        --toast: #f3f3f3;
+        --link: #62a1e4;
+        --GitHub: #ffffff;
+        --LinkedIn: #ffffff;
+    }
+}
+
 .menu-button {
   @media (min-width: 960px) {
     display: none !important;
@@ -120,109 +167,104 @@ export default {
   }
 }
 
-.hex-menu {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  @media (max-width: 600px) {
-      display: none;
-  }
-  .hex-row {
-    flex-basis: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-left: -15px;
-    a {
-      color: white;
-      text-decoration: none;
+.article {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15), 0 2px 3px rgba(0, 0, 0, 0.2);
+  background-color: var(--article);
+  border-radius: 2px;
+  overflow: hidden;
+  .article-section {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    color: var(--text);
+    &:last-child {
+      border-bottom: 0;
     }
-    .hex-menu-item {
-      display: flex;
-      flex-direction: row;
-      height: 105px;
-      margin-right: -26px;
-      margin-bottom: -50px;
-      position: relative;
-      z-index: 1;
-      &:hover {
-        animation: shake 500ms ease-in-out forwards;
-        z-index: 2;
-        .item-content {
-          background-color: #69c;
-        }
-        &::before,
-        &::after {
-          border-right-color: #69c;
-          border-left-color: #69c;
-        }
+    h2 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 1rem;
+      @media (max-width: 576px) {
+        text-align: center;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
       }
-      &.even {
-        margin-top: 53px;
+    }
+    figure {
+      font-weight: 300;
+      margin: 0 0 0.5rem;
+      strong {
+        font-weight: 500;
       }
-      &::before {
-        content: "";
-        width: 0;
-        height: 104px;
-        border-right: 30px solid #6c6;
-        border-top: 52px solid transparent;
-        border-bottom: 52px solid transparent;
-        z-index: 0;
+      div > div:last-child {
+        text-align: right;
       }
-      .item-content {
-        width: 60px;
-        height: 104px;
-        background: #6c6;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
-        overflow: visible;
-        white-space: nowrap;
-        font-size: 1.2em;
-        font-weight: 600;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-      }
-      &::after {
-        content: "";
-        width: 0;
-        height: 104px;
-        border-left: 30px solid #6c6;
-        border-top: 52px solid transparent;
-        border-bottom: 52px solid transparent;
-        z-index: 0;
-      }
-      &.empty {
-        .item-content,
-        &::before,
-        &::after {
-          background: transparent;
-          border-left-color: transparent;
-          border-right-color: transparent;
+      @media (max-width: 576px) {
+        text-align: center;
+        div > div:last-child {
+          text-align: center;
         }
       }
     }
-  }
-}
-
-@keyframes shake {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.5);
-  }
-  60% {
-    transform: rotate(-5deg);
-  }
-  80% {
-    transform: rotate(5deg);
-  }
-  100% {
-    transform: rotate(0deg);
+    .article-section-items {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 10px;
+      @media (max-width: 991px) {
+        grid-template-columns: 1fr;
+      }
+      .article-section-item {
+        margin: 20px 0 0;
+        min-height: 60px;
+        overflow: hidden;
+        color: var(--text);
+        @media (max-width: 991px) {
+          border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+          padding-bottom: 20px;
+          &:last-child {
+            padding-bottom: 0;
+            border: 0;
+          }
+        }
+        .article-section-item-image {
+          float: left;
+          width: 56px;
+          height: 56px;
+          display: grid;
+          justify-content: center;
+          align-items: center;
+          background: white;
+          border-radius: 2px;
+          img {
+            max-width: 56px;
+            max-height: 56px;
+            border-radius: 2px;
+          }
+        }
+        .article-section-item-content {
+          margin-left: 80px;
+          h3 {
+            font-size: 1.15rem;
+            line-height: 1.5;
+            font-weight: 500;
+            margin: 0;
+          }
+          h4 {
+            font-size: 1rem;
+            line-height: 1.5;
+            font-weight: 300;
+            margin-bottom: 5px;
+          }
+          h5 {
+            font-size: 0.85rem;
+            line-height: 1;
+            font-weight: 300;
+            margin: 0;
+          }
+        }
+      }
+    }
   }
 }
 </style>
