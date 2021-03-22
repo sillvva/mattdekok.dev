@@ -7,7 +7,7 @@
     "
   >
     <nuxt-link class="item-content" :to="link">
-      {{ label }}
+      <span class="item-label">{{ label }}</span>
     </nuxt-link>
   </div>
 </template>
@@ -95,6 +95,16 @@ export default {
     font-size: 1.2em;
     font-weight: 600;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    // .item-label {
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: center;
+    //   height: 50%;
+    //   width: 104px;
+    //   border-radius: 50%;
+    //   position: absolute;
+    //   background: blue;
+    // }
   }
   &::after {
     content: "";

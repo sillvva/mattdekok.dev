@@ -26,7 +26,7 @@ export default {
       items: [
         { link: '/', label: 'Intro' },
         { link: '/about', label: 'About Me' },
-        { link: '/donate', label: 'donate', active: true }
+        { link: '/donate', label: 'Donate', active: true }
       ]
     }
   }

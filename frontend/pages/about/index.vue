@@ -16,7 +16,7 @@
                 <p>
                   Experienced web developer with a demonstrated history of
                   working in the wireless industry. Skilled in PHP, Node.JS,
-                  React, Angular, HTML, JavaScript, TypeScript, CSS, and SASS.
+                  Vue, Angular, HTML, JavaScript, TypeScript, CSS, and SCSS.
                   Strong engineering professional with a Bachelor’s Degree
                   focused in Computer and Information Systems
                   Security/Information Assurance from Dakota State University.
