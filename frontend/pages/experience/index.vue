@@ -8,7 +8,7 @@
         <h1 class="page-header text-center">Experience</h1>
         <page-article>
           <page-article-section>
-            <h2>Experience</h2>
+            <h2>Work Experience</h2>
             <page-article-section-items>
               <page-article-section-item image="images/ddb.png">
                 <h3>Forum, Twitch, and Discord Moderator</h3>
