@@ -6,8 +6,8 @@
     <v-row justify="center" align="center">
       <v-col sm="9" md="8" lg="7">
         <h1 class="page-header text-center">About Me</h1>
-        <div class="article">
-          <div class="article-section">
+        <page-article>
+          <page-article-section>
             <v-row>
               <v-col cols="12" sm="6">
                 <p>
@@ -81,8 +81,8 @@
                 </h4>
               </v-col>
             </v-row>
-          </div>
-          <div class="article-section">
+          </page-article-section>
+          <page-article-section>
             <v-row>
               <v-col>
                 <div class="text-center">
@@ -93,18 +93,28 @@
                 </div>
               </v-col>
             </v-row>
-          </div>
-        </div>
+          </page-article-section>
+        </page-article>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import '~/components/hex-menu';
+import HexMenu from "../../components/hex-menu.vue";
+import PageArticle from "../../components/page-article.vue";
+import PageArticleSection from "../../components/page-article-section.vue";
+import PageArticleSectionItems from "../../components/page-article-section-items.vue";
+import PageArticleSectionItem from "../../components/page-article-section-item.vue";
 
 export default {
-  components: ['hex-menu'],
+  components: {
+    HexMenu,
+    PageArticle,
+    PageArticleSection,
+    PageArticleSectionItems,
+    PageArticleSectionItem,
+  },
   head() {
     return {
       title: "About Me",
