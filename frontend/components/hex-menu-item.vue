@@ -83,6 +83,7 @@ export default {
     font-weight: 600;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     color: white;
+    letter-spacing: 1px;
   }
   .face {
     position: absolute;
@@ -107,8 +108,8 @@ export default {
     transform: rotate(-60deg);
   }
   &.rotated {
-    --baseYMargin: calc(75px * var(--scale));
-    --baseXMargin: calc(-30px * var(--scale));
+    --baseYMargin: 45px;
+    --baseXMargin: -20px;
     &:nth-child(2n) {
       top: calc(100px * var(--scale));
     }

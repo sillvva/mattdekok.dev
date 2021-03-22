@@ -5,7 +5,7 @@
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="9" md="8" lg="7">
-        <h1 class="text-center">Experience</h1>
+        <h1 class="page-header text-center">Experience</h1>
       </v-col>
     </v-row>
   </v-container>
