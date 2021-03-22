@@ -1,9 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="12">
-        <hex-menu :items="items" :classes="['page-menu']"></hex-menu>
-      </v-col>
+      <hex-menu :items="items" :classes="['page-menu', 'rotated']"></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="9" md="8" lg="7">
@@ -12,7 +10,6 @@
           <div class="article-section">
             <v-row>
               <v-col cols="12" sm="6">
-                <h2>About Me</h2>
                 <p>
                   Experienced web developer with a demonstrated history of
                   working in the wireless industry. Skilled in PHP, Node.JS,

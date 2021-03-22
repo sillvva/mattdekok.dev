@@ -5,136 +5,167 @@
     </v-main>
     <v-btn
       fab
-      icon
       top
       left
       fixed
-      color="white"
+      color="black"
       class="menu-button"
       v-if="!drawer"
-      @click="drawer = !drawer"
+      @click="openDrawer();"
     >
       <v-icon>mdi-menu</v-icon>
     </v-btn>
-    <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      temporary
-      class="menu"
-      style="position: fixed;"
-      @click="drawer = !drawer"
-    >
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-          class="menu-item"
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <div :class="['drawer-container', openingDrawer && 'open', closingDrawer && 'close']" v-if="drawer" @click="closeDrawer();">
+      <hex-menu :maxLength="3" :items="items" :classes="['drawer-wrapper']"></hex-menu>
+    </div>
   </v-app>
 </template>
 
 <script>
+import '~/components/hex-menu';
+
 export default {
+  components: ['hex-menu'],
   data() {
     return {
       drawer: false,
+      openingDrawer: null,
+      closingDrawer: null,
       items: [
-        {
-          icon: "mdi-home",
-          title: "Intro",
-          to: "/",
-        },
-        {
-          icon: "mdi-account",
-          title: "About Me",
-          to: "/about",
-        },
-        {
-          icon: "mdi-calendar-account",
-          title: "Experience",
-          to: "/experience",
-        },
-        {
-          icon: "mdi-star",
-          title: "Skills",
-          to: "/skills",
-        },
-        {
-          icon: "mdi-briefcase-variant",
-          title: "Projects",
-          to: "/projects",
-        },
-        {
-          icon: "mdi-ethereum",
-          title: "Donate",
-          to: "/donate",
-        },
-      ],
+        { link: '/about', label: 'About Me' },
+        { link: '/experience', label: 'Experience' },
+        { link: '/skills', label: 'Skills' },
+        { link: '/projects', label: 'Projects' },
+        { link: '/donate', label: 'Donate' }
+      ]
     };
   },
+  methods: {
+    openDrawer() {
+      this.drawer = true;
+      this.openingDrawer = true;
+      setTimeout(() => {
+        this.openingDrawer = null;
+      }, 500);
+    },
+    closeDrawer() {
+      this.closingDrawer = true;
+      setTimeout(() => {
+        this.closingDrawer = null;
+        this.drawer = false;
+      }, 300);
+    }
+  }
 };
 </script>
 
 <style lang="scss">
 :root {
-    --background: #f5f5f5;
-    --text: #2a2a2a;
-    --altText: #f5f5f5;
-    --headingWeight: 700;
-    --menu: #2a2a2a;
-    --menuText: #f5f5f5;
-    --page1: #f5f5f5;
-    --page2: #d9c09e;
-    --page3: #f5aeae;
-    --page4: #aad7f0;
-    --page5: darkseagreen;
-    --article: #cccccc;
-    --PayPal1: #003087;
-    --PayPal2: #009cde;
-    --Stripe: #32325d;
-    --toast: #111111;
-    --link: #007bff;
-    --GitHub: #0D0D0D;
-    --LinkedIn: #000000;
+  --background: #f5f5f5;
+  --text: #2a2a2a;
+  --altText: #f5f5f5;
+  --headingWeight: 700;
+  --menu: #2a2a2a;
+  --menuText: #f5f5f5;
+  --page1: #f5f5f5;
+  --page2: #d9c09e;
+  --page3: #f5aeae;
+  --page4: #aad7f0;
+  --page5: darkseagreen;
+  --article: #cccccc;
+  --PayPal1: #003087;
+  --PayPal2: #009cde;
+  --Stripe: #32325d;
+  --toast: #111111;
+  --link: #007bff;
+  --GitHub: #0d0d0d;
+  --LinkedIn: #000000;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --background: #4a4a4a;
-        --text: #f5f5f5;
-        --altText: #4a4a4a;
-        --headingWeight: 500;
-        --menu: #2a2a2a;
-        --menuText: #f5f5f5;
-        --page1: #585858;
-        --page2: #4f4f4f;
-        --page3: #484848;
-        --page4: #3f3f3f;
-        --page5: #383838;
-        --article: #2f2f2f;
-        --PayPal1: #007bff;
-        --PayPal2: #cccccc;
-        --Stripe: #007bff;
-        --toast: #f3f3f3;
-        --link: #62a1e4;
-        --GitHub: #ffffff;
-        --LinkedIn: #ffffff;
+  :root {
+    --background: #4a4a4a;
+    --text: #f5f5f5;
+    --altText: #4a4a4a;
+    --headingWeight: 500;
+    --menu: #2a2a2a;
+    --menuText: #f5f5f5;
+    --page1: #585858;
+    --page2: #4f4f4f;
+    --page3: #484848;
+    --page4: #3f3f3f;
+    --page5: #383838;
+    --article: #2f2f2f;
+    --PayPal1: #007bff;
+    --PayPal2: #cccccc;
+    --Stripe: #007bff;
+    --toast: #f3f3f3;
+    --link: #62a1e4;
+    --GitHub: #ffffff;
+    --LinkedIn: #ffffff;
+  }
+}
+
+.drawer-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.5);
+  &.open > * {
+    animation: drawer-open 500ms ease-in-out forwards;
+  }
+  &.close > * {
+    animation: drawer-close 300ms ease-in-out forwards;
+  }
+  @media (max-width: 960px) {
+    > .hex-wrapper {
+      --scale: 0.9;
     }
+  }
+  @media (max-width: 650px) {
+    > .hex-wrapper {
+      --scale: 0.7;
+    }
+  }
+  @media (max-width: 500px) {
+    > .hex-wrapper {
+      --scale: 0.6;
+    }
+  }
+  @media (max-width: 350px) {
+    > .hex-wrapper {
+      --scale: 0.5;
+    }
+  }
+}
+
+@keyframes drawer-open {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes drawer-close {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
 }
 
 .menu-button {
+  z-indeX: 101;
   @media (min-width: 960px) {
     display: none !important;
   }

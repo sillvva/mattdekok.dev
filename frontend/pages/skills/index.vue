@@ -1,9 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="12">
-        <hex-menu :items="items" :classes="['page-menu']"></hex-menu>
-      </v-col>
+      <hex-menu :items="items" :classes="['page-menu', 'rotated']"></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="9" md="8" lg="7">
