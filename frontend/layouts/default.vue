@@ -27,7 +27,7 @@
       <hex-menu
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
-        :classes="['drawer-wrapper', 'rotated']"
+        :classes="['drawer-wrapper']"
       ></hex-menu>
     </div>
   </v-app>
@@ -49,7 +49,6 @@ export default {
         { link: "/experience", label: "Experience" },
         { link: "/skills", label: "Skills" },
         { link: "/projects", label: "Projects" },
-        { link: "/donate", label: "Donate" },
       ],
     };
   },
