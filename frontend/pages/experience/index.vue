@@ -2,35 +2,7 @@
   <v-container fluid>
     <v-row justify="center">
       <v-col cols="12">
-        <div class="hex-menu">
-          <div class="hex-row">
-            <div class="hex-menu-item even">
-              <router-link class="item-content" to="/">
-                Intro
-              </router-link>
-            </div>
-            <div class="hex-menu-item">
-              <router-link class="item-content" to="/about">
-                About Me
-              </router-link>
-            </div>
-            <div class="hex-menu-item even">
-              <router-link class="item-content" to="/skills">
-                Skills
-              </router-link>
-            </div>
-            <div class="hex-menu-item">
-              <router-link class="item-content" to="/projects">
-                Projects
-              </router-link>
-            </div>
-            <div class="hex-menu-item even">
-              <router-link class="item-content" to="/donate">
-                Donate
-              </router-link>
-            </div>
-          </div>
-        </div>
+        <hex-menu :items="items" :classes="['page-menu']"></hex-menu>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
@@ -49,11 +21,22 @@ export default {
     };
   },
   components: {},
+  data() {
+    return {
+      items: [
+        { link: '/', label: 'Intro' },
+        { link: '/about', label: 'About Me' },
+        { link: '/experience', label: 'Experience', active: true },
+        { link: '/skills', label: 'Skills' },
+        { link: '/projects', label: 'Projects' }
+      ]
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.hex-menu {
+.hex-menu.page-menu {
     height: 165px;
     margin-bottom: 20px;
 }

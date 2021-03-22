@@ -1,0 +1,99 @@
+<template>
+  <div :class="['hex-menu', ...classes]">
+    <div class="hex-row" v-for="(row, r) in rows" :key="`hex-row-${r}`">
+      <hex-menu-item
+        v-for="(item, i) in row"
+        :key="`hex-item-${i}`"
+        :link="item.link"
+        :label="item.label"
+        :even="item.even"
+        :empty="item.empty"
+        :active="item.active"
+      ></hex-menu-item>
+    </div>
+  </div>
+</template>
+
+<script>
+import "../components/hex-menu-item.vue";
+
+export default {
+  components: ['hex-menu-item'],
+  props: {
+    items: {
+      type: Array,
+      required: true,
+    },
+    maxLength: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    reversed: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    classes: {
+      type: Array,
+      required: false,
+      default: []
+    }
+  },
+  data() {
+    console.log(this.getRows())
+    return {
+      rows: this.getRows(),
+    };
+  },
+  methods: {
+    getRows() {
+      const numRows =
+        this.maxLength <= 0 ? 1 : Math.ceil(this.items.length / this.maxLength);
+      if (numRows === 1) {
+        return [
+          this.items.map((item, i) => ({
+            ...item,
+            even: i % 2 === (this.reversed ? 0 : 1),
+          }))
+        ];
+      }
+      const rows = [[]];
+      this.items.forEach((item, i) => {
+        const rowIndex = rows.length - 1;
+        let rowItemIndex = rows[rowIndex].length;
+        // console.log(rowItemIndex, JSON.stringify(item));
+        rows[rowIndex].push({
+          ...item,
+          ...(item.empty && { link: '', label: '' }),
+          even: rowItemIndex % 2 === (this.reversed ? 0 : 1),
+        });
+        if (this.maxLength >= 0 && rows[rowIndex].length === this.maxLength) {
+          rows.push([]);
+        }
+      });
+      return rows;
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.hex-menu {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  @media (max-width: 600px) {
+    display: none;
+  }
+  .hex-row {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: -15px;
+  }
+}
+</style>

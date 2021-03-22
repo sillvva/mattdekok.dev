@@ -1,62 +1,43 @@
 <template>
   <v-container fill-height fluid class="me-bg">
     <v-row justify="center" align="center">
-      <v-col sm="9" md="8" lg="7">
+      <v-col sm="9" md="8" xl="6">
         <div class="intro">
           <h2>Matt DeKok</h2>
           <h4>Full Stack Web Developer</h4>
         </div>
-        <div class="hex-menu">
-          <div class="hex-row">
-            <div class="hex-menu-item">
-              <router-link class="item-content" to="/about">
-                About Me
-              </router-link>
-            </div>
-            <div class="hex-menu-item even">
-              <router-link class="item-content" to="/experience">
-                Experience
-              </router-link>
-            </div>
-            <div class="hex-menu-item">
-              <router-link class="item-content" to="/skills">
-                Skills
-              </router-link>
-            </div>
-          </div>
-          <div class="hex-row">
-            <div class="hex-menu-item">
-              <router-link class="item-content" to="/projects">
-                Projects
-              </router-link>
-            </div>
-            <div class="hex-menu-item even empty">
-              <div class="item-content"></div>
-            </div>
-            <div class="hex-menu-item">
-              <router-link class="item-content" to="/donate">
-                Donate
-              </router-link>
-            </div>
-          </div>
-        </div>
+        <hex-menu :maxLength="3" :items="items" :classes="['home-styles']"></hex-menu>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import '~/components/hex-menu';
+
 export default {
+  components: ['hex-menu'],
   head() {
     return {
       title: "Intro",
     };
   },
-  components: {},
+  data() {
+    return {
+      items: [
+        { link: '/about', label: 'About Me' },
+        { link: '/experience', label: 'Experience' },
+        { link: '/skills', label: 'Skills' },
+        { link: '/projects', label: 'Projects' },
+        { empty: true },
+        { link: '/donate', label: 'Donate' }
+      ]
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .me-bg {
   background-image: url("/images/me.png");
   background-position: bottom left;
@@ -98,7 +79,7 @@ export default {
   @media (min-width: 960px) {
     text-align: right;
   }
-  @media (min-width: 1264px) {
+  @media (min-width: 1400px) {
     h2 {
       font-size: 300%;
     }
@@ -114,12 +95,14 @@ export default {
     margin-top: 20vh;
   }
 }
+</style>
 
-.hex-menu {
+<style lang="scss">
+.hex-menu.home-styles {
   .hex-row {
     justify-content: flex-end;
     margin-left: 0;
-    @media (min-width: 1264px) {
+    @media (min-width: 1400px) {
       .hex-menu-item {
         height: 156px;
         margin-bottom: -75px;
