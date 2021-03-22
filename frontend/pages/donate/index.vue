@@ -7,22 +7,89 @@
       <v-col sm="9" md="8" lg="7">
         <h1 class="page-header text-center">Donate</h1>
         <page-article>
-          <page-article-section v-if="showForm">
+          <page-article-section v-if="showForm && !showThanks && !paymentError">
             <v-row justify="center">
-              <stripe-element-card
-                ref="cardRef"
-                :pk="stripeKey"
-                v-if="stripeKey"
-                @token="tokenCreated"
-              />
+              <v-col cols="12" v-if="stripeKey">
+                <v-row>
+                  <v-col cols="12" md="5">
+                    <v-text-field
+                      label="Name on Card"
+                      v-model="name"
+                      required
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="8" md="5">
+                    <v-text-field
+                      label="Email"
+                      v-model="email"
+                      required
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="4" md="2">
+                    <v-text-field
+                      label="Amount"
+                      v-model="amount"
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      required
+                      hide-details="auto"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col class="stripe-field">
+                    <stripe-element-card
+                      ref="cardRef"
+                      :pk="stripeKey"
+                      v-if="stripeKey"
+                      @token="tokenCreated"
+                    />
+                  </v-col>
+                  <v-col class="text-right" style="max-width: 100px">
+                    <v-btn @click="sendPayment();" :disabled="!token"> Send </v-btn>
+                  </v-col>
+                  <v-col cols="12" style="font-family: monospace">
+                    Payment handled by
+                    <a href="https://stripe.com" target="_blank">
+                      <svg
+                        width="62"
+                        height="20"
+                        viewBox="0 0 62 25"
+                        style="
+                          vertical-align: middle;
+                          margin-top: -3px;
+                          margin-left: -8px;
+                        "
+                      >
+                        <path
+                          fill="var(--Stripe)"
+                          d="M5 10.1c0-.6.6-.9 1.4-.9 1.2 0 2.8.4 4 1.1V6.5c-1.3-.5-2.7-.8-4-.8C3.2 5.7 1 7.4 1 10.3c0 4.4 6 3.6 6 5.6 0 .7-.6 1-1.5 1-1.3 0-3-.6-4.3-1.3v3.8c1.5.6 2.9.9 4.3.9 3.3 0 5.5-1.6 5.5-4.5.1-4.8-6-3.9-6-5.7zM29.9 20h4V6h-4v14zM16.3 2.7l-3.9.8v12.6c0 2.4 1.8 4.1 4.1 4.1 1.3 0 2.3-.2 2.8-.5v-3.2c-.5.2-3 .9-3-1.4V9.4h3V6h-3V2.7zm8.4 4.5L24.6 6H21v14h4v-9.5c1-1.2 2.7-1 3.2-.8V6c-.5-.2-2.5-.5-3.5 1.2zm5.2-2.3l4-.8V.8l-4 .8v3.3zM61.1 13c0-4.1-2-7.3-5.8-7.3s-6.1 3.2-6.1 7.3c0 4.8 2.7 7.2 6.6 7.2 1.9 0 3.3-.4 4.4-1.1V16c-1.1.6-2.3.9-3.9.9s-2.9-.6-3.1-2.5H61c.1-.2.1-1 .1-1.4zm-7.9-1.5c0-1.8 1.1-2.5 2.1-2.5s2 .7 2 2.5h-4.1zM42.7 5.7c-1.6 0-2.5.7-3.1 1.3l-.1-1h-3.6v18.5l4-.7v-4.5c.6.4 1.4 1 2.8 1 2.9 0 5.5-2.3 5.5-7.4-.1-4.6-2.7-7.2-5.5-7.2zm-1 11c-.9 0-1.5-.3-1.9-.8V10c.4-.5 1-.8 1.9-.8 1.5 0 2.5 1.6 2.5 3.7 0 2.2-1 3.8-2.5 3.8z"
+                        />
+                      </svg>
+                    </a>
+                  </v-col>
+                </v-row>
+              </v-col>
               <v-progress-circular
                 :size="50"
                 color="primary"
                 indeterminate
                 v-if="!stripeKey"
-                style="margin: 20px 0;"
+                style="margin: 20px 0"
               ></v-progress-circular>
             </v-row>
+          </page-article-section>
+          <page-article-section v-if="showThanks">
+            <v-alert border="top" colored-border type="success" elevation="2">
+              <h1>Thank you!</h1>
+            </v-alert>
+          </page-article-section>
+          <page-article-section v-if="paymentError">
+            <v-alert border="top" colored-border type="error" elevation="2">
+              <h3 v-if="paymentErrorType">{{paymentErrorType}}</h3>
+              <p>{{ paymentErrorMessage }}</p>
+            </v-alert>
           </page-article-section>
           <page-article-section>
             <v-row justify="center" class="static-payment">
@@ -120,7 +187,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import PageArticleSection from "../../components/page-article-section.vue";
 import PageArticle from "../../components/page-article.vue";
 import { StripeElementCard } from "@vue-stripe/vue-stripe";
@@ -134,32 +201,49 @@ export default {
   components: { PageArticle, PageArticleSection, StripeElementCard },
   data() {
     return {
-      showForm: true,
       stripeKey: null,
+      name: "",
+      email: "",
+      amount: "5.00",
+      token: "",
+      showThanks: false,
+      paymentError: false,
+      paymentErrorType: "",
+      paymentErrorMessage: "",
       items: [
         { link: "/", label: "Intro" },
         { link: "/about", label: "About Me" },
-        { link: "/donate", label: "Donate", active: true },
+        { link: "/experience", label: "Experience" },
+        { link: "/skills", label: "Skills" },
+        { link: "/projects", label: "Projects" },
       ],
+      rules: [],
     };
   },
-  async asyncData(context: any) {
+  async asyncData() {
     let stripeKey = null;
+    let showForm = true;
 
     try {
-      const result = await context.$axios.get('/stripeKey');
-      stripeKey = (result.data || {}).key;
-    }
-    catch(err) {
+      const response = await fetch("/stripeKey");
+      if (response.status === 200) {
+        const data = await response.json();
+        stripeKey = (data || {}).key;
+      } else {
+        showForm = false;
+      }
+    } catch (err) {
       console.log(err);
+      showForm = false;
     }
-    
+
     return {
-      stripeKey: stripeKey
+      stripeKey: stripeKey,
+      showForm: showForm,
     };
   },
   methods: {
-    copyTokenAddress(address: string) {
+    copyTokenAddress(address) {
       const el = document.createElement("textarea");
       el.value = address;
       document.body.appendChild(el);
@@ -168,8 +252,46 @@ export default {
       document.body.removeChild(el);
       alert("Copied token address to clipboard");
     },
-    tokenCreated(token: string) {
-      console.log(token);
+    tokenCreated(token) {
+      this.token = token;
+    },
+    async sendPayment() {
+      try {
+        const options = {
+          method: "POST",
+          body: JSON.stringify({
+            name: this.name,
+            email: this.email,
+            amount: this.amount,
+            tokenId: this.token,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        this.stripeKey = null;
+        const response = await fetch("/payment", options);
+        if (response.status === 200) {
+          const result = await response.json();
+          if (result.status === "failed") {
+            this.paymentError = true;
+            this.paymentErrorType = result.error.type;
+            this.paymentErrorMessage = result.error.message;
+          } else {
+            this.showThanks = true;
+          }
+        } else {
+          this.paymentError = true;
+          this.paymentErrorType = "Stripe Error";
+          this.paymentErrorMessage =
+            "Cannot reach Stripe right now. Please try again later.";
+        }
+      } catch (err) {
+        this.paymentError = true;
+        this.paymentErrorType = "";
+        this.paymentErrorMessage = err.message;
+      }
     },
   },
 };
@@ -199,5 +321,10 @@ export default {
       }
     }
   }
+}
+
+.stripe-field {
+  max-height: 60px;
+  padding-bottom: 0;
 }
 </style>

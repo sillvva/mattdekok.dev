@@ -26,7 +26,7 @@ export default {
         { link: '/about', label: 'About Me' },
         { link: '/experience', label: 'Experience' },
         { link: '/skills', label: 'Skills' },
-        { link: '/projects', label: 'Projects', active: true }
+        { link: '/projects', label: 'Projects' }
       ]
     }
   }

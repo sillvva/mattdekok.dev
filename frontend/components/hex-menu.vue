@@ -52,7 +52,8 @@ export default {
         const rowIndex = rows.length - 1;
         rows[rowIndex].push({
           ...item,
-          ...(item.empty && { link: "", label: "" })
+          ...(item.empty && { link: "", label: "" }),
+          ...(item.link === this.$route.path && { active: true })
         });
         let rotDiff = 0;
         if (!this.classes.includes('rotated') && rows.length % 2 === 0) {

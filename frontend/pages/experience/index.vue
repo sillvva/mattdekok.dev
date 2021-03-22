@@ -163,7 +163,7 @@ export default {
       items: [
         { link: "/", label: "Intro" },
         { link: "/about", label: "About Me" },
-        { link: "/experience", label: "Experience", active: true },
+        { link: "/experience", label: "Experience" },
         { link: "/skills", label: "Skills" },
         { link: "/projects", label: "Projects" },
       ],

@@ -124,7 +124,7 @@ export default {
     return {
       items: [
         { link: '/', label: 'Intro' },
-        { link: '/about', label: 'About Me', active: true },
+        { link: '/about', label: 'About Me' },
         { link: '/experience', label: 'Experience' },
         { link: '/skills', label: 'Skills' },
         { link: '/projects', label: 'Projects' }

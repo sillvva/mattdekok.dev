@@ -15,10 +15,12 @@
 </template>
 
 <script>
-import '~/components/hex-menu';
+import HexMenu from '../components/hex-menu.vue';
 
 export default {
-  components: ['hex-menu'],
+  components: {
+    HexMenu
+  },
   head() {
     return {
       title: "Intro",
