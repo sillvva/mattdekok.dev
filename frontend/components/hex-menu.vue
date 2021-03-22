@@ -14,16 +14,8 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import "../components/hex-menu-item.vue";
-
-interface MenuItem {
-  link?: string;
-  label?: string;
-  empty?: boolean;
-  even?: boolean;
-  active?: boolean;
-}
 
 export default {
   components: ['hex-menu-item'],
@@ -58,15 +50,15 @@ export default {
       const numRows =
         this.maxLength <= 0 ? 1 : Math.ceil(this.items.length / this.maxLength);
       if (numRows === 1) {
-        return <MenuItem[][]>[
-          this.items.map((item: MenuItem, i: number) => ({
+        return [
+          this.items.map((item, i) => ({
             ...item,
             even: i % 2 === (this.reversed ? 0 : 1),
           }))
         ];
       }
-      const rows: MenuItem[][] = [[]];
-      this.items.forEach((item: MenuItem) => {
+      const rows = [[]];
+      this.items.forEach((item) => {
         const rowIndex = rows.length - 1;
         let rowItemIndex = rows[rowIndex].length;
         rows[rowIndex].push({
