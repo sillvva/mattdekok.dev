@@ -11,33 +11,45 @@
       color="black"
       class="menu-button"
       v-if="!drawer"
-      @click="openDrawer();"
+      @click="openDrawer()"
     >
       <v-icon>mdi-menu</v-icon>
     </v-btn>
-    <div :class="['drawer-container', openingDrawer && 'open', closingDrawer && 'close']" v-if="drawer" @click="closeDrawer();">
-      <hex-menu :maxLength="3" :items="items" :classes="['drawer-wrapper']"></hex-menu>
+    <div
+      :class="[
+        'drawer-container',
+        openingDrawer && 'open',
+        closingDrawer && 'close',
+      ]"
+      v-if="drawer"
+      @click="closeDrawer()"
+    >
+      <hex-menu
+        :maxLength="3"
+        :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
+        :classes="['drawer-wrapper']"
+      ></hex-menu>
     </div>
   </v-app>
 </template>
 
 <script>
-import '~/components/hex-menu';
+import "~/components/hex-menu";
 
 export default {
-  components: ['hex-menu'],
+  components: ["hex-menu"],
   data() {
     return {
       drawer: false,
       openingDrawer: null,
       closingDrawer: null,
       items: [
-        { link: '/about', label: 'About Me' },
-        { link: '/experience', label: 'Experience' },
-        { link: '/skills', label: 'Skills' },
-        { link: '/projects', label: 'Projects' },
-        { link: '/donate', label: 'Donate' }
-      ]
+        { link: "/", label: "Intro" },
+        { link: "/about", label: "About Me" },
+        { link: "/experience", label: "Experience" },
+        { link: "/skills", label: "Skills" },
+        { link: "/projects", label: "Projects" },
+      ],
     };
   },
   methods: {
@@ -54,8 +66,8 @@ export default {
         this.closingDrawer = null;
         this.drawer = false;
       }, 300);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -84,7 +96,7 @@ export default {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #4a4a4a;
+    --background: #121212;
     --text: #f5f5f5;
     --altText: #4a4a4a;
     --headingWeight: 500;
@@ -165,36 +177,20 @@ export default {
 }
 
 .menu-button {
-  z-indeX: 101;
+  z-index: 101;
   @media (min-width: 960px) {
     display: none !important;
   }
 }
-.menu {
-  background-image: linear-gradient(to right, black 0, transparent 90%);
-  background-color: transparent !important;
-  box-shadow: none !important;
-  overflow: visible;
-  .v-navigation-drawer__border {
-    display: none;
-  }
-  .menu-item::before {
-    border-top-right-radius: 24px;
-    border-bottom-right-radius: 24px;
-  }
-  @media (max-width: 600px) {
-    background-image: none;
-    &::before {
-      content: "";
-      position: absolute;
-      top: -30%;
-      left: -30%;
-      bottom: -30%;
-      width: 350px;
-      transform: rotate(3deg);
-      background-color: rgba(0, 0, 0, 0.8);
-      box-shadow: 5px 0 50px rgba(0, 0, 0, 0.5), 5px 0 50px rgba(0, 0, 0, 0.5);
-    }
+
+@media (max-width: 960px) {
+  .page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--background);
+    line-height: 84px;
   }
 }
 
@@ -295,6 +291,11 @@ export default {
           }
         }
       }
+    }
+  }
+  @media (max-width: 960px) {
+    .page-header + & {
+      margin-top: 74px;
     }
   }
 }

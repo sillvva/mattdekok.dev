@@ -4,7 +4,7 @@
       <v-col md="10" lg="9" xl="6">
         <div class="intro">
           <h2>Matt DeKok</h2>
-          <h4>Full Stack Web Developer</h4>
+          <h4>Full&nbsp;Stack Web&nbsp;Developer</h4>
         </div>
         <div class="menu-container">
           <hex-menu :maxLength="3" :items="items" :classes="['home-styles']"></hex-menu>
@@ -67,11 +67,12 @@ export default {
   text-shadow: 2px 2px black, 1px 1px 5px black;
   position: relative;
   z-index: 1;
+  letter-spacing: 6px;
   h2 {
     font-size: 200%;
   }
   h4 {
-    font-size: 150%;
+    font-size: 100%;
   }
   h2,
   h4 {
