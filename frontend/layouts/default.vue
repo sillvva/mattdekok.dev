@@ -191,6 +191,7 @@ export default {
     right: 0;
     background: var(--background);
     line-height: 84px;
+    z-index: 2;
   }
 }
 </style>
