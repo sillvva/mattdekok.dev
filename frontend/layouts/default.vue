@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import "~/components/hex-menu";
+import HexMenu from "../components/hex-menu.vue";
 
 export default {
-  components: ["hex-menu"],
+  components: { HexMenu },
   data() {
     return {
       drawer: false,
