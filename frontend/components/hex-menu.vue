@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import "../components/hex-menu-item.vue";
+import HexMenuItem from "../components/hex-menu-item.vue";
 
 export default {
-  components: ["hex-menu-item"],
+  components: { HexMenuItem },
   props: {
     items: {
       type: Array,
