@@ -14,7 +14,16 @@ export default {
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" }
+      { hid: "description", name: "description", content: "" },
+      { property: 'os:title', content: 'Matt DeKok' },
+      { property: 'os:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
+      { property: 'os:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
+      { property: 'os:url', content: 'https://www.mattdekok.dev' },
+      { name: 'twitter:title', content: 'Matt DeKok' },
+      { name: 'twitter:site', content: '@sillvvasensei' },
+      { name: 'twitter:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
+      { name: 'twitter:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
+      { name: 'twitter:card', content: 'summary_large_image' },
     ],
     link: [
       { rel: "icon", type: "image/png", href: "/favicon-32x32.png" },
