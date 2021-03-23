@@ -5,7 +5,9 @@
       empty && 'empty',
       active && 'active',
       rotated && 'rotated',
+      ...classes
     ]"
+    :style="{'--item-color': color, '--hover-color': hoverColor}"
     :to="link"
   >
     <span class="item-label">{{ label }}</span>
@@ -41,6 +43,21 @@ export default {
       required: false,
       default: false,
     },
+    color: {
+      type: String,
+      required: false,
+      default: '#6c6'
+    },
+    hoverColor: {
+      type: String,
+      required: false,
+      default: '#69c'
+    },
+    classes: {
+      type: Array,
+      required: false,
+      default: [],
+    },
   },
 };
 </script>
@@ -72,7 +89,7 @@ export default {
   &:hover:not(.empty), &.active {
     z-index: 2;
     .face {
-      background-color: #69c;
+      background-color: var(--hover-color);
     }
   }
   .item-label {
@@ -93,7 +110,7 @@ export default {
     height: 100%;
     overflow: hidden;
     background: inherit;
-    background: #6c6;
+    background: var(--item-color);
     z-index: -1;
     backface-visibility: hidden;
     transition: background-color 500ms ease, -webkit-transform 1s ease-in-out;

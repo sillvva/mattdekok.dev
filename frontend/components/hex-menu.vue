@@ -9,6 +9,9 @@
         :empty="item.empty"
         :active="item.active"
         :rotated="classes.includes('rotated')"
+        :color="color"
+        :hoverColor="hoverColor",
+        :classes="itemClasses"
       ></hex-menu-item>
     </div>
   </div>
@@ -35,6 +38,21 @@ export default {
       default: false,
     },
     classes: {
+      type: Array,
+      required: false,
+      default: [],
+    },
+    color: {
+      type: String,
+      required: false,
+      default: '#6c6'
+    },
+    hoverColor: {
+      type: String,
+      required: false,
+      default: '#69c'
+    },
+    itemClasses: {
       type: Array,
       required: false,
       default: [],
