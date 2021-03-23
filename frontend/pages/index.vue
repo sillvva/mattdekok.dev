@@ -7,7 +7,11 @@
           <h4>Full&nbsp;Stack Web&nbsp;Developer</h4>
         </div>
         <div class="menu-container">
-          <hex-menu :maxLength="3" :items="items" :classes="['home-styles']"></hex-menu>
+          <hex-menu
+            :maxLength="3"
+            :items="items"
+            :classes="['home-styles']"
+          ></hex-menu>
         </div>
       </v-col>
     </v-row>
@@ -15,11 +19,11 @@
 </template>
 
 <script>
-import HexMenu from '../components/hex-menu.vue';
+import HexMenu from "../components/hex-menu.vue";
 
 export default {
   components: {
-    HexMenu
+    HexMenu,
   },
   head() {
     return {
@@ -29,14 +33,14 @@ export default {
   data() {
     return {
       items: [
-        { link: '/about', label: 'About Me' },
-        { link: '/experience', label: 'Experience' },
-        { link: '/skills', label: 'Skills' },
-        { link: '/projects', label: 'Projects' },
-        { link: '/donate', label: 'Donate' }
-      ]
-    }
-  }
+        { link: "/about", label: "About Me" },
+        { link: "/experience", label: "Experience" },
+        { link: "/skills", label: "Skills" },
+        { link: "/projects", label: "Projects" },
+        { link: "/donate", label: "Donate" },
+      ],
+    };
+  },
 };
 </script>
 

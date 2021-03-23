@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
     <v-main>
-      <nuxt />
+      <nuxt style="position: relative;" />
     </v-main>
     <v-btn
       fab

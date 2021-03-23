@@ -9,7 +9,7 @@
         <v-row justify="center">
           <v-col cols="12" md="6" lg="5">
             <gallery-item
-              image="me"
+              image="me2"
               title="This Page"
               subtitle="Personal Website"
               description="Firebase, Node.js, Vue, JavaScript, HTML, SCSS, Vuetify"
@@ -17,7 +17,25 @@
           </v-col>
           <v-col cols="12" md="6" lg="5">
             <gallery-item
-              image="rpg-schedule"
+              image="me"
+              title="This Page (Previous Version)"
+              subtitle="Personal Website"
+              description="Heroku, Node.js, React, TypeScript, HTML, SCSS, Bootstrap, Stripe"
+              link="https://mattdekok.herokuapp.com"
+            />
+          </v-col>
+          <v-col cols="12" md="6" lg="5">
+            <gallery-item
+              image="valley-365"
+              title="Valley 365"
+              subtitle="Valmont Industries, Inc. - Web App"
+              description="Angular, TypeScript, jQuery, HTML, SCSS"
+              link="https://www.valley365.com/"
+            />
+          </v-col>
+          <v-col cols="12" md="6" lg="5">
+            <gallery-item
+              image="rpgschedule"
               title="RPG Schedule"
               subtitle="Discord Bot"
               description="Google Cloud, Node.js, Vue, TypeScript, discord.js, MongoDB, HTML, CSS"
@@ -31,15 +49,6 @@
               subtitle="NPM Module - React Components"
               description="NPM, React, TypeScript, JavaScript, Styled Components"
               link="https://www.npmjs.com/package/@sillvva/react-styled-flexgrid"
-            />
-          </v-col>
-          <v-col cols="12" md="6" lg="5">
-            <gallery-item
-              image="valley-365"
-              title="Valley 365"
-              subtitle="Valmont Industries, Inc. - Web App"
-              description="Angular, TypeScript, jQuery, HTML, SCSS"
-              link="https://www.valley365.com/"
             />
           </v-col>
         </v-row>

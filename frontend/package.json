@@ -13,7 +13,8 @@
     "@nuxtjs/pwa": "^3.3.5",
     "@vue-stripe/vue-stripe": "^4.1.5",
     "core-js": "^3.9.1",
-    "nuxt": "^2.15.3"
+    "nuxt": "^2.15.3",
+    "nuxt-gsap": "^0.1.4"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.3",
