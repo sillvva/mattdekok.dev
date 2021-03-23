@@ -1,6 +1,10 @@
 <template>
-  <div :class="['hex-wrapper', ...classes]">
-    <div :class="['hex-row', r % 2 === 1 && !classes.includes('rotated') && 'shift']" v-for="(row, r) in rows" :key="`hex-row-${r}`">
+  <div :class="['hex-wrapper', rotated && 'rotated', ...classes]">
+    <div
+      :class="['hex-row', r % 2 === 1 && !rotated && 'shift']"
+      v-for="(row, r) in rows"
+      :key="`hex-row-${r}`"
+    >
       <hex-menu-item
         v-for="(item, i) in row"
         :key="`hex-item-${i}`"
@@ -8,9 +12,9 @@
         :label="item.label"
         :empty="item.empty"
         :active="item.active"
-        :rotated="classes.includes('rotated')"
+        :rotated="rotated"
         :color="color"
-        :hoverColor="hoverColor",
+        :hoverColor="hoverColor"
         :classes="itemClasses"
       ></hex-menu-item>
     </div>
@@ -40,22 +44,27 @@ export default {
     classes: {
       type: Array,
       required: false,
-      default: [],
+      default: () => [],
+    },
+    rotated: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     color: {
       type: String,
       required: false,
-      default: '#6c6'
+      default: "#6c6",
     },
     hoverColor: {
       type: String,
       required: false,
-      default: '#69c'
+      default: "#69c",
     },
     itemClasses: {
       type: Array,
       required: false,
-      default: [],
+      default: () => [],
     },
   },
   data() {
@@ -71,13 +80,16 @@ export default {
         rows[rowIndex].push({
           ...item,
           ...(item.empty && { link: "", label: "" }),
-          ...(item.link === this.$route.path && { active: true })
+          ...(item.link === this.$route.path && { active: true }),
         });
         let rotDiff = 0;
-        if (!this.classes.includes('rotated') && rows.length % 2 === 0) {
+        if (!this.classes.includes("rotated") && rows.length % 2 === 0) {
           rotDiff = 1;
         }
-        if (this.maxLength >= 0 && rows[rowIndex].length === this.maxLength - rotDiff) {
+        if (
+          this.maxLength >= 0 &&
+          rows[rowIndex].length === this.maxLength - rotDiff
+        ) {
           rows.push([]);
         }
       });

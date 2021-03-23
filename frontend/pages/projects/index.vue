@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <hex-menu :items="items" :classes="['page-menu', 'rotated']"></hex-menu>
+      <hex-menu :items="items" rotated :classes="['page-menu']"></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="12" md="12" lg="8">
@@ -79,10 +79,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.hex-menu.page-menu {
-  height: 165px;
-  margin-bottom: 20px;
-}
-</style>

@@ -183,6 +183,11 @@ export default {
   }
 }
 
+.hex-menu.page-menu {
+  height: 165px;
+  margin-bottom: 20px;
+}
+
 @media (max-width: 960px) {
   .page-header {
     position: fixed;

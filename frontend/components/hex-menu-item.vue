@@ -56,7 +56,7 @@ export default {
     classes: {
       type: Array,
       required: false,
-      default: [],
+      default: () => [],
     },
   },
 };
