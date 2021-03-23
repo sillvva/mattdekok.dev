@@ -7,7 +7,7 @@
       rotated && 'rotated',
       ...classes
     ]"
-    :style="{'--item-color': color, '--hover-color': hoverColor}"
+    :style="{'--item-color': color, '--hover-color': hoverColor, '--active-color': activeColor}"
     :to="link"
   >
     <span class="item-label">{{ label }}</span>
@@ -48,6 +48,11 @@ export default {
       required: false,
       default: '#6c6'
     },
+    activeColor: {
+      type: String,
+      required: false,
+      default: '#69c'
+    },
     hoverColor: {
       type: String,
       required: false,
@@ -86,7 +91,12 @@ export default {
       background-color: transparent;
     }
   }
-  &:hover:not(.empty), &.active {
+  &.active {
+    .face {
+      background-color: var(--active-color);
+    }
+  }
+  &:hover:not(.empty) {
     z-index: 2;
     .face {
       background-color: var(--hover-color);

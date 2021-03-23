@@ -13,8 +13,9 @@
         :empty="item.empty"
         :active="item.active"
         :rotated="rotated"
-        :color="color"
-        :hoverColor="hoverColor"
+        :color="item.color || color"
+        :activeColor="item.activeColor || activeColor"
+        :hoverColor="item.hoverColor || hoverColor"
         :classes="itemClasses"
       ></hex-menu-item>
     </div>
@@ -36,11 +37,6 @@ export default {
       required: false,
       default: 0,
     },
-    reversed: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
     classes: {
       type: Array,
       required: false,
@@ -55,6 +51,11 @@ export default {
       type: String,
       required: false,
       default: "#6c6",
+    },
+    activeColor: {
+      type: String,
+      required: false,
+      default: "#69c",
     },
     hoverColor: {
       type: String,
@@ -80,7 +81,7 @@ export default {
         rows[rowIndex].push({
           ...item,
           ...(item.empty && { link: "", label: "" }),
-          ...(item.link === this.$route.path && { active: true }),
+          ...(item.link === this.$route.path && { active: true })
         });
         let rotDiff = 0;
         if (!this.classes.includes("rotated") && rows.length % 2 === 0) {
