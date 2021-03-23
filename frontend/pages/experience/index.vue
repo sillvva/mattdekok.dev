@@ -4,7 +4,7 @@
       <hex-menu :items="items" :classes="['page-menu', 'rotated']"></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col sm="9" md="8" lg="7">
+      <v-col sm="10" md="9" lg="7">
         <h1 class="page-header text-center">Experience</h1>
         <page-article>
           <page-article-section>
