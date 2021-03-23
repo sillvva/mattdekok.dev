@@ -46,7 +46,8 @@ export default {
 
 <style lang="scss" scoped>
 .me-bg {
-  background-image: url("/images/me.png");
+  background-image: url("/images/me4x.webp");
+  background-image: image-set("/images/me1x.webp" 1x, "/images/me2x.webp" 2x, "/images/me3x.webp" 3x, "/images/me4x.webp" 4x);
   background-position: bottom left;
   background-repeat: no-repeat;
   background-size: cover;

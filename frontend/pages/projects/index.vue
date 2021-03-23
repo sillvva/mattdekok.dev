@@ -38,7 +38,7 @@
               image="rpgschedule"
               title="RPG Schedule"
               subtitle="Discord Bot"
-              description="Google Cloud, Node.js, Vue, TypeScript, discord.js, MongoDB, HTML, CSS"
+              description="Google Cloud, Node.js, Vue, TypeScript, discord.js, MongoDB, HTML, CSS, Web Sockets"
               link="https://github.com/sillvva/rpg-schedule"
             />
           </v-col>
