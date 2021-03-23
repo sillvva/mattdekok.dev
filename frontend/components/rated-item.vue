@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" md="6">
+  <v-col cols="12" sm="6">
     <v-row>
       <v-col class="column-1">
         {{ name }}

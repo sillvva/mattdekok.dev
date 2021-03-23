@@ -4,7 +4,7 @@
       <hex-menu :items="items" :classes="['page-menu', 'rotated']"></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col sm="9" md="8" lg="7">
+      <v-col sm="12" md="9" lg="7">
         <h1 class="page-header text-center">Skills</h1>
         <page-article class="ratings">
           <page-article-section>
@@ -12,8 +12,8 @@
             <v-row>
               <v-col class="column-1"> Skills </v-col>
               <v-col class="column-2"> Rating </v-col>
-              <v-col class="column-1 d-none d-md-block"> Skills </v-col>
-              <v-col class="column-2 d-none d-md-block"> Rating </v-col>
+              <v-col class="column-1 d-none d-sm-block"> Skills </v-col>
+              <v-col class="column-2 d-none d-sm-block"> Rating </v-col>
             </v-row>
             <v-row>
               <rated-item name="Angular" :rating="3" />
