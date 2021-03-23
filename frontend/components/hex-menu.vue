@@ -16,6 +16,7 @@
         :color="item.color || color"
         :activeColor="item.activeColor || activeColor"
         :hoverColor="item.hoverColor || hoverColor"
+        :textColor="item.textColor || textColor"
         :classes="itemClasses"
       ></hex-menu-item>
     </div>
@@ -61,6 +62,11 @@ export default {
       type: String,
       required: false,
       default: "#69c",
+    },
+    textColor: {
+      type: String,
+      required: false,
+      default: "#fff",
     },
     itemClasses: {
       type: Array,
