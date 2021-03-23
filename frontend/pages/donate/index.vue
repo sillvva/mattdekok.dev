@@ -208,7 +208,7 @@ export default {
     if (window.location.host === 'localhost:3000') {
       stripeKey = 'pk_test_bC4lCA3Dje38ZMelZUpXaU9700RpKxjEW7';
     }
-    else {
+    else if (showForm) {
       try {
         const response = await fetch("/stripeKey");
         if (response.status === 200) {
