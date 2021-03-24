@@ -91,9 +91,6 @@ export default {
   z-index: 1;
   text-decoration: none;
   text-align: center;
-  &:hover:not(.active):not(.empty) {
-    animation: shake 500ms ease-in-out forwards;
-  }
   &.active,
   &.empty {
     cursor: default;
@@ -161,21 +158,6 @@ export default {
     .face3 {
       transform: rotate(-30deg);
     }
-  }
-}
-
-@keyframes shake {
-  40% {
-    transform: scale(1.5);
-  }
-  60% {
-    transform: rotate(-5deg);
-  }
-  80% {
-    transform: rotate(5deg);
-  }
-  100% {
-    transform: rotate(0deg);
   }
 }
 </style>

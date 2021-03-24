@@ -28,6 +28,7 @@
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
         :classes="['drawer-wrapper']"
+        :itemClasses="['menu-shake']"
       ></hex-menu>
     </div>
   </v-app>
@@ -158,24 +159,6 @@ export default {
   }
 }
 
-@keyframes drawer-open {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes drawer-close {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0);
-  }
-}
-
 .menu-button {
   z-index: 101;
   @media (min-width: 960px) {
@@ -197,6 +180,44 @@ export default {
     background: var(--background);
     line-height: 84px;
     z-index: 2;
+  }
+}
+
+/* Animations */
+
+@keyframes drawer-open {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes drawer-close {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+.menu-shake:hover:not(.active):not(.empty) {
+  animation: shake 500ms ease-in-out forwards;
+}
+@keyframes shake {
+  40% {
+    transform: scale(1.5);
+  }
+  60% {
+    transform: rotate(-5deg);
+  }
+  80% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(0deg);
   }
 }
 </style>
