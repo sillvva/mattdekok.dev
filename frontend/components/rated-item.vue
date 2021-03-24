@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" sm="6">
+  <v-col cols="12" :sm="cols.sm" :md="cols.md" :lg="cols.lg" :xl="cols.xl">
     <v-row>
       <v-col class="column-1">
         {{ name }}
@@ -25,6 +25,11 @@ export default {
       type: Number,
       required: true,
     },
+    cols: {
+      type: Object | null,
+      required: false,
+      default: () => ({})
+    }
   },
 };
 </script>
