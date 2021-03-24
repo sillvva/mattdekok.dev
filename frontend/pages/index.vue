@@ -11,6 +11,7 @@
             :maxLength="3"
             :items="items"
             :classes="['home-styles']"
+            :itemClasses="['menu-shake']"
           ></hex-menu>
         </div>
       </v-col>
@@ -47,7 +48,12 @@ export default {
 <style lang="scss" scoped>
 .me-bg {
   background-image: url("/images/me4x.webp");
-  background-image: image-set("/images/me1x.webp" 1x, "/images/me2x.webp" 2x, "/images/me3x.webp" 3x, "/images/me4x.webp" 4x);
+  background-image: image-set(
+    "/images/me1x.webp" 1x,
+    "/images/me2x.webp" 2x,
+    "/images/me3x.webp" 3x,
+    "/images/me4x.webp" 4x
+  );
   background-position: bottom left;
   background-repeat: no-repeat;
   background-size: cover;
