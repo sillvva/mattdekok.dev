@@ -15,68 +15,77 @@
           <page-article-section v-if="showForm && !showThanks && !paymentError">
             <v-row justify="center">
               <v-col cols="12" v-if="stripeKey">
-                <v-row>
-                  <v-col cols="12" md="5">
-                    <v-text-field
-                      label="Name on Card"
-                      v-model="name"
-                      required
-                      hide-details="auto"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="8" md="5">
-                    <v-text-field
-                      label="Email"
-                      v-model="email"
-                      required
-                      hide-details="auto"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="4" md="2">
-                    <v-text-field
-                      label="Amount"
-                      v-model="amount"
-                      type="number"
-                      min="0"
-                      step="0.1"
-                      required
-                      hide-details="auto"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col class="stripe-field">
-                    <stripe-element-card
-                      ref="cardRef"
-                      :pk="stripeKey"
-                      v-if="stripeKey"
-                      @token="tokenCreated"
-                      @error="console.log"
-                    />
-                  </v-col>
-                  <v-col class="text-right" style="max-width: 100px">
-                    <v-btn @click="generateToken" :disabled="!token"> Send </v-btn>
-                  </v-col>
-                  <v-col cols="12" style="font-family: monospace">
-                    Payment handled by
-                    <a href="https://stripe.com" target="_blank">
-                      <svg
-                        width="62"
-                        height="20"
-                        viewBox="0 0 62 25"
-                        style="
-                          vertical-align: middle;
-                          margin-top: -3px;
-                          margin-left: -8px;
-                        "
+                <v-form ref="stripeForm" v-model="valid" lazy-validation>
+                  <v-row>
+                    <v-col cols="12" md="5">
+                      <v-text-field
+                        label="Name on Card"
+                        v-model="name"
+                        hide-details="auto"
+                        :rules="nameRules"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="8" md="5">
+                      <v-text-field
+                        label="Email"
+                        v-model="email"
+                        hide-details="auto"
+                        :rules="emailRules"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4" md="2">
+                      <v-text-field
+                        label="Amount"
+                        v-model="amount"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                        hide-details="auto"
+                        :rules="amountRules"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="stripe-field">
+                      <stripe-element-card
+                        ref="cardRef"
+                        :pk="stripeKey"
+                        v-if="stripeKey"
+                        @token="tokenCreated"
+                        @element-change="stripeChanged"
+                        @error="console.log"
+                      />
+                    </v-col>
+                    <v-col class="text-right" style="max-width: 100px">
+                      <v-btn
+                        @click="generateToken"
+                        :disabled="!valid || !cardComplete"
+                        :color="valid && cardComplete ? 'primary' : 'dark'"
                       >
-                        <path
-                          fill="var(--Stripe)"
-                          d="M5 10.1c0-.6.6-.9 1.4-.9 1.2 0 2.8.4 4 1.1V6.5c-1.3-.5-2.7-.8-4-.8C3.2 5.7 1 7.4 1 10.3c0 4.4 6 3.6 6 5.6 0 .7-.6 1-1.5 1-1.3 0-3-.6-4.3-1.3v3.8c1.5.6 2.9.9 4.3.9 3.3 0 5.5-1.6 5.5-4.5.1-4.8-6-3.9-6-5.7zM29.9 20h4V6h-4v14zM16.3 2.7l-3.9.8v12.6c0 2.4 1.8 4.1 4.1 4.1 1.3 0 2.3-.2 2.8-.5v-3.2c-.5.2-3 .9-3-1.4V9.4h3V6h-3V2.7zm8.4 4.5L24.6 6H21v14h4v-9.5c1-1.2 2.7-1 3.2-.8V6c-.5-.2-2.5-.5-3.5 1.2zm5.2-2.3l4-.8V.8l-4 .8v3.3zM61.1 13c0-4.1-2-7.3-5.8-7.3s-6.1 3.2-6.1 7.3c0 4.8 2.7 7.2 6.6 7.2 1.9 0 3.3-.4 4.4-1.1V16c-1.1.6-2.3.9-3.9.9s-2.9-.6-3.1-2.5H61c.1-.2.1-1 .1-1.4zm-7.9-1.5c0-1.8 1.1-2.5 2.1-2.5s2 .7 2 2.5h-4.1zM42.7 5.7c-1.6 0-2.5.7-3.1 1.3l-.1-1h-3.6v18.5l4-.7v-4.5c.6.4 1.4 1 2.8 1 2.9 0 5.5-2.3 5.5-7.4-.1-4.6-2.7-7.2-5.5-7.2zm-1 11c-.9 0-1.5-.3-1.9-.8V10c.4-.5 1-.8 1.9-.8 1.5 0 2.5 1.6 2.5 3.7 0 2.2-1 3.8-2.5 3.8z"
-                        />
-                      </svg>
-                      {{token}}
-                    </a>
-                  </v-col>
-                </v-row>
+                        Send
+                      </v-btn>
+                    </v-col>
+                    <v-col cols="12" style="font-family: monospace">
+                      Payment handled by
+                      <a href="https://stripe.com" target="_blank">
+                        <svg
+                          width="62"
+                          height="20"
+                          viewBox="0 0 62 25"
+                          style="
+                            vertical-align: middle;
+                            margin-top: -3px;
+                            margin-left: -8px;
+                          "
+                        >
+                          <path
+                            fill="var(--Stripe)"
+                            d="M5 10.1c0-.6.6-.9 1.4-.9 1.2 0 2.8.4 4 1.1V6.5c-1.3-.5-2.7-.8-4-.8C3.2 5.7 1 7.4 1 10.3c0 4.4 6 3.6 6 5.6 0 .7-.6 1-1.5 1-1.3 0-3-.6-4.3-1.3v3.8c1.5.6 2.9.9 4.3.9 3.3 0 5.5-1.6 5.5-4.5.1-4.8-6-3.9-6-5.7zM29.9 20h4V6h-4v14zM16.3 2.7l-3.9.8v12.6c0 2.4 1.8 4.1 4.1 4.1 1.3 0 2.3-.2 2.8-.5v-3.2c-.5.2-3 .9-3-1.4V9.4h3V6h-3V2.7zm8.4 4.5L24.6 6H21v14h4v-9.5c1-1.2 2.7-1 3.2-.8V6c-.5-.2-2.5-.5-3.5 1.2zm5.2-2.3l4-.8V.8l-4 .8v3.3zM61.1 13c0-4.1-2-7.3-5.8-7.3s-6.1 3.2-6.1 7.3c0 4.8 2.7 7.2 6.6 7.2 1.9 0 3.3-.4 4.4-1.1V16c-1.1.6-2.3.9-3.9.9s-2.9-.6-3.1-2.5H61c.1-.2.1-1 .1-1.4zm-7.9-1.5c0-1.8 1.1-2.5 2.1-2.5s2 .7 2 2.5h-4.1zM42.7 5.7c-1.6 0-2.5.7-3.1 1.3l-.1-1h-3.6v18.5l4-.7v-4.5c.6.4 1.4 1 2.8 1 2.9 0 5.5-2.3 5.5-7.4-.1-4.6-2.7-7.2-5.5-7.2zm-1 11c-.9 0-1.5-.3-1.9-.8V10c.4-.5 1-.8 1.9-.8 1.5 0 2.5 1.6 2.5 3.7 0 2.2-1 3.8-2.5 3.8z"
+                          />
+                        </svg>
+                        {{ token }}
+                      </a>
+                    </v-col>
+                  </v-row>
+                </v-form>
               </v-col>
               <v-progress-circular
                 :size="50"
@@ -94,7 +103,7 @@
           </page-article-section>
           <page-article-section v-if="paymentError">
             <v-alert border="top" colored-border type="error" elevation="2">
-              <h3 v-if="paymentErrorType">{{paymentErrorType}}</h3>
+              <h3 v-if="paymentErrorType">{{ paymentErrorType }}</h3>
               <p>{{ paymentErrorMessage }}</p>
             </v-alert>
           </page-article-section>
@@ -104,7 +113,11 @@
                 <h2>Or you can donate with</h2>
               </v-col>
               <div class="text-center static-payment-options">
-                <a href="https://www.paypal.me/Sillvva" title="PayPal" target="_blank">
+                <a
+                  href="https://www.paypal.me/Sillvva"
+                  title="PayPal"
+                  target="_blank"
+                >
                   <svg width="64" height="64" viewBox="-23 0 302 302">
                     <path
                       d="M217.168 23.507C203.234 7.625 178.046.816 145.823.816h-93.52A13.393 13.393 0 0 0 39.076 12.11L.136 259.077c-.774 4.87 2.997 9.28 7.933 9.28h57.736l14.5-91.971-.45 2.88c1.033-6.501 6.593-11.296 13.177-11.296h27.436c53.898 0 96.101-21.892 108.429-85.221.366-1.873.683-3.696.957-5.477-1.556-.824-1.556-.824 0 0 3.671-23.407-.025-39.34-12.686-53.765"
@@ -127,7 +140,11 @@
                 </a>
               </div>
               <div class="text-center static-payment-options">
-                <a href="https://cash.app/$SillvvaSensei" title="Cash App" target="_blank">
+                <a
+                  href="https://cash.app/$SillvvaSensei"
+                  title="Cash App"
+                  target="_blank"
+                >
                   <svg width="64" height="64" viewBox="0 0 24 24">
                     <path
                       fill="#00D54B"
@@ -139,7 +156,14 @@
               </div>
               <div class="w-100 d-none d-md-block"></div>
               <div class="text-center static-payment-options">
-                <a title="Bitcoin" @click="copyTokenAddress('bc1qqw9qsdh6l3mk78qczkjmpqpptvt3rv2hydhrr5')">
+                <a
+                  title="Bitcoin"
+                  @click="
+                    copyTokenAddress(
+                      'bc1qqw9qsdh6l3mk78qczkjmpqpptvt3rv2hydhrr5'
+                    )
+                  "
+                >
                   <svg width="64px" height="64px" viewBox="0.004 0 64 64">
                     <path
                       d="M63.04 39.741c-4.274 17.143-21.638 27.575-38.783 23.301C7.12 58.768-3.313 41.404.962 24.262 5.234 7.117 22.597-3.317 39.737.957c17.144 4.274 27.576 21.64 23.302 38.784z"
@@ -154,7 +178,14 @@
                 </a>
               </div>
               <div class="text-center static-payment-options">
-                <a title="Ethereum" @click="copyTokenAddress('0xBC5fb1a82dec2d728167AE46966E462F4F26bed7')">
+                <a
+                  title="Ethereum"
+                  @click="
+                    copyTokenAddress(
+                      '0xBC5fb1a82dec2d728167AE46966E462F4F26bed7'
+                    )
+                  "
+                >
                   <svg height="64" viewBox="0 0 24 24">
                     <path
                       fill="var(--PayPal2)"
@@ -195,6 +226,21 @@ export default {
       paymentErrorType: "",
       paymentErrorMessage: "",
       console: console,
+      token: null,
+      cardComplete: false,
+      nameRules: [(v) => !!v || "Name is required"],
+      emailRules: [
+        (v) => !!v || "Email is required",
+        (v) =>
+          v.match(
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          ) || "Invalid email address",
+      ],
+      amountRules: [
+        (v) => !!v || "Amount is required",
+        (v) => v >= 1 || "Please enter at least $1",
+      ],
+      valid: true,
       items: [
         { link: "/", label: "Intro" },
         { link: "/about", label: "About Me" },
@@ -207,12 +253,11 @@ export default {
   },
   async asyncData() {
     let stripeKey = null;
-    let showForm = false;
+    let showForm = true;
 
-    if (window.location.host === 'localhost:3000') {
-      stripeKey = 'pk_test_bC4lCA3Dje38ZMelZUpXaU9700RpKxjEW7';
-    }
-    else if (showForm) {
+    if (window.location.host === "localhost:3000") {
+      stripeKey = "pk_test_bC4lCA3Dje38ZMelZUpXaU9700RpKxjEW7";
+    } else if (showForm) {
       try {
         const response = await fetch("/stripeKey");
         if (response.status === 200) {
@@ -242,13 +287,23 @@ export default {
       document.body.removeChild(el);
       alert("Copied token address to clipboard");
     },
-    generateToken () {
-      this.$refs.cardRef.submit();
+    stripeChanged($ev) {
+      if ($ev.complete && !$ev.error) {
+        this.cardComplete = true;
+      } else {
+        this.cardComplete = false;
+      }
+    },
+    generateToken() {
+      this.$refs.stripeForm.validate();
+      if (this.valid && this.cardComplete) {
+        this.$refs.cardRef.submit();
+      }
     },
     tokenCreated(token) {
-      this.sendPayment(token);
+      this.sendPayment(token.id);
     },
-    async sendPayment(token) {
+    async sendPayment(tokenId) {
       try {
         const options = {
           method: "POST",
@@ -256,7 +311,7 @@ export default {
             name: this.name,
             email: this.email,
             amount: this.amount,
-            tokenId: token,
+            tokenId: tokenId,
           }),
           headers: {
             "Content-Type": "application/json",
