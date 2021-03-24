@@ -5,7 +5,14 @@
       empty && 'empty',
       active && 'active',
       rotated && 'rotated',
+      ...classes,
     ]"
+    :style="{
+      '--item-color': color,
+      '--hover-color': hoverColor,
+      '--active-color': activeColor,
+      '--text-color': textColor,
+    }"
     :to="link"
   >
     <span class="item-label">{{ label }}</span>
@@ -41,6 +48,31 @@ export default {
       required: false,
       default: false,
     },
+    color: {
+      type: String,
+      required: false,
+      default: "#6c6",
+    },
+    activeColor: {
+      type: String,
+      required: false,
+      default: "#69c",
+    },
+    hoverColor: {
+      type: String,
+      required: false,
+      default: "#69c",
+    },
+    textColor: {
+      type: String,
+      required: false,
+      default: "#fff",
+    },
+    classes: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
   },
 };
 </script>
@@ -51,7 +83,8 @@ export default {
   --baseXMargin: 4px;
   float: left;
   position: relative;
-  margin: calc(var(--baseYMargin) * var(--scale)) calc(var(--baseXMargin) * var(--scale));
+  margin: calc(var(--baseYMargin) * var(--scale))
+    calc(var(--baseXMargin) * var(--scale));
   margin-left: calc(2px * var(--scale));
   width: calc(190px * var(--scale));
   height: calc(110px * var(--scale));
@@ -61,7 +94,8 @@ export default {
   &:hover:not(.active):not(.empty) {
     animation: shake 500ms ease-in-out forwards;
   }
-  &.active, &.empty {
+  &.active,
+  &.empty {
     cursor: default;
   }
   &.empty {
@@ -69,10 +103,15 @@ export default {
       background-color: transparent;
     }
   }
-  &:hover:not(.empty), &.active {
+  &.active {
+    .face {
+      background-color: var(--active-color);
+    }
+  }
+  &:hover:not(.empty) {
     z-index: 2;
     .face {
-      background-color: #69c;
+      background-color: var(--hover-color);
     }
   }
   .item-label {
@@ -82,7 +121,7 @@ export default {
     font-size: calc(1.8em * var(--scale));
     font-weight: 600;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    color: white;
+    color: var(--text-color);
     letter-spacing: 1px;
   }
   .face {
@@ -93,7 +132,7 @@ export default {
     height: 100%;
     overflow: hidden;
     background: inherit;
-    background: #6c6;
+    background: var(--item-color);
     z-index: -1;
     backface-visibility: hidden;
     transition: background-color 500ms ease, -webkit-transform 1s ease-in-out;
@@ -127,7 +166,7 @@ export default {
 
 @keyframes shake {
   40% {
-    transform: scale(1.5) ;
+    transform: scale(1.5);
   }
   60% {
     transform: rotate(-5deg);

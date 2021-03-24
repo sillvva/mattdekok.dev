@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <hex-menu :items="items" :classes="['page-menu', 'rotated']"></hex-menu>
+      <hex-menu :items="items" rotated :classes="['page-menu']"></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="9" md="8" lg="7">
@@ -208,7 +208,7 @@ export default {
     if (window.location.host === 'localhost:3000') {
       stripeKey = 'pk_test_bC4lCA3Dje38ZMelZUpXaU9700RpKxjEW7';
     }
-    else {
+    else if (showForm) {
       try {
         const response = await fetch("/stripeKey");
         if (response.status === 200) {
@@ -285,11 +285,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.hex-menu.page-menu {
-  height: 165px;
-  margin-bottom: 20px;
-}
-
 .static-payment {
   > .static-payment-options {
     margin: 10px;
