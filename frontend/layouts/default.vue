@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import HexMenu from "../components/hex-menu.vue";
+import HexMenu from "@/components/hex-menu.vue";
 
 export default {
   components: { HexMenu },

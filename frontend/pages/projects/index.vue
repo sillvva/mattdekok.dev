@@ -63,7 +63,8 @@
 </template>
 
 <script>
-import GalleryItem from "../../components/gallery-item.vue";
+import GalleryItem from "@/components/gallery-item.vue";
+
 export default {
   head() {
     return {

@@ -205,8 +205,8 @@
 </template>
 
 <script>
-import PageArticleSection from "../../components/page-article-section.vue";
-import PageArticle from "../../components/page-article.vue";
+import PageArticleSection from "@/components/page-article-section.vue";
+import PageArticle from "@/components/page-article.vue";
 import { StripeElementCard } from "@vue-stripe/vue-stripe";
 
 export default {

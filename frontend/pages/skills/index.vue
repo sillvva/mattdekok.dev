@@ -86,9 +86,9 @@
 </template>
 
 <script>
-import PageArticleSection from "../../components/page-article-section.vue";
-import PageArticle from "../../components/page-article.vue";
-import RatedItem from "../../components/rated-item.vue";
+import PageArticleSection from "@/components/page-article-section.vue";
+import PageArticle from "@/components/page-article.vue";
+import RatedItem from "@/components/rated-item.vue";
 export default {
   components: { PageArticle, PageArticleSection, RatedItem },
   head() {
