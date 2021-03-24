@@ -59,11 +59,12 @@
                         @click="generateToken"
                         :disabled="!valid || !cardComplete"
                         :color="valid && cardComplete ? 'primary' : 'dark'"
+                        style="height: 42px;"
                       >
                         Send
                       </v-btn>
                     </v-col>
-                    <v-col cols="12" style="font-family: monospace">
+                    <v-col cols="12" style="font-family: monospace;">
                       Payment handled by
                       <a href="https://stripe.com" target="_blank">
                         <svg
@@ -369,5 +370,9 @@ export default {
 .stripe-field {
   max-height: 60px;
   padding-bottom: 0;
+}
+
+#stripe-element-errors {
+  color: red;
 }
 </style>
