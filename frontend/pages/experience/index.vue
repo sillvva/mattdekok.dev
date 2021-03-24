@@ -145,10 +145,10 @@
 </template>
 
 <script>
-import PageArticle from "../../components/page-article.vue";
-import PageArticleSection from "../../components/page-article-section.vue";
-import PageArticleSectionItems from "../../components/page-article-section-items.vue";
-import PageArticleSectionItem from "../../components/page-article-section-item.vue";
+import PageArticle from "@/components/page-article.vue";
+import PageArticleSection from "@/components/page-article-section.vue";
+import PageArticleSectionItems from "@/components/page-article-section-items.vue";
+import PageArticleSectionItem from "@/components/page-article-section-item.vue";
 
 export default {
   components: {

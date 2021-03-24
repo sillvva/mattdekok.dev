@@ -3,7 +3,7 @@
     <a :href="link" class="linked-gallery-item" v-if="link">
       <slot></slot>
     </a>
-    <div class="gallery-item" v-if="!link">
+    <div class="gallery-item" v-else>
       <slot></slot>
     </div>
   </div>
