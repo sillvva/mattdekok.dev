@@ -165,9 +165,9 @@ export default {
   }
 }
 
-.hex-menu.page-menu {
-  height: 165px;
+.page-menu {
   margin-bottom: 20px;
+  --scale: 0.6 !important;
 }
 
 @media (max-width: 960px) {

@@ -25,7 +25,7 @@ export default {
 .gallery-item,
 .linked-gallery-item {
   width: 100%;
-  margin: 15px 0;
+  margin-top: 10px;
   position: relative;
   display: block;
   border-radius: 2px;
