@@ -28,7 +28,6 @@
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
         :classes="['drawer-wrapper']"
-        :itemClasses="['menu-shake']"
       ></hex-menu>
     </div>
   </v-app>
