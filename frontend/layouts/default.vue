@@ -28,7 +28,6 @@
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
         :classes="['drawer-wrapper']"
-        :itemClasses="['menu-shake']"
       ></hex-menu>
     </div>
   </v-app>
@@ -204,20 +203,35 @@ export default {
 }
 
 .menu-shake:hover:not(.active):not(.empty) {
-  animation: shake 500ms ease-in-out forwards;
+  animation: shake 300ms ease-in-out forwards;
 }
 @keyframes shake {
-  40% {
-    transform: scale(1.5);
-  }
-  60% {
+  33% {
     transform: rotate(-5deg);
   }
-  80% {
+  67% {
     transform: rotate(5deg);
   }
   100% {
     transform: rotate(0deg);
+  }
+}
+
+.menu-bounce:hover:not(.active):not(.empty) {
+  animation: bounce 500ms ease-in-out forwards;
+}
+@keyframes bounce {
+  40% {
+    transform: scale(1.5);
+  }
+  60% {
+    transform: scale(1);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>

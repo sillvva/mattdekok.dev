@@ -25,18 +25,21 @@
               <rated-item name="AWS Elastic Beanstalk" :rating="2" />
               <rated-item name="AWS CodePipeline" :rating="2" />
               <rated-item name="Azure DevOps" :rating="1.5" />
-              <rated-item name="Bootstrap" :rating="5" />
+              <rated-item name="Bootstrap" :rating="4.5" />
+              <rated-item name="CI/CD" :rating="2.5" />
               <rated-item name="CSS3" :rating="4.5" />
               <rated-item name="Express" :rating="3.5" />
+              <rated-item name="Github Actions" :rating="2" />
+              <rated-item name="Google Cloud" :rating="2" />
               <rated-item name="Heroku" :rating="3.5" />
               <rated-item name="HTML5" :rating="4.5" />
               <rated-item name="JavaScript" :rating="5" />
-              <rated-item name="jQuery" :rating="4.5" />
+              <rated-item name="jQuery" :rating="4" />
               <rated-item name="JSON" :rating="5" />
               <rated-item name="Node.Js" :rating="4" />
               <rated-item name="PHP" :rating="4" />
               <rated-item name="React" :rating="3" />
-              <rated-item name="SASS / SCSS" :rating="4" />
+              <rated-item name="SCSS" :rating="4" />
               <rated-item name="TypeScript" :rating="4" />
               <rated-item name="Visual Studio Code" :rating="4" />
               <rated-item name="Vue / Nuxt" :rating="3.5" />
