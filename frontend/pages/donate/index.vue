@@ -12,9 +12,20 @@
       <v-col sm="9" md="8" lg="7">
         <h1 class="page-header text-center">Donate</h1>
         <page-article>
-          <page-article-section v-if="showForm && !showThanks && !paymentError">
+          <page-article-section v-if="showThanks">
+            <v-alert border="top" colored-border type="success" elevation="2">
+              <h1>Thank you!</h1>
+            </v-alert>
+          </page-article-section>
+          <page-article-section v-if="paymentError">
+            <v-alert border="top" colored-border type="error" elevation="2">
+              <h3 v-if="paymentErrorType">{{ paymentErrorType }}</h3>
+              <p>{{ paymentErrorMessage }}</p>
+            </v-alert>
+          </page-article-section>
+          <page-article-section v-if="showForm && !showThanks">
             <v-row justify="center">
-              <v-col cols="12" v-if="stripeKey">
+              <v-col cols="12" v-if="stripeKey && !sending">
                 <v-form ref="stripeForm" v-model="valid" lazy-validation>
                   <v-row>
                     <v-col cols="12" md="5">
@@ -92,21 +103,10 @@
                 :size="50"
                 color="primary"
                 indeterminate
-                v-if="!stripeKey"
+                v-else
                 style="margin: 20px 0"
               ></v-progress-circular>
             </v-row>
-          </page-article-section>
-          <page-article-section v-if="showThanks">
-            <v-alert border="top" colored-border type="success" elevation="2">
-              <h1>Thank you!</h1>
-            </v-alert>
-          </page-article-section>
-          <page-article-section v-if="paymentError">
-            <v-alert border="top" colored-border type="error" elevation="2">
-              <h3 v-if="paymentErrorType">{{ paymentErrorType }}</h3>
-              <p>{{ paymentErrorMessage }}</p>
-            </v-alert>
           </page-article-section>
           <page-article-section>
             <v-row justify="center" class="static-payment">
@@ -233,7 +233,7 @@ export default {
       emailRules: [
         (v) => !!v || "Email is required",
         (v) =>
-          v.match(
+          !!(v || "").match(
             /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           ) || "Invalid email address",
       ],
@@ -242,6 +242,7 @@ export default {
         (v) => v >= 1 || "Please enter at least $1",
       ],
       valid: true,
+      sending: false,
       items: [
         { link: "/", label: "Intro" },
         { link: "/about", label: "About Me" },
@@ -297,7 +298,10 @@ export default {
     },
     generateToken() {
       this.$refs.stripeForm.validate();
-      if (this.valid && this.cardComplete) {
+      if (window.location.host === "localhost:3000") {
+        this.sendPayment();
+      }
+      else if (this.valid && this.cardComplete) {
         this.$refs.cardRef.submit();
       }
     },
@@ -305,6 +309,16 @@ export default {
       this.sendPayment(token.id);
     },
     async sendPayment(tokenId) {
+      this.sending = true;
+
+      if (window.location.host === "localhost:3000") {
+        setTimeout(() => {
+          this.showThanks = true;
+          this.sending = false;
+        }, 1000);
+        return;
+      }
+
       try {
         const options = {
           method: "POST",
@@ -319,7 +333,6 @@ export default {
           },
         };
 
-        this.stripeKey = null;
         const response = await fetch("/payment", options);
         if (response.status === 200) {
           const result = await response.json();
@@ -333,14 +346,15 @@ export default {
         } else {
           this.paymentError = true;
           this.paymentErrorType = "Stripe Error";
-          this.paymentErrorMessage =
-            "Cannot reach Stripe right now. Please try again later.";
+          this.paymentErrorMessage = "Cannot reach Stripe right now. Please try again later.";
         }
       } catch (err) {
         this.paymentError = true;
         this.paymentErrorType = "";
         this.paymentErrorMessage = err.message;
       }
+      
+      this.sending = false;
     },
   },
 };
