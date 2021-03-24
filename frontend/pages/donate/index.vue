@@ -48,12 +48,12 @@
                       ref="cardRef"
                       :pk="stripeKey"
                       v-if="stripeKey"
-                      @token="console.log"
+                      @token="tokenCreated"
                       @error="console.log"
                     />
                   </v-col>
                   <v-col class="text-right" style="max-width: 100px">
-                    <v-btn @click="sendPayment();" :disabled="!token"> Send </v-btn>
+                    <v-btn @click="generateToken" :disabled="!token"> Send </v-btn>
                   </v-col>
                   <v-col cols="12" style="font-family: monospace">
                     Payment handled by
@@ -190,7 +190,6 @@ export default {
       name: "",
       email: "",
       amount: "5.00",
-      token: "",
       showThanks: false,
       paymentError: false,
       paymentErrorType: "",
@@ -243,11 +242,13 @@ export default {
       document.body.removeChild(el);
       alert("Copied token address to clipboard");
     },
-    tokenCreated(token) {
-      console.log(token);
-      this.token = token;
+    generateToken () {
+      this.$refs.cardRef.submit();
     },
-    async sendPayment() {
+    tokenCreated(token) {
+      this.sendPayment(token);
+    },
+    async sendPayment(token) {
       try {
         const options = {
           method: "POST",
@@ -255,7 +256,7 @@ export default {
             name: this.name,
             email: this.email,
             amount: this.amount,
-            tokenId: this.token,
+            tokenId: token,
           }),
           headers: {
             "Content-Type": "application/json",
