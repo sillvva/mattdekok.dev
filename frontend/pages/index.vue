@@ -11,7 +11,7 @@
             :maxLength="3"
             :items="items"
             :classes="['home-styles']"
-            :itemClasses="['menu-shake']"
+            :itemClasses="['menu-bounce']"
           ></hex-menu>
         </div>
       </v-col>
