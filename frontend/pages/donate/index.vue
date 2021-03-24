@@ -75,7 +75,7 @@
                         Send
                       </v-btn>
                     </v-col>
-                    <v-col cols="12" style="font-family: monospace;">
+                    <v-col cols="12" class="text-right">
                       Payment handled by
                       <a href="https://stripe.com" target="_blank">
                         <svg
@@ -385,8 +385,12 @@ export default {
   max-height: 60px;
   padding-bottom: 0;
 }
+</style>
 
+<style lang="scss">
 #stripe-element-errors {
-  color: red;
+  color: #dd2c00;
+  font-size: 12px;
+  margin-top: 6px;
 }
 </style>
