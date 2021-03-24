@@ -56,6 +56,15 @@
               link="https://www.npmjs.com/package/@sillvva/react-styled-flexgrid"
             />
           </v-col>
+          <v-col cols="12" md="6" lg="4" class="project">
+            <gallery-item
+              :images="['hex-menu', 'hex-menu2']"
+              title="@sillvva/vue-hex-menu"
+              subtitle="Vue UI Component"
+              description="Vue, HTML, SCSS, JavaScript"
+              link="https://github.com/sillvva/vue-hexagon-menu"
+            />
+          </v-col>
         </v-row>
       </v-col>
     </v-row>

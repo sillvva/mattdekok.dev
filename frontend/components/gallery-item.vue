@@ -1,10 +1,43 @@
 <template>
   <gallery-item-wrapper :link="link">
-    <img :src="`/images/preview-${image}.jpg`" :alt="title" />
+    <img :src="`/images/preview-${image}.jpg`" :alt="title" v-if="image" />
+    <v-carousel
+      hide-delimiters
+      cycle
+      height="auto"
+      v-else-if="images.length > 0"
+      class="gallery-carousel"
+    >
+      <template v-slot:prev="{ on, attrs }">
+        <v-btn
+          dark round icon
+          v-bind="attrs"
+          v-on="on"
+          @click.prevent
+        >
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+      </template>
+      <template v-slot:next="{ on, attrs }">
+        <v-btn
+          dark round icon
+          v-bind="attrs"
+          v-on="on"
+          @click.prevent
+        >
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </template>
+      <v-carousel-item
+        v-for="(img, i) in images"
+        :key="i"
+        :src="`/images/preview-${img}.jpg`"
+      ></v-carousel-item>
+    </v-carousel>
     <div class="cover">
-      <h3>{{title}}</h3>
-      <h4 v-if="subtitle">{{subtitle}}</h4>
-      <div v-if="description">{{description}}</div>
+      <h3>{{ title }}</h3>
+      <h4 v-if="subtitle">{{ subtitle }}</h4>
+      <div v-if="description">{{ description }}</div>
     </div>
   </gallery-item-wrapper>
 </template>
@@ -21,8 +54,14 @@ export default {
       default: null,
     },
     image: {
-      type: String,
-      required: true,
+      type: String | null,
+      required: false,
+      default: null,
+    },
+    images: {
+      type: Array,
+      required: false,
+      default: () => [],
     },
     title: {
       type: String,
@@ -38,6 +77,15 @@ export default {
       default: "",
     },
   },
+  methods: {
+    test($ev) {
+      console.log('test');
+      $ev.stopPropagation();
+    },
+    test2($ev) {
+      console.log('test2');
+    }
+  }
 };
 </script>
 
@@ -115,5 +163,19 @@ img {
     font-weight: 300;
     margin-top: 5px;
   }
+}
+</style>
+
+<style lang="scss">
+.gallery-carousel {
+  width: 100%;
+  padding-top: calc(60% + 6px);
+}
+.gallery-carousel > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>
