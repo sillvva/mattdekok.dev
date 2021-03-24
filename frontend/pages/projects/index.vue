@@ -11,8 +11,8 @@
     <v-row justify="center" align="center">
       <v-col sm="12" md="12" lg="10">
         <h1 class="page-header text-center">Projects</h1>
-        <v-row justify="center">
-          <v-col cols="12" md="6" lg="4">
+        <v-row justify="center" class="project-container">
+          <v-col cols="12" md="6" lg="4" class="project">
             <gallery-item
               image="me2"
               title="This Page"
@@ -20,7 +20,7 @@
               description="Firebase, Node.js, Vue, JavaScript, HTML, SCSS, Vuetify"
             />
           </v-col>
-          <v-col cols="12" md="6" lg="4">
+          <v-col cols="12" md="6" lg="4" class="project">
             <gallery-item
               image="me"
               title="This Page (Previous Version)"
@@ -29,7 +29,7 @@
               link="https://mattdekok.herokuapp.com"
             />
           </v-col>
-          <v-col cols="12" md="6" lg="4">
+          <v-col cols="12" md="6" lg="4" class="project">
             <gallery-item
               image="valley-365"
               title="Valley 365"
@@ -38,7 +38,7 @@
               link="https://www.valley365.com/"
             />
           </v-col>
-          <v-col cols="12" md="6" lg="4">
+          <v-col cols="12" md="6" lg="4" class="project">
             <gallery-item
               image="rpgschedule"
               title="RPG Schedule"
@@ -47,7 +47,7 @@
               link="https://github.com/sillvva/rpg-schedule"
             />
           </v-col>
-          <v-col cols="12" md="6" lg="4">
+          <v-col cols="12" md="6" lg="4" class="project">
             <gallery-item
               image="npm"
               title="@sillvva/react-styled-flexgrid"
@@ -84,3 +84,25 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.project-container {
+  @media (max-width: 960px) {
+    margin-top: 74px;
+    .project {
+      padding-top: 0;
+      padding-bottom: 10px;
+      max-width: 60%;
+      .gallery-item {
+        margin: 0;
+      }
+      @media (max-width: 800px) {
+        max-width: 80%;
+      }
+      @media (max-width: 640px) {
+        max-width: 100%;
+      }
+    }
+  }
+}
+</style>
