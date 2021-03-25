@@ -65,7 +65,7 @@
                         @error="console.log"
                       />
                     </v-col>
-                    <v-col cols="12" class="d-block d-sm-none"></v-col>
+                    <v-col cols="12" class="d-block d-sm-none pa-0"></v-col>
                     <v-col class="text-right send-button-container">
                       <v-btn
                         @click="generateToken"
