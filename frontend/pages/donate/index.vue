@@ -65,7 +65,8 @@
                         @error="console.log"
                       />
                     </v-col>
-                    <v-col class="text-right" style="max-width: 100px">
+                    <v-col cols="12" class="d-block d-sm-none"></v-col>
+                    <v-col class="text-right send-button-container">
                       <v-btn
                         @click="generateToken"
                         :disabled="!valid || !cardComplete"
@@ -379,6 +380,16 @@ export default {
         margin-bottom: 10px;
       }
     }
+  }
+}
+
+.send-button-container {
+  max-width: 100px;
+  @media (max-width: 600px) {
+    max-width: none;
+  }
+  .v-btn {
+    width: 100%;
   }
 }
 
