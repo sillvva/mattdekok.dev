@@ -65,7 +65,8 @@
                         @error="console.log"
                       />
                     </v-col>
-                    <v-col class="text-right" style="max-width: 100px">
+                    <v-col cols="12" class="d-block d-sm-none pa-0"></v-col>
+                    <v-col class="text-right send-button-container">
                       <v-btn
                         @click="generateToken"
                         :disabled="!valid || !cardComplete"
@@ -189,7 +190,7 @@
                 >
                   <svg height="64" viewBox="0 0 24 24">
                     <path
-                      fill="var(--PayPal2)"
+                      fill="#888888"
                       d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z"
                     />
                   </svg>
@@ -379,6 +380,16 @@ export default {
         margin-bottom: 10px;
       }
     }
+  }
+}
+
+.send-button-container {
+  max-width: 100px;
+  @media (max-width: 600px) {
+    max-width: none;
+  }
+  .v-btn {
+    width: 100%;
   }
 }
 

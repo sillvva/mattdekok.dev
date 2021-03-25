@@ -1,33 +1,41 @@
 <template>
-  <v-app dark>
+  <v-app class="theme--custom">
     <v-main>
-      <nuxt style="position: relative;" />
+      <nuxt style="position: relative" />
     </v-main>
     <v-btn
       fab
       top
       left
       fixed
-      color="black"
-      class="menu-button"
+      text
+      :class="['menu-button', 'fab-button']"
       v-if="!drawer"
       @click="openDrawer()"
     >
       <v-icon>mdi-menu</v-icon>
     </v-btn>
+    <v-btn
+      fab
+      top
+      right
+      fixed
+      text
+      class="fab-button"
+      v-if="!drawer"
+      @click="toggleTheme()"
+    >
+      <v-icon>mdi-brightness-6</v-icon>
+    </v-btn>
     <div
-      :class="[
-        'drawer-container',
-        openingDrawer && 'open',
-        closingDrawer && 'close',
-      ]"
-      v-if="drawer"
+      :class="['drawer-container', drawer && 'open', drawerClosing && 'close']"
       @click="closeDrawer()"
     >
       <hex-menu
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
         :wrapperClasses="['drawer-wrapper']"
+        rotated
       ></hex-menu>
     </div>
   </v-app>
@@ -41,85 +49,87 @@ export default {
   data() {
     return {
       drawer: false,
-      openingDrawer: null,
-      closingDrawer: null,
+      drawerOpen: null,
+      drawerClosing: null,
       items: [
+        { empty: true },
         { link: "/", label: "Intro" },
+        { empty: true },
         { link: "/about", label: "About Me" },
+        { empty: true },
         { link: "/experience", label: "Experience" },
         { link: "/skills", label: "Skills" },
         { link: "/projects", label: "Projects" },
+        { link: "/donate", label: "Donate" },
       ],
     };
+  },
+  created() {
+    this.$vuetify.theme.dark =
+      !localStorage.getItem("theme") ||
+      localStorage.getItem("theme") === "dark";
   },
   methods: {
     openDrawer() {
       this.drawer = true;
-      this.openingDrawer = true;
-      setTimeout(() => {
-        this.openingDrawer = null;
-      }, 500);
     },
     closeDrawer() {
-      this.closingDrawer = true;
+      this.drawerClosing = true;
       setTimeout(() => {
-        this.closingDrawer = null;
+        this.drawerClosing = null;
         this.drawer = false;
-      }, 300);
+      }, 500);
+    },
+    toggleTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      localStorage.setItem(
+        "theme",
+        this.$vuetify.theme.dark ? "dark" : "light"
+      );
     },
   },
 };
 </script>
 
 <style lang="scss">
-:root {
+.v-application.theme--custom {
   --background: #f5f5f5;
+  --background-transparent: rgba(246, 246, 246, 0.8);
   --text: #2a2a2a;
   --altText: #f5f5f5;
-  --headingWeight: 700;
-  --menu: #2a2a2a;
-  --menuText: #f5f5f5;
-  --page1: #f5f5f5;
-  --page2: #d9c09e;
-  --page3: #f5aeae;
-  --page4: #aad7f0;
-  --page5: darkseagreen;
+  --fab: #f5f5f5;
+  --fabIcon: #2a2a2a;
   --article: #cccccc;
   --PayPal1: #003087;
   --PayPal2: #009cde;
-  --Stripe: #32325d;
+  --Stripe: #007bff;
   --toast: #111111;
   --link: #007bff;
   --GitHub: #0d0d0d;
   --LinkedIn: #000000;
-}
+  background: var(--background);
+  color: var(--text);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #121212;
-    --text: #f5f5f5;
-    --altText: #4a4a4a;
-    --headingWeight: 500;
-    --menu: #2a2a2a;
-    --menuText: #f5f5f5;
-    --page1: #585858;
-    --page2: #4f4f4f;
-    --page3: #484848;
-    --page4: #3f3f3f;
-    --page5: #383838;
-    --article: #2f2f2f;
-    --PayPal1: #007bff;
-    --PayPal2: #cccccc;
-    --Stripe: #007bff;
-    --toast: #f3f3f3;
-    --link: #62a1e4;
-    --GitHub: #ffffff;
-    --LinkedIn: #ffffff;
+  a {
+    color: var(--link);
   }
 }
 
+.v-application.theme--custom.theme--dark {
+  --background: #121212;
+  --background-transparent: rgba(0, 0, 0, 0.8);
+  --text: #f5f5f5;
+  --altText: #4a4a4a;
+  --fab: #121212;
+  --fabIcon: #f5f5f5;
+  --article: #2f2f2f;
+  --toast: #f3f3f3;
+  --link: #62a1e4;
+  --GitHub: #ffffff;
+  --LinkedIn: #ffffff;
+}
+
 .drawer-container {
-  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -129,30 +139,37 @@ export default {
   right: 0;
   bottom: 0;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.5);
-  &.open > * {
-    animation: drawer-open 500ms ease-in-out forwards;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  .drawer-wrapper {
+    margin-top: -25px;
   }
-  &.close > * {
-    animation: drawer-close 300ms ease-in-out forwards;
+  &.open {
+    display: flex;
+    .drawer-wrapper {
+      animation: drawer-open 500ms ease-in-out forwards;
+    }
+  }
+  &.close .drawer-wrapper {
+    animation: drawer-close 500ms ease-in-out forwards;
   }
   @media (max-width: 960px) {
-    > .hex-wrapper {
+    .drawer-wrapper {
       --scale: 1;
     }
   }
   @media (max-width: 650px) {
-    > .hex-wrapper {
+    .drawer-wrapper {
       --scale: 1;
     }
   }
   @media (max-width: 500px) {
-    > .hex-wrapper {
+    .drawer-wrapper {
       --scale: 0.9;
     }
   }
   @media (max-width: 350px) {
-    > .hex-wrapper {
+    .drawer-wrapper {
       --scale: 0.7;
     }
   }
@@ -162,6 +179,14 @@ export default {
   z-index: 101;
   @media (min-width: 960px) {
     display: none !important;
+  }
+}
+
+.fab-button {
+  z-index: 101;
+  background-color: var(--fab) !important;
+  .mdi {
+    color: var(--fabIcon) !important;
   }
 }
 
@@ -186,7 +211,7 @@ export default {
 
 @keyframes drawer-open {
   0% {
-    transform: scale(0);
+    transform: scale(0) rotate(-270deg);
   }
   100% {
     transform: scale(1);
@@ -198,7 +223,7 @@ export default {
     transform: scale(1);
   }
   100% {
-    transform: scale(0);
+    transform: scale(0) rotate(270deg);
   }
 }
 
@@ -219,16 +244,20 @@ export default {
 
 .menu-bounce:hover:not(.active):not(.empty) {
   animation: bounce 500ms ease-in-out forwards;
+  stroke: var(--background);
+  stroke-width: 0;
 }
 @keyframes bounce {
   40% {
     transform: scale(1.5);
+    stroke-width: 2;
   }
   60% {
     transform: scale(1);
   }
   80% {
     transform: scale(1.2);
+    stroke-width: 2;
   }
   100% {
     transform: scale(1);
