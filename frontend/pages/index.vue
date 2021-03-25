@@ -10,8 +10,8 @@
           <hex-menu
             :maxLength="3"
             :items="items"
-            :classes="['home-styles']"
-            :itemClasses="['menu-bounce']"
+            :wrapperClasses="['home-styles']"
+            :hexagonClasses="['menu-bounce']"
           ></hex-menu>
         </div>
       </v-col>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import HexMenu from "@/components/hex-menu.vue";
+import HexMenu from "@/components/hex-menu-svg.vue";
 
 export default {
   components: {
@@ -118,12 +118,12 @@ export default {
   flex-direction: row;
   justify-content: flex-end;
   .home-styles {
-    --scale: 0.6;
+    --scale: 1;
     @media (min-width: 1264px) {
-      --scale: 0.8;
+      --scale: 1.1;
     }
     @media (min-width: 1400px) {
-      --scale: 0.9;
+      --scale: 1.2;
     }
   }
   @media (max-width: 960px) {

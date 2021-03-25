@@ -27,7 +27,7 @@
       <hex-menu
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
-        :classes="['drawer-wrapper']"
+        :wrapperClasses="['drawer-wrapper']"
       ></hex-menu>
     </div>
   </v-app>
@@ -167,7 +167,7 @@ export default {
 
 .page-menu {
   margin-bottom: 20px;
-  --scale: 0.6 !important;
+  --scale: 0.9 !important;
 }
 
 @media (max-width: 960px) {

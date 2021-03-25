@@ -4,8 +4,8 @@
       <hex-menu
         :items="items"
         rotated
-        :classes="['page-menu']"
-        :itemClasses="['menu-shake']"
+        :wrapperClasses="['page-menu']"
+        :svgClasses="['menu-shake']"
       ></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
@@ -59,13 +59,14 @@
 </template>
 
 <script>
+import HexMenu from "@/components/hex-menu-svg.vue";
 import PageArticleSection from "@/components/page-article-section.vue";
 import PageArticle from "@/components/page-article.vue";
 import RatedItem from "@/components/rated-item.vue";
 import RatingSection from "../../components/rating-section.vue";
 
 export default {
-  components: { PageArticle, PageArticleSection, RatedItem, RatingSection },
+  components: { HexMenu, PageArticle, PageArticleSection, RatedItem, RatingSection },
   head() {
     return {
       title: "Skills",

@@ -9,22 +9,12 @@
       class="gallery-carousel"
     >
       <template v-slot:prev="{ on, attrs }">
-        <v-btn
-          dark round icon
-          v-bind="attrs"
-          v-on="on"
-          @click.prevent
-        >
+        <v-btn dark round icon v-bind="attrs" v-on="on" @click.prevent>
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
       </template>
       <template v-slot:next="{ on, attrs }">
-        <v-btn
-          dark round icon
-          v-bind="attrs"
-          v-on="on"
-          @click.prevent
-        >
+        <v-btn dark round icon v-bind="attrs" v-on="on" @click.prevent>
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </template>
@@ -79,13 +69,13 @@ export default {
   },
   methods: {
     test($ev) {
-      console.log('test');
+      console.log("test");
       $ev.stopPropagation();
     },
     test2($ev) {
-      console.log('test2');
-    }
-  }
+      console.log("test2");
+    },
+  },
 };
 </script>
 
@@ -170,12 +160,12 @@ img {
 .gallery-carousel {
   width: 100%;
   padding-top: calc(60% + 6px);
-}
-.gallery-carousel > * {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  > * {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 }
 </style>

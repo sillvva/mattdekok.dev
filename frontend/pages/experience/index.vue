@@ -4,8 +4,8 @@
       <hex-menu
         :items="items"
         rotated
-        :classes="['page-menu']"
-        :itemClasses="['menu-shake']"
+        :wrapperClasses="['page-menu']"
+        :svgClasses="['menu-shake']"
       ></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
@@ -145,6 +145,7 @@
 </template>
 
 <script>
+import HexMenu from "@/components/hex-menu-svg.vue";
 import PageArticle from "@/components/page-article.vue";
 import PageArticleSection from "@/components/page-article-section.vue";
 import PageArticleSectionItems from "@/components/page-article-section-items.vue";
@@ -152,6 +153,7 @@ import PageArticleSectionItem from "@/components/page-article-section-item.vue";
 
 export default {
   components: {
+    HexMenu,
     PageArticle,
     PageArticleSection,
     PageArticleSectionItems,
@@ -162,7 +164,6 @@ export default {
       title: "Experience",
     };
   },
-  components: {},
   data() {
     return {
       items: [
