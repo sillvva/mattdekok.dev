@@ -18,16 +18,16 @@
     <div
       :class="[
         'drawer-container',
-        openingDrawer && 'open',
-        closingDrawer && 'close',
+        drawer && 'open',
+        drawerClosing && 'close',
       ]"
-      v-if="drawer"
       @click="closeDrawer()"
     >
       <hex-menu
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
         :wrapperClasses="['drawer-wrapper']"
+        rotated
       ></hex-menu>
     </div>
   </v-app>
@@ -41,31 +41,31 @@ export default {
   data() {
     return {
       drawer: false,
-      openingDrawer: null,
-      closingDrawer: null,
+      drawerOpen: null,
+      drawerClosing: null,
       items: [
+        { empty: true },
         { link: "/", label: "Intro" },
+        { empty: true },
         { link: "/about", label: "About Me" },
+        { empty: true },
         { link: "/experience", label: "Experience" },
         { link: "/skills", label: "Skills" },
         { link: "/projects", label: "Projects" },
+        { link: "/donate", label: "Donate" }
       ],
     };
   },
   methods: {
     openDrawer() {
       this.drawer = true;
-      this.openingDrawer = true;
-      setTimeout(() => {
-        this.openingDrawer = null;
-      }, 500);
     },
     closeDrawer() {
-      this.closingDrawer = true;
+      this.drawerClosing = true;
       setTimeout(() => {
-        this.closingDrawer = null;
+        this.drawerClosing = null;
         this.drawer = false;
-      }, 300);
+      }, 500);
     },
   },
 };
@@ -119,7 +119,6 @@ export default {
 }
 
 .drawer-container {
-  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -129,30 +128,37 @@ export default {
   right: 0;
   bottom: 0;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.5);
-  &.open > * {
-    animation: drawer-open 500ms ease-in-out forwards;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  .drawer-wrapper {
+    margin-top: -25px;
   }
-  &.close > * {
-    animation: drawer-close 300ms ease-in-out forwards;
+  &.open {
+    display: flex;
+    .drawer-wrapper {
+      animation: drawer-open 500ms ease-in-out forwards;
+    }
+  }
+  &.close .drawer-wrapper {
+    animation: drawer-close 500ms ease-in-out forwards;
   }
   @media (max-width: 960px) {
-    > .hex-wrapper {
+    .drawer-wrapper {
       --scale: 1;
     }
   }
   @media (max-width: 650px) {
-    > .hex-wrapper {
+    .drawer-wrapper {
       --scale: 1;
     }
   }
   @media (max-width: 500px) {
-    > .hex-wrapper {
+    .drawer-wrapper {
       --scale: 0.9;
     }
   }
   @media (max-width: 350px) {
-    > .hex-wrapper {
+    .drawer-wrapper {
       --scale: 0.7;
     }
   }
@@ -186,7 +192,7 @@ export default {
 
 @keyframes drawer-open {
   0% {
-    transform: scale(0);
+    transform: scale(0) rotate(-180deg);
   }
   100% {
     transform: scale(1);
@@ -198,7 +204,7 @@ export default {
     transform: scale(1);
   }
   100% {
-    transform: scale(0);
+    transform: scale(0) rotate(180deg);
   }
 }
 
