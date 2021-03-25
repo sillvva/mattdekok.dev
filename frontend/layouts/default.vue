@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import HexMenu from "@/components/hex-menu.vue";
+import HexMenu from "@/components/hex-menu-svg.vue";
 
 export default {
   components: { HexMenu },
@@ -138,22 +138,22 @@ export default {
   }
   @media (max-width: 960px) {
     > .hex-wrapper {
-      --scale: 0.9;
+      --scale: 1;
     }
   }
   @media (max-width: 650px) {
     > .hex-wrapper {
-      --scale: 0.7;
+      --scale: 1;
     }
   }
   @media (max-width: 500px) {
     > .hex-wrapper {
-      --scale: 0.6;
+      --scale: 0.9;
     }
   }
   @media (max-width: 350px) {
     > .hex-wrapper {
-      --scale: 0.5;
+      --scale: 0.7;
     }
   }
 }

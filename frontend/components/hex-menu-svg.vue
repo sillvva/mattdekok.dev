@@ -122,7 +122,7 @@ export default {
 <style lang="scss">
 .hex-wrapper {
   display: inline-block;
-  --scale: 0.8;
+  --scale: 1;
   margin: 50px 0;
   .hex-row {
     height: calc(108px * var(--scale));
@@ -144,10 +144,6 @@ export default {
         margin-bottom: calc(61px * var(--scale));
       }
     }
-  }
-  
-  @media (max-width: 1264px) {
-    --scale: 0.6;
   }
   @media (max-width: 960px) {
     &:not(.drawer-wrapper) {
