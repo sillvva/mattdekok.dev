@@ -4,8 +4,8 @@
       <hex-menu
         :items="items"
         rotated
-        :classes="['page-menu']"
-        :itemClasses="['menu-shake']"
+        :wrapperClasses="['page-menu']"
+        :svgClasses="['menu-shake']"
       ></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
@@ -205,6 +205,7 @@
 </template>
 
 <script>
+import HexMenu from "@/components/hex-menu-svg.vue";
 import PageArticleSection from "@/components/page-article-section.vue";
 import PageArticle from "@/components/page-article.vue";
 import { StripeElementCard } from "@vue-stripe/vue-stripe";
@@ -215,7 +216,7 @@ export default {
       title: "Donate",
     };
   },
-  components: { PageArticle, PageArticleSection, StripeElementCard },
+  components: { PageArticle, PageArticleSection, StripeElementCard, HexMenu },
   data() {
     return {
       stripeKey: null,

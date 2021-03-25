@@ -4,8 +4,8 @@
       <hex-menu
         :items="items"
         rotated
-        :classes="['page-menu']"
-        :itemClasses="['menu-shake']"
+        :wrapperClasses="['page-menu']"
+        :svgClasses="['menu-shake']"
       ></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import HexMenu from "@/components/hex-menu-svg.vue";
 import GalleryItem from "@/components/gallery-item.vue";
 
 export default {
@@ -80,7 +81,7 @@ export default {
       title: "Projects",
     };
   },
-  components: { GalleryItem },
+  components: { HexMenu, GalleryItem },
   data() {
     return {
       items: [
