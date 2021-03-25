@@ -172,7 +172,7 @@ img {
   padding-top: calc(60% + 6px);
 }
 .gallery-carousel > * {
-  position: absolute;
+  position: absolute !important;
   top: 0;
   left: 0;
   right: 0;
