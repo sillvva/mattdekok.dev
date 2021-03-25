@@ -1,7 +1,7 @@
 <template>
-  <v-app class="">
+  <v-app class="theme--custom">
     <v-main>
-      <nuxt style="position: relative;" />
+      <nuxt style="position: relative" />
     </v-main>
     <v-btn
       fab
@@ -28,11 +28,7 @@
       <v-icon>mdi-brightness-6</v-icon>
     </v-btn>
     <div
-      :class="[
-        'drawer-container',
-        drawer && 'open',
-        drawerClosing && 'close',
-      ]"
+      :class="['drawer-container', drawer && 'open', drawerClosing && 'close']"
       @click="closeDrawer()"
     >
       <hex-menu
@@ -64,7 +60,7 @@ export default {
         { link: "/experience", label: "Experience" },
         { link: "/skills", label: "Skills" },
         { link: "/projects", label: "Projects" },
-        { link: "/donate", label: "Donate" }
+        { link: "/donate", label: "Donate" },
       ],
     };
   },
@@ -96,18 +92,13 @@ export default {
 </script>
 
 <style lang="scss">
-.v-application {
+.v-application.theme--custom {
   --background: #f5f5f5;
   --background-transparent: rgba(246, 246, 246, 0.8);
   --text: #2a2a2a;
   --altText: #f5f5f5;
   --fab: #f5f5f5;
   --fabIcon: #2a2a2a;
-  --page1: #f5f5f5;
-  --page2: #d9c09e;
-  --page3: #f5aeae;
-  --page4: #aad7f0;
-  --page5: darkseagreen;
   --article: #cccccc;
   --PayPal1: #003087;
   --PayPal2: #009cde;
@@ -116,22 +107,21 @@ export default {
   --link: #007bff;
   --GitHub: #0d0d0d;
   --LinkedIn: #000000;
-  background: var(--background) !important;
-  color: var(--text) !important;
+  background: var(--background);
+  color: var(--text);
+
+  a {
+    color: var(--link);
+  }
 }
 
-.v-application.theme--dark {
+.v-application.theme--custom.theme--dark {
   --background: #121212;
   --background-transparent: rgba(0, 0, 0, 0.8);
   --text: #f5f5f5;
   --altText: #4a4a4a;
   --fab: #121212;
   --fabIcon: #f5f5f5;
-  --page1: #585858;
-  --page2: #4f4f4f;
-  --page3: #484848;
-  --page4: #3f3f3f;
-  --page5: #383838;
   --article: #2f2f2f;
   --toast: #f3f3f3;
   --link: #62a1e4;
@@ -254,7 +244,7 @@ export default {
 
 .menu-bounce:hover:not(.active):not(.empty) {
   animation: bounce 500ms ease-in-out forwards;
-  stroke: black;
+  stroke: var(--background);
   stroke-width: 0;
 }
 @keyframes bounce {
