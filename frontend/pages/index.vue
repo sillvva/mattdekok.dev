@@ -69,7 +69,7 @@ export default {
       right: 0;
       bottom: 0;
       height: 80vh;
-      background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      background-image: linear-gradient(transparent, var(--background-transparent));
     }
   }
 }
@@ -77,7 +77,7 @@ export default {
 .intro {
   font-family: "Montserrat", sans-serif;
   text-align: center;
-  text-shadow: 2px 2px black, 1px 1px 5px black;
+  text-shadow: 2px 2px var(--background), 1px 1px 5px var(--background);
   position: relative;
   z-index: 1;
   letter-spacing: 6px;

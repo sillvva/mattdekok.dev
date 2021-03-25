@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app class="">
     <v-main>
       <nuxt style="position: relative;" />
     </v-main>
@@ -8,12 +8,24 @@
       top
       left
       fixed
-      color="black"
-      class="menu-button"
+      text
+      :class="['menu-button', 'fab-button']"
       v-if="!drawer"
       @click="openDrawer()"
     >
       <v-icon>mdi-menu</v-icon>
+    </v-btn>
+    <v-btn
+      fab
+      top
+      right
+      fixed
+      text
+      class="fab-button"
+      v-if="!drawer"
+      @click="toggleTheme()"
+    >
+      <v-icon>mdi-brightness-6</v-icon>
     </v-btn>
     <div
       :class="[
@@ -56,6 +68,11 @@ export default {
       ],
     };
   },
+  created() {
+    this.$vuetify.theme.dark =
+      !localStorage.getItem("theme") ||
+      localStorage.getItem("theme") === "dark";
+  },
   methods: {
     openDrawer() {
       this.drawer = true;
@@ -67,18 +84,25 @@ export default {
         this.drawer = false;
       }, 500);
     },
+    toggleTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      localStorage.setItem(
+        "theme",
+        this.$vuetify.theme.dark ? "dark" : "light"
+      );
+    },
   },
 };
 </script>
 
 <style lang="scss">
-:root {
+.v-application {
   --background: #f5f5f5;
+  --background-transparent: rgba(246, 246, 246, 0.8);
   --text: #2a2a2a;
   --altText: #f5f5f5;
-  --headingWeight: 700;
-  --menu: #2a2a2a;
-  --menuText: #f5f5f5;
+  --fab: #f5f5f5;
+  --fabIcon: #2a2a2a;
   --page1: #f5f5f5;
   --page2: #d9c09e;
   --page3: #f5aeae;
@@ -87,35 +111,32 @@ export default {
   --article: #cccccc;
   --PayPal1: #003087;
   --PayPal2: #009cde;
-  --Stripe: #32325d;
+  --Stripe: #007bff;
   --toast: #111111;
   --link: #007bff;
   --GitHub: #0d0d0d;
   --LinkedIn: #000000;
+  background: var(--background) !important;
+  color: var(--text) !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #121212;
-    --text: #f5f5f5;
-    --altText: #4a4a4a;
-    --headingWeight: 500;
-    --menu: #2a2a2a;
-    --menuText: #f5f5f5;
-    --page1: #585858;
-    --page2: #4f4f4f;
-    --page3: #484848;
-    --page4: #3f3f3f;
-    --page5: #383838;
-    --article: #2f2f2f;
-    --PayPal1: #007bff;
-    --PayPal2: #cccccc;
-    --Stripe: #007bff;
-    --toast: #f3f3f3;
-    --link: #62a1e4;
-    --GitHub: #ffffff;
-    --LinkedIn: #ffffff;
-  }
+.v-application.theme--dark {
+  --background: #121212;
+  --background-transparent: rgba(0, 0, 0, 0.8);
+  --text: #f5f5f5;
+  --altText: #4a4a4a;
+  --fab: #121212;
+  --fabIcon: #f5f5f5;
+  --page1: #585858;
+  --page2: #4f4f4f;
+  --page3: #484848;
+  --page4: #3f3f3f;
+  --page5: #383838;
+  --article: #2f2f2f;
+  --toast: #f3f3f3;
+  --link: #62a1e4;
+  --GitHub: #ffffff;
+  --LinkedIn: #ffffff;
 }
 
 .drawer-container {
@@ -168,6 +189,14 @@ export default {
   z-index: 101;
   @media (min-width: 960px) {
     display: none !important;
+  }
+}
+
+.fab-button {
+  z-index: 101;
+  background-color: var(--fab) !important;
+  .mdi {
+    color: var(--fabIcon) !important;
   }
 }
 
