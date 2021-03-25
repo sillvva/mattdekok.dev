@@ -221,7 +221,7 @@ export default {
 
 @keyframes drawer-open {
   0% {
-    transform: scale(0) rotate(-180deg);
+    transform: scale(0) rotate(-270deg);
   }
   100% {
     transform: scale(1);
@@ -233,7 +233,7 @@ export default {
     transform: scale(1);
   }
   100% {
-    transform: scale(0) rotate(180deg);
+    transform: scale(0) rotate(270deg);
   }
 }
 
