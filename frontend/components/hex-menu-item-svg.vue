@@ -126,6 +126,9 @@ export default {
   }
   &.rotated {
     --baseMargin: -46px;
+    &:nth-child(2n-1) {
+      top: calc(61px * var(--scale));
+    }
     &:nth-child(2n) {
       top: calc(124px * var(--scale));
     }

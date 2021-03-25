@@ -119,7 +119,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .hex-wrapper {
   display: inline-block;
   --scale: 0.8;
@@ -130,12 +130,22 @@ export default {
     &.shift {
       margin-left: calc(62px * var(--scale));
     }
-  }
-  &.rotated {
-    .hex-row {
-      height: calc(124px * var(--scale));
+    &:last-child {
+      > * {
+        margin-bottom: 0 !important;
+      }
     }
   }
+  &.rotated {
+    margin: 25px 0;
+    .hex-row {
+      height: calc(125px * var(--scale));
+      &:last-child {
+        margin-bottom: calc(61px * var(--scale));
+      }
+    }
+  }
+  
   @media (max-width: 1264px) {
     --scale: 0.6;
   }
