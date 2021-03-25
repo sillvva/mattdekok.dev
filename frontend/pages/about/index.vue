@@ -25,7 +25,6 @@
                 </p>
               </v-col>
               <v-col cols="12" sm="6">
-                <h2>Details</h2>
                 <v-row class="me-details">
                   <v-col
                     class="text-center text-sm-right"

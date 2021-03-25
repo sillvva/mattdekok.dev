@@ -254,16 +254,20 @@ export default {
 
 .menu-bounce:hover:not(.active):not(.empty) {
   animation: bounce 500ms ease-in-out forwards;
+  stroke: black;
+  stroke-width: 0;
 }
 @keyframes bounce {
   40% {
     transform: scale(1.5);
+    stroke-width: 2;
   }
   60% {
     transform: scale(1);
   }
   80% {
     transform: scale(1.2);
+    stroke-width: 2;
   }
   100% {
     transform: scale(1);
