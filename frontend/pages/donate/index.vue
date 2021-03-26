@@ -6,6 +6,9 @@
         rotated
         :wrapperClasses="['page-menu']"
         :svgClasses="['menu-shake']"
+        color="var(--menuColor1)"
+        activeColor="var(--menuColor2)"
+        hoverColor="var(--menuColor2)"
       ></hex-menu>
     </v-row>
     <v-row justify="center" align="center">
