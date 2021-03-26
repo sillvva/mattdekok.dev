@@ -96,7 +96,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .project-container {
   @media (max-width: 960px) {
     margin-top: 74px;
@@ -104,9 +104,6 @@ export default {
       padding-top: 0;
       padding-bottom: 10px;
       max-width: 60%;
-      .gallery-item {
-        margin: 0;
-      }
       @media (max-width: 800px) {
         max-width: 80%;
       }
