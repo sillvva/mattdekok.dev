@@ -12,6 +12,7 @@
       :class="['menu-button', 'fab-button']"
       v-if="!drawer"
       @click="openDrawer()"
+      aria-label="Menu"
     >
       <v-icon>mdi-menu</v-icon>
     </v-btn>
@@ -24,6 +25,7 @@
       class="fab-button"
       v-if="!drawer"
       @click="toggleTheme()"
+      :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
     >
       <v-icon>mdi-brightness-6</v-icon>
     </v-btn>
