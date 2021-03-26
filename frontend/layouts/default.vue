@@ -100,7 +100,6 @@ export default {
   --text: #2a2a2a;
   --altText: #f5f5f5;
   --fab: #f5f5f5;
-  --fabIcon: #2a2a2a;
   --article: #cccccc;
   --PayPal1: #003087;
   --PayPal2: #009cde;
@@ -111,24 +110,24 @@ export default {
   --LinkedIn: #000000;
   background: var(--background);
   color: var(--text);
-
+  &.theme--dark {
+    --background: #121212;
+    --background-transparent: rgba(0, 0, 0, 0.8);
+    --text: #f5f5f5;
+    --altText: #4a4a4a;
+    --fab: #121212;
+    --article: #2f2f2f;
+    --toast: #f3f3f3;
+    --link: #62a1e4;
+    --GitHub: #ffffff;
+    --LinkedIn: #ffffff;
+  }
+  .mdi {
+    color: var(--text);
+  }
   a {
     color: var(--link);
   }
-}
-
-.v-application.theme--custom.theme--dark {
-  --background: #121212;
-  --background-transparent: rgba(0, 0, 0, 0.8);
-  --text: #f5f5f5;
-  --altText: #4a4a4a;
-  --fab: #121212;
-  --fabIcon: #f5f5f5;
-  --article: #2f2f2f;
-  --toast: #f3f3f3;
-  --link: #62a1e4;
-  --GitHub: #ffffff;
-  --LinkedIn: #ffffff;
 }
 
 .drawer-container {
@@ -188,8 +187,5 @@ export default {
 .fab-button {
   z-index: 101;
   background-color: var(--fab) !important;
-  .mdi {
-    color: var(--fabIcon) !important;
-  }
 }
 </style>
