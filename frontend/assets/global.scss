@@ -1,0 +1,20 @@
+* {
+  font-display: swap;
+}
+
+.page-menu {
+  margin-bottom: 20px;
+  --scale: 0.9 !important;
+}
+
+@media (max-width: 960px) {
+  .page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--background);
+    line-height: 84px;
+    z-index: 2;
+  }
+}

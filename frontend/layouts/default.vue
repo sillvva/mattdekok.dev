@@ -12,6 +12,7 @@
       :class="['menu-button', 'fab-button']"
       v-if="!drawer"
       @click="openDrawer()"
+      aria-label="Menu"
     >
       <v-icon>mdi-menu</v-icon>
     </v-btn>
@@ -24,6 +25,7 @@
       class="fab-button"
       v-if="!drawer"
       @click="toggleTheme()"
+      :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
     >
       <v-icon>mdi-brightness-6</v-icon>
     </v-btn>
@@ -34,7 +36,7 @@
       <hex-menu
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
-        :wrapperClasses="['drawer-wrapper']"
+        :class="['drawer-wrapper']"
         rotated
       ></hex-menu>
     </div>
@@ -143,6 +145,7 @@ export default {
   display: none;
   .drawer-wrapper {
     margin-top: -25px;
+    display: block;
   }
   &.open {
     display: flex;
@@ -187,80 +190,6 @@ export default {
   background-color: var(--fab) !important;
   .mdi {
     color: var(--fabIcon) !important;
-  }
-}
-
-.page-menu {
-  margin-bottom: 20px;
-  --scale: 0.9 !important;
-}
-
-@media (max-width: 960px) {
-  .page-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--background);
-    line-height: 84px;
-    z-index: 2;
-  }
-}
-
-/* Animations */
-
-@keyframes drawer-open {
-  0% {
-    transform: scale(0) rotate(-270deg);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes drawer-close {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0) rotate(270deg);
-  }
-}
-
-.menu-shake:hover:not(.active):not(.empty) {
-  animation: shake 300ms ease-in-out forwards;
-}
-@keyframes shake {
-  33% {
-    transform: rotate(-5deg);
-  }
-  67% {
-    transform: rotate(5deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
-
-.menu-bounce:hover:not(.active):not(.empty) {
-  animation: bounce 500ms ease-in-out forwards;
-  stroke: var(--background);
-  stroke-width: 0;
-}
-@keyframes bounce {
-  40% {
-    transform: scale(1.5);
-    stroke-width: 2;
-  }
-  60% {
-    transform: scale(1);
-  }
-  80% {
-    transform: scale(1.2);
-    stroke-width: 2;
-  }
-  100% {
-    transform: scale(1);
   }
 }
 </style>

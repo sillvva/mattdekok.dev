@@ -46,11 +46,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .rating {
   color: var(--text);
   .v-icon {
     font-size: medium;
+    color: var(--text);
   }
 }
 </style>
