@@ -9,13 +9,13 @@
       class="gallery-carousel"
     >
       <template v-slot:prev="{ on, attrs }">
-        <v-btn dark round icon v-bind="attrs" v-on="on" @click.prevent>
-          <v-icon>mdi-chevron-left</v-icon>
+        <v-btn rounded icon v-bind="attrs" v-on="on" @click.prevent>
+          <v-icon color="white">mdi-chevron-left</v-icon>
         </v-btn>
       </template>
       <template v-slot:next="{ on, attrs }">
-        <v-btn dark round icon v-bind="attrs" v-on="on" @click.prevent>
-          <v-icon>mdi-chevron-right</v-icon>
+        <v-btn rounded icon v-bind="attrs" v-on="on" @click.prevent>
+          <v-icon color="white">mdi-chevron-right</v-icon>
         </v-btn>
       </template>
       <v-carousel-item
@@ -90,33 +90,33 @@ img {
   background: -moz-linear-gradient(
     top,
     rgba(255, 255, 255, 0.01) 50%,
-    rgba(0, 0, 0, 1) 100%
+    var(--darkBackground) 100%
   );
   background: -webkit-gradient(
     left top,
     left bottom,
     color-stop(50%, rgba(255, 255, 255, 0.01)),
-    color-stop(100%, rgba(0, 0, 0, 1))
+    color-stop(100%, var(--darkBackground))
   );
   background: -webkit-linear-gradient(
     top,
     rgba(255, 255, 255, 0.01) 50%,
-    rgba(0, 0, 0, 1) 100%
+    var(--darkBackground) 100%
   );
   background: -o-linear-gradient(
     top,
     rgba(255, 255, 255, 0.01) 50%,
-    rgba(0, 0, 0, 1) 100%
+    var(--darkBackground) 100%
   );
   background: -ms-linear-gradient(
     top,
     rgba(255, 255, 255, 0.01) 50%,
-    rgba(0, 0, 0, 1) 100%
+    var(--darkBackground) 100%
   );
   background: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.01) 50%,
-    rgba(0, 0, 0, 1) 100%
+    var(--darkBackground) 100%
   );
   filter: progid:DXImageTransform.Microsoft.gradient(
                 startColorstr='#ffffff',
@@ -139,6 +139,7 @@ img {
     line-height: 1.5;
     font-weight: 500;
     margin: 0;
+    color: white;
     filter: drop-shadow(1px 1px 1px black);
   }
   h4 {

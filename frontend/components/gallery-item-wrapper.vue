@@ -36,6 +36,6 @@ export default {
   overflow: hidden;
 }
 .linked-gallery-item:hover {
-  border-color: #007bff;
+  border-color: var(--link);
 }
 </style>

@@ -12,6 +12,9 @@
             :items="items"
             :class="['home-styles']"
             :hexagonClasses="['menu-bounce']"
+            color="var(--menuColor1)"
+            activeColor="var(--menuColor2)"
+            hoverColor="var(--menuColor2)"
           ></hex-menu>
         </div>
       </v-col>
@@ -69,7 +72,10 @@ export default {
       right: 0;
       bottom: 0;
       height: 80vh;
-      background-image: linear-gradient(transparent, var(--background-transparent));
+      background-image: linear-gradient(
+        transparent,
+        var(--background-transparent)
+      );
     }
   }
 }

@@ -37,6 +37,9 @@
         :maxLength="3"
         :items="items.map((i) => ({ ...i, active: i.link === $route.path }))"
         :class="['drawer-wrapper']"
+        color="var(--menuColor1)"
+        activeColor="var(--menuColor2)"
+        hoverColor="var(--menuColor2)"
         rotated
       ></hex-menu>
     </div>
@@ -97,36 +100,42 @@ export default {
 .v-application.theme--custom {
   --background: #f5f5f5;
   --background-transparent: rgba(246, 246, 246, 0.8);
+  --darkBackground: #222629;
   --text: #2a2a2a;
   --altText: #f5f5f5;
-  --fab: #f5f5f5;
+  --fab: var(--background);
   --article: #cccccc;
   --PayPal1: #003087;
   --PayPal2: #009cde;
   --Stripe: #007bff;
   --toast: #111111;
-  --link: #007bff;
   --GitHub: #0d0d0d;
   --LinkedIn: #000000;
+  --link: #007bff;
+  --menuColor1: var(--link);
+  --menuColor2: #003087;
   background: var(--background);
   color: var(--text);
   &.theme--dark {
-    --background: #121212;
+    --background: #202125;
     --background-transparent: rgba(0, 0, 0, 0.8);
     --text: #f5f5f5;
     --altText: #4a4a4a;
-    --fab: #121212;
+    --fab: var(--background);
     --article: #2f2f2f;
     --toast: #f3f3f3;
-    --link: #62a1e4;
     --GitHub: #ffffff;
     --LinkedIn: #ffffff;
+    --link: #66c252;
+    --menuColor1: var(--link);
+    --menuColor2: #1f6521;
   }
   .mdi {
     color: var(--text);
   }
   a {
     color: var(--link);
+    text-decoration: none;
   }
 }
 

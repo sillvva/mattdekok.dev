@@ -81,13 +81,8 @@ export default {
       default: () => [],
     },
   },
-  data() {
-    return {
-      rows: this.getRows(),
-    };
-  },
-  methods: {
-    getRows() {
+  computed: {
+    rows() {
       const rows = [[]];
       this.items.forEach((item, i) => {
         const rowIndex = rows.length - 1;
@@ -109,8 +104,8 @@ export default {
         }
       });
       return rows;
-    },
-  },
+    }
+  }
 };
 </script>
 
