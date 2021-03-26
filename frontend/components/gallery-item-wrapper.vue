@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a :href="link" target="_blank" class="linked-gallery-item" v-if="link">
+    <a :href="link" target="_blank" rel="noopener noreferrer" class="linked-gallery-item" v-if="link">
       <slot></slot>
     </a>
     <div class="gallery-item" v-else>
