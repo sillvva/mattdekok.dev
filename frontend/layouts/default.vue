@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss">
 .v-application.theme--custom {
-  --background: #f5f5f5;
+  --background: #e5e5e5;
   --background-transparent: rgba(246, 246, 246, 0.8);
   --darkBackground: #222629;
   --text: #2a2a2a;

@@ -1,5 +1,5 @@
 <template>
-  <div class="rating text-right">
+  <div class="rating rating-zoom text-right">
     <v-icon v-for="(star, s) in stars" :key="s">
       {{star}}
     </v-icon>
