@@ -6,7 +6,7 @@
         fab
         @click="$router.push('/')"
         :aria-label="`Return to Website`"
-        v-if="$route.path == '/blog'"
+        v-if="blogHome()"
       >
         <v-icon>mdi-home</v-icon>
       </v-btn>
@@ -15,7 +15,7 @@
         fab
         @click="$router.push('/blog')"
         :aria-label="`Return to Blog`"
-        v-if="$route.path != '/blog'"
+        v-if="!blogHome()"
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
@@ -94,7 +94,7 @@ export default {
       );
     },
     searching() {
-      return this.searchOpen && this.$route.path === "/blog";
+      return this.searchOpen && this.blogHome();
     },
     toggleSearch() {
       this.searchOpen = !this.searchOpen;
@@ -111,6 +111,9 @@ export default {
       if (this.search.trim().length === 0) {
         this.searchOpen = false;
       }
+    },
+    blogHome() {
+      return this.$route.path.match(/^\/blog\/?$/);
     }
   },
 };
