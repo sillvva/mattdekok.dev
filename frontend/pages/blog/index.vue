@@ -4,12 +4,14 @@
       <NuxtLink
         :to="articleLink(article)"
         v-for="article of pageArticles()"
-        :key="article.slug"
+        :key="article.path"
       >
         <v-card class="blog-card">
-          <v-img height="250" :src="article.image" v-if="article.image"></v-img>
+          <v-img height="250" :src="article.image"></v-img>
 
-          <v-card-title><a>{{ article.title }}</a></v-card-title>
+          <v-card-title
+            ><a>{{ article.title }}</a></v-card-title
+          >
 
           <v-card-text v-if="article.description">
             {{ article.description }}
@@ -111,15 +113,17 @@ export default {
       return (this.articles || [])
         .filter((a) => {
           return (
-            a.title
-              .toLowerCase()
-              .match(new RegExp(this.search.toLowerCase())) ||
-            (a.description || "")
-              .toLowerCase()
-              .match(new RegExp(this.search.toLowerCase())) ||
-            (a.tags || []).find((t) =>
-              t.toLowerCase().match(new RegExp(this.search.toLowerCase()))
-            )
+            a.title &&
+            (!this.search.trim() ||
+              a.title
+                .toLowerCase()
+                .match(new RegExp(this.search.toLowerCase())) ||
+              (a.description || "")
+                .toLowerCase()
+                .match(new RegExp(this.search.toLowerCase())) ||
+              (a.tags || []).find((t) =>
+                t.toLowerCase().match(new RegExp(this.search.toLowerCase()))
+              ))
           );
         })
         .slice(this.pageIndex(), this.pageIndex() + this.perPage);
@@ -131,8 +135,8 @@ export default {
       return article.path.replace("/articles", "/blog").replace("/index", "");
     },
     setBlogSearch(val) {
-      this.$store.dispatch('setBlogSearch', val);
-    }
+      this.$store.dispatch("setBlogSearch", val);
+    },
   },
 };
 </script>
@@ -160,6 +164,9 @@ export default {
       .blog-card {
         width: 100%;
         height: 100%;
+        .v-image {
+          background: var(--dropShadow);
+        }
       }
     }
     @media (min-width: 1400px) {

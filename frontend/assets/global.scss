@@ -52,6 +52,10 @@
   }
 }
 
+.theme--dark.v-application code {
+  background-color: transparent !important;
+}
+
 .noscroll {
   overflow: hidden;
 }

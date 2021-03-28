@@ -16,6 +16,7 @@
     "core-js": "^3.9.1",
     "nuxt": "^2.15.3",
     "nuxt-gsap": "^0.1.4",
+    "prism-themes": "^1.6.0",
     "vuetify": "^2.4.8"
   },
   "devDependencies": {
