@@ -62,11 +62,11 @@
 </template>
 
 <script>
-import HexMenu from "@/components/hex-menu-svg.vue";
-import PageArticleSection from "@/components/page-article-section.vue";
-import PageArticle from "@/components/page-article.vue";
-import RatedItem from "@/components/rated-item.vue";
-import RatingSection from "../../components/rating-section.vue";
+import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
+import PageArticleSection from "@/components/page-article/page-article-section.vue";
+import PageArticle from "@/components/page-article/page-article.vue";
+import RatedItem from "@/components/rating/rated-item.vue";
+import RatingSection from "@/components/rating/rating-section.vue";
 
 export default {
   components: { HexMenu, PageArticle, PageArticleSection, RatedItem, RatingSection },

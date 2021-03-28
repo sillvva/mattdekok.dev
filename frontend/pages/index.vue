@@ -15,6 +15,7 @@
             color="var(--menuColor1)"
             activeColor="var(--menuColor2)"
             hoverColor="var(--menuColor2)"
+            rotated
           ></hex-menu>
         </div>
       </v-col>
@@ -23,7 +24,7 @@
 </template>
 
 <script>
-import HexMenu from "@/components/hex-menu-svg.vue";
+import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
 
 export default {
   components: {
@@ -41,6 +42,7 @@ export default {
         { link: "/experience", label: "Experience" },
         { link: "/skills", label: "Skills" },
         { link: "/projects", label: "Projects" },
+        { link: "/blog", label: "Blog" },
         { link: "/donate", label: "Donate" },
       ],
     };

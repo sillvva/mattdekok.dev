@@ -16,18 +16,18 @@ export default {
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { "http-equiv": "cache-control", content: "max-age=31536000" },
       { hid: "description", name: "description", content: "Experienced web developer with a demonstrated history of working in the wireless industry." },
-      { property: 'os:title', content: 'Matt DeKok' },
-      { property: 'os:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
-      { property: 'os:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
-      { property: 'os:url', content: 'https://www.mattdekok.dev' },
-      { property: 'og:title', content: 'Matt DeKok' },
-      { property: 'og:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
-      { property: 'og:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
-      { property: 'og:url', content: 'https://www.mattdekok.dev' },
-      { name: 'twitter:title', content: 'Matt DeKok' },
-      { name: 'twitter:site', content: '@sillvvasensei' },
-      { name: 'twitter:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
-      { name: 'twitter:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
+      { hid: "os:title", property: 'os:title', content: 'Matt DeKok' },
+      { hid: "os:description", property: 'os:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
+      { hid: "os:image", property: 'os:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
+      { hid: "os:url", property: 'os:url', content: 'https://www.mattdekok.dev' },
+      { hid: "og:title", property: 'og:title', content: 'Matt DeKok' },
+      { hid: "og:description", property: 'og:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
+      { hid: "og:image", property: 'og:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
+      { hid: "og:url", property: 'og:url', content: 'https://www.mattdekok.dev' },
+      { hid: "twitter:title", name: 'twitter:title', content: 'Matt DeKok' },
+      { hid: "twitter:site", name: 'twitter:site', content: '@sillvvasensei' },
+      { hid: "twitter:description", name: 'twitter:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
+      { hid: "twitter:image", name: 'twitter:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
       { name: 'twitter:card', content: 'summary_large_image' },
     ],
     link: [
@@ -65,6 +65,8 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
+    // https://go.nuxtjs.dev/constent
+    "@nuxt/content",
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa",
     "nuxt-gsap"

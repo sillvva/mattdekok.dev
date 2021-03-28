@@ -1,5 +1,5 @@
 <template>
-  <div :class="['hex-wrapper', rotated && 'rotated']">
+  <div :class="['hex-wrapper', rotated && 'rotated', ...classes]">
     <div
       :class="['hex-row', r % 2 === 1 && !rotated && 'shift']"
       v-for="(row, r) in rows"
@@ -17,16 +17,14 @@
         :activeColor="item.activeColor || activeColor"
         :hoverColor="item.hoverColor || hoverColor"
         :textColor="item.textColor || textColor"
-        :svgClasses="item.svgClasses || svgClasses"
-        :hexagonClasses="item.hexagonClasses || hexagonClasses"
-        :textClasses="item.textClasses || textClasses"
+        :classes="itemClasses"
       ></hex-menu-item>
     </div>
   </div>
 </template>
 
 <script>
-import HexMenuItem from "@/components/hex-menu-item-svg.vue";
+import HexMenuItem from "./hex-menu-item.vue";
 
 export default {
   components: { HexMenuItem },
@@ -39,6 +37,11 @@ export default {
       type: Number,
       required: false,
       default: 0,
+    },
+    classes: {
+      type: Array,
+      required: false,
+      default: () => [],
     },
     rotated: {
       type: Boolean,
@@ -65,26 +68,21 @@ export default {
       required: false,
       default: "#fff",
     },
-    svgClasses: {
-      type: Array,
-      required: false,
-      default: () => [],
-    },
-    hexagonClasses: {
-      type: Array,
-      required: false,
-      default: () => [],
-    },
-    textClasses: {
+    itemClasses: {
       type: Array,
       required: false,
       default: () => [],
     },
   },
-  computed: {
-    rows() {
+  data() {
+    return {
+      rows: this.getRows(),
+    };
+  },
+  methods: {
+    getRows() {
       const rows = [[]];
-      this.items.forEach((item, i) => {
+      this.items.forEach((item) => {
         const rowIndex = rows.length - 1;
         rows[rowIndex].push({
           ...item,
@@ -97,41 +95,35 @@ export default {
         }
         if (
           this.maxLength >= 0 &&
-          rows[rowIndex].length === this.maxLength - rotDiff &&
-          i < this.items.length - 1
+          rows[rowIndex].length === this.maxLength - rotDiff
         ) {
           rows.push([]);
         }
       });
       return rows;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .hex-wrapper {
   display: inline-block;
-  --scale: 1;
+  --scale: 0.8;
   margin: 50px 0;
+  &.rotated {
+    margin: 20px 0 calc(120px * var(--scale));
+  }
   .hex-row {
-    height: calc(108px * var(--scale));
-    position: relative;
     &.shift {
-      margin-left: calc(62px * var(--scale));
+      margin-left: calc(98px * var(--scale));
     }
   }
-  &.rotated {
-    margin: 25px 0;
-    .hex-row {
-      height: calc(125px * var(--scale));
-      &:last-child {
-        margin-bottom: calc(61px * var(--scale));
-      }
-    }
+  @media (max-width: 1264px) {
+    --scale: 0.6;
   }
   @media (max-width: 960px) {
-    & {
+    &:not(.drawer-wrapper) {
       display: none;
     }
   }

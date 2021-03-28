@@ -148,11 +148,11 @@
 </template>
 
 <script>
-import HexMenu from "@/components/hex-menu-svg.vue";
-import PageArticle from "@/components/page-article.vue";
-import PageArticleSection from "@/components/page-article-section.vue";
-import PageArticleSectionItems from "@/components/page-article-section-items.vue";
-import PageArticleSectionItem from "@/components/page-article-section-item.vue";
+import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
+import PageArticle from "@/components/page-article/page-article.vue";
+import PageArticleSection from "@/components/page-article/page-article-section.vue";
+import PageArticleSectionItems from "@/components/page-article/page-article-section-items.vue";
+import PageArticleSectionItem from "@/components/page-article/page-article-section-item.vue";
 
 export default {
   components: {
