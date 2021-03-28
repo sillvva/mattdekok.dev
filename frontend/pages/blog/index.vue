@@ -132,6 +132,7 @@ export default {
       return Math.ceil(this.pageArticles().length / this.perPage);
     },
     articleLink(article) {
+      console.log(article.path);
       return (article.path || "").replace("/articles", "/blog").replace("/index", "");
     },
     setBlogSearch(val) {
