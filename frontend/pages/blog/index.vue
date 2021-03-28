@@ -1,10 +1,9 @@
 <template>
   <div class="blog-body">
+    <h1 class="page-header">Blog</h1>
     <ul class="article-listings">
       <li v-for="article of pageArticles()" :key="article.slug">
-        <NuxtLink
-          :to="articleLink(article)"
-        >
+        <NuxtLink :to="articleLink(article)">
           <div
             class="article-img"
             :style="`--article-img: url(${article.image});`"
@@ -15,7 +14,7 @@
               `theme--${$vuetify.theme.dark ? 'dark' : 'light'}`,
             ]"
           >
-            <h2>
+            <h2 class="article-title">
               <a>{{ article.title }}</a>
             </h2>
             <p class="article-description">
@@ -34,6 +33,7 @@
         :length="pages"
         :total-visible="7"
         class="pages"
+        color="var(--link)"
       ></v-pagination>
     </div>
   </div>
@@ -43,11 +43,11 @@
 export default {
   layout: "blog",
   head: {
-    title: "Blog"
+    title: "Blog",
   },
   data() {
     return {
-      page: 1
+      page: 1,
     };
   },
   async asyncData({ $content, query }) {
@@ -67,7 +67,7 @@ export default {
     return {
       articles,
       perPage,
-      pages: Math.ceil(articles.length / perPage)
+      pages: Math.ceil(articles.length / perPage),
     };
   },
   methods: {
@@ -91,26 +91,39 @@ export default {
       return (this.page - 1) * this.perPage;
     },
     pageArticles() {
-      return (this.articles || []).slice(this.pageIndex(), this.pageIndex() + this.perPage);
+      return (this.articles || []).slice(
+        this.pageIndex(),
+        this.pageIndex() + this.perPage
+      );
     },
     articleLink(article) {
-      return article.path.replace('/articles', '/blog').replace('/index', '');
-    }
+      return article.path.replace("/articles", "/blog").replace("/index", "");
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .blog-body {
-  padding: 10px;
+  padding-top: 80px;
+  .page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--background);
+    line-height: 84px;
+    z-index: 2;
+    text-align: center;
+  }
   .article-listings {
-    padding: 0;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    padding: 0 10px;
     li {
       list-style: none;
-      background: var(--blogHeaderShade);
+      background: var(--article);
       padding: 15px;
       width: calc(50% - 20px);
       margin: 10px;
@@ -125,8 +138,16 @@ export default {
         margin-bottom: 10px;
       }
       .article-info {
+        position: relative;
+        .article-title {
+          font-size: 20px;
+        }
+        .article-description {
+          font-size: 14px;
+        }
         .article-date {
           margin: 0;
+          font-size: 12px;
         }
       }
     }
@@ -155,6 +176,10 @@ export default {
           }
           .article-info {
             grid-area: info;
+            .article-date {
+              position: absolute;
+              bottom: 0;
+            }
           }
         }
       }
@@ -164,9 +189,31 @@ export default {
         > a {
           grid-template-areas: "img" "info";
           grid-template-columns: 1fr;
+          display: block;
+          position: relative;
+          height: 250px;
           .article-img {
             width: 100%;
-            height: 200px;
+            height: 250px;
+          }
+          .article-info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 10px;
+            background-image: linear-gradient(
+              to top,
+              var(--background) 00%,
+              transparent 100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            .article-date {
+              position: relative;
+            }
           }
         }
       }
