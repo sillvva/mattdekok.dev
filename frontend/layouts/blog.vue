@@ -34,7 +34,7 @@
         text
         @click="toggleSearch()"
         :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
-        v-if="$route.path === '/blog'"
+        v-if="blogHome()"
       >
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
