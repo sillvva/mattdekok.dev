@@ -67,8 +67,8 @@ export default {
 
     try {
       articles = await $content({ deep: true })
-        .only(["title", "slug", "description", "tags", "createdAt", "image"])
-        .sortBy("createdAt", "desc")
+        .only(["title", "slug", "description", "tags", "createdAt", "image", "date"])
+        .sortBy("date", "desc")
         .fetch();
     } catch (err) {
       console.log(err);

@@ -1,6 +1,7 @@
 ---
 title: Data Model Class
 description: A JavaScript class for creating data models
+date: 2021-03-28T23:07:22.325Z
 image: /images/code.jpg
 tags:
   - JavaScript
