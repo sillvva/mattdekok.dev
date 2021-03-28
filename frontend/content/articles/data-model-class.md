@@ -5,6 +5,7 @@ date: 2021-03-28T23:07:22.325Z
 image: /images/code.jpg
 tags:
   - JavaScript
+  - Snippets
 ---
 
 ## The Base Class

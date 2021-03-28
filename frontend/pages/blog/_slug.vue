@@ -9,7 +9,7 @@
         <h1>{{ article.title }}</h1>
         <p>{{ article.description }}</p>
         <p style="font-size: small">
-          Created: {{ formatDate(article.createdAt) }}<br />
+          Created: {{ formatDate(article.date) }}<br />
           <span v-if="article.createdAt != article.updatedAt"
             >Updated: {{ formatDate(article.updatedAt, true) }}</span
           >
