@@ -1,6 +1,7 @@
 ---
 title: New Website
 description: I talk about why I built a personal website and how it evolved over time.
+date: 2021-03-27T23:09:21.438Z
 image: /images/preview-me.jpg
 tags:
   - Valley365
