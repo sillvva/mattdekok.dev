@@ -41,7 +41,7 @@ class Model {
   }
 
   static async getInstance(query) {
-    if (!this.collection) throw new Error("Expected a collection property on model");
+    if (!this.collection()) throw new Error("Expected a collection property on model");
     if (!(query instanceof Object)) throw new Error("Expected query as instance of Object");
 
     // Fetch doc from database based on query
