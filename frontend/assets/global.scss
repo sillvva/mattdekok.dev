@@ -1,3 +1,70 @@
+.v-application.theme--custom {
+  &, .theme--light {
+    --background: #e5e5e5;
+    --background-transparent: rgba(246, 246, 246, 0.8);
+    --darkBackground: #222629;
+    --blogHeaderShade: #181818;
+    --blogHeaderText: #f5f5f5;
+    --dropShadow: #888888;
+    --text: #2a2a2a;
+    --altText: #f5f5f5;
+    --fab: var(--background);
+    --article: #cccccc;
+    --PayPal1: #003087;
+    --PayPal2: #009cde;
+    --Stripe: #007bff;
+    --toast: #111111;
+    --GitHub: #0d0d0d;
+    --LinkedIn: #000000;
+    --link: #007bff;
+    --menuColor1: var(--link);
+    --menuColor2: #003087;
+    color: var(--text) !important;
+  }
+  & {
+    background: var(--background) !important;
+  }
+  &.theme--dark, .theme--dark {
+    --background: #202125;
+    --background-transparent: rgba(0, 0, 0, 0.8);
+    --darkBackground: #222629;
+    --dropShadow: #181818;
+    --blogHeaderShade: #181818;
+    --blogHeaderText: #f5f5f5;
+    --text: #f5f5f5;
+    --altText: #4a4a4a;
+    --fab: var(--background);
+    --article: #2f2f2f;
+    --toast: #f3f3f3;
+    --GitHub: #ffffff;
+    --LinkedIn: #ffffff;
+    --link: #66c252;
+    --menuColor1: var(--link);
+    --menuColor2: #1f6521;
+    color: var(--text) !important;
+  }
+  .mdi {
+    color: var(--text);
+  }
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+}
+
+.theme--dark.v-application code {
+  background-color: transparent !important;
+}
+
+.noscroll {
+  overflow: hidden;
+}
+
+.fab-button {
+  z-index: 101;
+  background-color: var(--fab) !important;
+}
+
 .page-menu {
   margin-bottom: 20px;
   --scale: 0.9 !important;
@@ -12,5 +79,6 @@
     background: var(--background);
     line-height: 84px;
     z-index: 2;
+    text-align: center;
   }
 }

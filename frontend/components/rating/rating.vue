@@ -1,7 +1,12 @@
 <template>
-  <div class="rating text-right">
+  <div
+    :class="[
+      'rating rating-zoom text-right',
+      $vuetify.theme.dark ? 'theme--dark' : 'theme--light',
+    ]"
+  >
     <v-icon v-for="(star, s) in stars" :key="s">
-      {{star}}
+      {{ star }}
     </v-icon>
   </div>
 </template>
@@ -50,6 +55,22 @@ export default {
 .rating {
   .v-icon {
     font-size: medium;
+    &.mdi-star {
+      color: gold;
+    }
+    &.mdi-star-half-full {
+      color: rgb(255, 240, 158);
+    }
+  }
+  &.theme--light {
+    .v-icon {
+      &.mdi-star {
+        color: rgb(200, 125, 0);
+      }
+      &.mdi-star-half-full {
+        color: rgb(200, 125, 0);
+      }
+    }
   }
 }
 </style>

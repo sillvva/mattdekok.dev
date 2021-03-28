@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import pageArticleSection from "@/components/page-article-section.vue";
+import pageArticleSection from "@/components/page-article/page-article-section.vue";
 
 export default {
   components: { pageArticleSection },

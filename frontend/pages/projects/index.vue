@@ -75,8 +75,8 @@
 </template>
 
 <script>
-import HexMenu from "@/components/hex-menu-svg.vue";
-import GalleryItem from "@/components/gallery-item.vue";
+import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
+import GalleryItem from "@/components/gallery-item/gallery-item.vue";
 
 export default {
   head() {
