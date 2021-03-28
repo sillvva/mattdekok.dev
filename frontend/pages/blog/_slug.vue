@@ -106,7 +106,7 @@ export default {
     let article;
 
     try {
-      article = await $content(`articles/${params.slug}`, 'index').fetch();
+      article = await $content(`articles`, params.slug).fetch();
     } catch (err) {
       redirect(302, "/blog");
       return;

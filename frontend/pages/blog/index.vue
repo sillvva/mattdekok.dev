@@ -4,7 +4,7 @@
       <NuxtLink
         :to="articleLink(article)"
         v-for="article of pageArticles()"
-        :key="article.path"
+        :key="article.slug"
       >
         <v-card class="blog-card">
           <v-img height="250" :src="article.image"></v-img>
@@ -132,9 +132,7 @@ export default {
       return Math.ceil(this.pageArticles().length / this.perPage);
     },
     articleLink(article) {
-      const pathParts = (article.path || "").split('/');
-      console.log(article, article.path, pathParts);
-      return `/blog/${pathParts[2]}`;
+      return `/blog/${article.slug}`;
     },
     setBlogSearch(val) {
       this.$store.dispatch("setBlogSearch", val);
