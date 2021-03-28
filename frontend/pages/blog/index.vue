@@ -1,36 +1,44 @@
 <template>
   <div class="blog-body">
-    <h1 class="page-header">Blog</h1>
-    <ul class="article-listings">
-      <li v-for="article of pageArticles()" :key="article.slug">
-        <NuxtLink :to="articleLink(article)">
-          <div
-            class="article-img"
-            :style="`--article-img: url(${article.image});`"
-          ></div>
-          <div
-            :class="[
-              'article-info',
-              `theme--${$vuetify.theme.dark ? 'dark' : 'light'}`,
-            ]"
-          >
-            <h2 class="article-title">
-              <a>{{ article.title }}</a>
-            </h2>
-            <p class="article-description">
-              {{ article.description }}
-            </p>
-            <p class="article-date">
-              {{ formatDate(article.createdAt) }}
-            </p>
-          </div>
-        </NuxtLink>
-      </li>
-    </ul>
+    <div class="article-listings">
+      <NuxtLink
+        :to="articleLink(article)"
+        v-for="article of pageArticles()"
+        :key="article.slug"
+      >
+        <v-card class="blog-card">
+          <v-img height="250" :src="article.image" v-if="article.image"></v-img>
+
+          <v-card-title><a>{{ article.title }}</a></v-card-title>
+
+          <v-card-text v-if="article.description">
+            {{ article.description }}
+          </v-card-text>
+
+          <v-divider
+            class="mx-4"
+            v-if="(article.tags || []).length > 0"
+          ></v-divider>
+
+          <v-card-text v-if="(article.tags || []).length > 0">
+            <v-chip-group active-class="white--text" color="var(--link)" column>
+              <v-btn
+                rounded
+                class="mr-2 mb-2"
+                @click.prevent="setBlogSearch(tag)"
+                v-for="(tag, t) in article.tags"
+                :key="`${article.slug}-tag-${t}`"
+                >{{ tag }}
+              </v-btn>
+            </v-chip-group>
+          </v-card-text>
+        </v-card>
+      </NuxtLink>
+    </div>
     <div class="text-center">
       <v-pagination
         v-model="page"
-        :length="pages"
+        :length="numPages()"
         :total-visible="7"
         class="pages"
         color="var(--link)"
@@ -48,11 +56,11 @@ export default {
   data() {
     return {
       page: 1,
+      search: "",
     };
   },
-  async asyncData({ $content, query }) {
+  async asyncData({ $content }) {
     const perPage = 20;
-
     let articles = [];
 
     try {
@@ -67,8 +75,17 @@ export default {
     return {
       articles,
       perPage,
-      pages: Math.ceil(articles.length / perPage),
     };
+  },
+  watch: {
+    blogSearch(val) {
+      this.search = val;
+    },
+  },
+  computed: {
+    blogSearch() {
+      return this.$store.getters.blogSearch;
+    },
   },
   methods: {
     formatDate(date, time) {
@@ -91,21 +108,37 @@ export default {
       return (this.page - 1) * this.perPage;
     },
     pageArticles() {
-      return (this.articles || []).slice(
-        this.pageIndex(),
-        this.pageIndex() + this.perPage
-      );
+      return (this.articles || [])
+        .filter((a) => {
+          return (
+            a.title
+              .toLowerCase()
+              .match(new RegExp(this.search.toLowerCase())) ||
+            (a.description || "")
+              .toLowerCase()
+              .match(new RegExp(this.search.toLowerCase())) ||
+            (a.tags || []).find((t) =>
+              t.toLowerCase().match(new RegExp(this.search.toLowerCase()))
+            )
+          );
+        })
+        .slice(this.pageIndex(), this.pageIndex() + this.perPage);
+    },
+    numPages() {
+      return Math.ceil(this.pageArticles().length / this.perPage);
     },
     articleLink(article) {
       return article.path.replace("/articles", "/blog").replace("/index", "");
     },
+    setBlogSearch(val) {
+      this.$store.dispatch('setBlogSearch', val);
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .blog-body {
-  padding-top: 80px;
   .page-header {
     position: fixed;
     top: 0;
@@ -120,102 +153,24 @@ export default {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    padding: 0 10px;
-    li {
-      list-style: none;
-      background: var(--article);
-      padding: 15px;
-      width: calc(50% - 20px);
-      margin: 10px;
-      a {
-        display: block;
-      }
-      .article-img {
-        background-image: var(--article-img);
-        background-position: center center;
-        background-size: cover;
-        height: 300px;
-        margin-bottom: 10px;
-      }
-      .article-info {
-        position: relative;
-        .article-title {
-          font-size: 20px;
-        }
-        .article-description {
-          font-size: 14px;
-        }
-        .article-date {
-          margin: 0;
-          font-size: 12px;
-        }
+    padding: 10px;
+    > a {
+      width: calc(100% / 2);
+      padding: 10px;
+      .blog-card {
+        width: 100%;
+        height: 100%;
       }
     }
     @media (min-width: 1400px) {
-      li {
-        width: calc(100% / 3 - 20px);
+      > a {
+        width: calc(100% / 3);
       }
     }
-    @media (max-width: 960px) {
+    @media (max-width: 700px) {
       padding: 5px 10px;
-      li {
-        min-width: 100%;
-        padding: 10px;
-        margin: 5px 0;
-        > a {
-          display: grid;
-          grid-template-areas: "img info";
-          grid-template-columns: 160px 1fr;
-          grid-gap: 10px;
-          .article-img {
-            grid-area: img;
-            float: left;
-            width: 160px;
-            height: 100px;
-            margin: 0;
-          }
-          .article-info {
-            grid-area: info;
-            .article-date {
-              position: absolute;
-              bottom: 0;
-            }
-          }
-        }
-      }
-    }
-    @media (max-width: 500px) {
-      li {
-        > a {
-          grid-template-areas: "img" "info";
-          grid-template-columns: 1fr;
-          display: block;
-          position: relative;
-          height: 250px;
-          .article-img {
-            width: 100%;
-            height: 250px;
-          }
-          .article-info {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 10px;
-            background-image: linear-gradient(
-              to top,
-              var(--background) 00%,
-              transparent 100%
-            );
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            .article-date {
-              position: relative;
-            }
-          }
-        }
+      > a {
+        width: 100%;
       }
     }
   }

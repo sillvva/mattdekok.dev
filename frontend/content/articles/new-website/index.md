@@ -14,7 +14,7 @@ tags:
 
 ## How It All Started
 
-At the time, I was working for a company called Valmont Industries. I had already learned Angular and was using that to develop what would become <a href="https://www.valley365.com" target="_blank" rel="noreferrer noopener">Valley 365</a>. I wasn't really enjoying Angular very much. It was clunky and complicated to learn.
+At the time, I was working for a company called Valmont Industries. I was learning Angular and using that to develop what would become <a href="https://www.valley365.com" target="_blank" rel="noreferrer noopener">Valley 365</a>. I wasn't really enjoying Angular very much. It was clunky and complicated to learn.
 
 <blog-img src="/images/preview-valley-365.jpg" width="500"></blog-img>
 

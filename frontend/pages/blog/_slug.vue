@@ -223,10 +223,10 @@ article {
       top: 0;
       bottom: 0;
       width: auto;
-      height: 400px;
+      height: 350px;
       box-shadow: 0 5px 5px var(--dropShadow);
       @media (max-width: 500px) {
-        height: 350px;
+        height: 300px;
       }
     }
     .article-body {
