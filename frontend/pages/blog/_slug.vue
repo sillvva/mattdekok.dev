@@ -21,18 +21,20 @@
         <v-col cols="12" style="max-width: 800px">
           <v-card class="article-toc">
             <v-list>
-              <v-list-item>
-                <v-list-item-title>Table of Contents</v-list-item-title>
-              </v-list-item>
-              <v-list-item
-                v-for="link of article.toc"
-                :key="link.id"
-                :class="[`pl-${4 + 3 * Math.max(0, link.depth - 2)}`]"
-                :to="`#${link.id}`"
-                dense
-              >
-                <v-list-item-title>{{ link.text }}</v-list-item-title>
-              </v-list-item>
+              <v-list-group :value="tocOpen">
+                <template v-slot:activator>
+                  <v-list-item-title>Table of Contents</v-list-item-title>
+                </template>
+                <v-list-item
+                  v-for="link of article.toc"
+                  :key="link.id"
+                  :class="[`pl-${4 + 3 * Math.max(0, link.depth - 2)}`]"
+                  :to="`#${link.id}`"
+                  dense
+                >
+                  <v-list-item-title>{{ link.text }}</v-list-item-title>
+                </v-list-item>
+              </v-list-group>
             </v-list>
           </v-card>
         </v-col>
@@ -68,6 +70,11 @@ export default {
           })
           .flat(),
       ],
+    };
+  },
+  data() {
+    return {
+      tocOpen: false,
     };
   },
   async asyncData({ $content, params, redirect }) {
@@ -216,6 +223,16 @@ article {
       width: auto;
       margin-left: 0;
       padding: 40px 20px;
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.article-body {
+  .nuxt-content-highlight {
+    code {
+      padding: 0;
     }
   }
 }
