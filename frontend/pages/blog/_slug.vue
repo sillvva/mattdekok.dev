@@ -10,9 +10,9 @@
         <p>{{ article.description }}</p>
         <p style="font-size: small">
           Created: {{ formatDate(article.date) }}<br />
-          <span v-if="article.createdAt != article.updatedAt"
-            >Updated: {{ formatDate(article.updatedAt, true) }}</span
-          >
+          <span v-if="article.updated">
+            Updated: {{ formatDate(article.updated, true) }}
+          </span>
         </p>
       </div>
     </section>
@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  layout: 'blog',
+  layout: "blog",
   head() {
     return {
       title: (this.article || {}).title,
@@ -117,7 +117,7 @@ export default {
       .sortBy("createdAt", "asc")
       .surround(params.slug)
       .fetch();
-    
+
     return { article, prev, next };
   },
   methods: {
@@ -201,10 +201,15 @@ article {
         h2 {
           font-weight: bold;
           font-size: 28px;
+          margin-top: 40px;
+          &:first-of-type {
+            margin-top: 0;
+          }
         }
         h3 {
           font-weight: bold;
           font-size: 22px;
+          margin-top: 20px;
         }
         p {
           margin: 10px 0 15px;
@@ -215,7 +220,7 @@ article {
       }
     }
   }
-  
+
   @media (max-width: 1000px) {
     grid-template-areas: "header" "body";
     .article-header {

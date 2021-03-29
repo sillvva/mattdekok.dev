@@ -62,7 +62,7 @@ export default {
     };
   },
   async asyncData({ $content }) {
-    const perPage = 20;
+    const perPage = 12;
     let articles = [];
 
     try {

@@ -56,19 +56,19 @@ export default {
   .v-icon {
     font-size: medium;
     &.mdi-star {
-      color: gold;
+      color: rgb(200, 125, 0) !important;
     }
     &.mdi-star-half-full {
-      color: rgb(255, 240, 158);
+      color: rgb(200, 125, 0) !important;
     }
   }
-  &.theme--light {
+  &.theme--dark {
     .v-icon {
       &.mdi-star {
-        color: rgb(200, 125, 0);
+        color: gold !important;
       }
       &.mdi-star-half-full {
-        color: rgb(200, 125, 0);
+        color: rgb(255, 240, 158) !important;
       }
     }
   }

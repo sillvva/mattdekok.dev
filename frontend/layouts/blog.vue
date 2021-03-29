@@ -1,5 +1,5 @@
 <template>
-  <v-app class="theme--custom">
+  <v-app class="theme--custom blog-app">
     <v-app-bar fixed color="var(--dropShadow)">
       <v-btn
         text
@@ -119,8 +119,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.v-application {
-  padding-top: 64px;
+<style lang="scss" scoped>
+.blog-app {
+  padding-top: 60px;
 }
 </style>
