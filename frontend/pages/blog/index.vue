@@ -9,7 +9,11 @@
         <v-card class="blog-card">
           <v-img height="250" :src="article.image"></v-img>
 
-          <v-card-title>
+          <v-card-text class="pb-0">
+            {{ formatDate(article.created || article.createdAt) }}
+          </v-card-text>
+
+          <v-card-title class="pt-0">
             <a>{{ article.title }}</a>
           </v-card-title>
 
