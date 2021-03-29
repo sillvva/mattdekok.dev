@@ -92,6 +92,11 @@ export default {
   watch: {
     search(val) {
       this.$store.dispatch("setBlogSearch", val);
+      if (this.$refs.search && !this.$refs.search.isFocused) {
+        if (!val) {
+          this.searchOpen = false;
+        }
+      }
     },
     blogSearch(val) {
       this.search = val.trim();

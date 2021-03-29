@@ -37,9 +37,6 @@ export default {
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
   },
-  mounted() {
-    this.$store.dispatch("setBlogSearch", this.search);
-  },
   methods: {
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
