@@ -57,6 +57,7 @@
         class="pages"
         color="var(--link)"
         @input="pageChanged"
+        v-if="numPages() > 1"
       ></v-pagination>
     </div>
   </div>
