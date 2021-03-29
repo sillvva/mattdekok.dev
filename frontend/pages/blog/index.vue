@@ -7,7 +7,7 @@
         :key="article.slug"
       >
         <v-card class="blog-card">
-          <v-img height="250" :src="article.image"></v-img>
+          <v-img :src="article.image"></v-img>
 
           <v-card-text class="pb-0">
             {{ formatDate(article.created || article.createdAt) }}
@@ -179,6 +179,7 @@ export default {
         height: 100%;
         .v-image {
           background: var(--dropShadow);
+          height: 250px;
         }
       }
     }
@@ -191,6 +192,15 @@ export default {
       padding: 5px 10px;
       > a {
         width: 100%;
+      }
+    }
+    @media (max-width: 450px) {
+      > a {
+        .blog-card {
+          .v-image {
+            height: 150px;
+          }
+        }
       }
     }
   }
