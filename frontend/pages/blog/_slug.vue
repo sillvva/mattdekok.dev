@@ -141,7 +141,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 article {
   display: grid;
   grid-template-areas: "header body";
