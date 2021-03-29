@@ -1,13 +1,20 @@
 <template>
   <div class="blog-body">
-    <div class="article-listings">
+    <div :class="['article-listings', fadeOut && 'fade-out']">
       <NuxtLink
         :to="articleLink(article)"
-        v-for="article of pageArticles()"
-        :key="article.slug"
+        v-for="(article, a) of pageArticles()"
+        :key="`${article.slug}${a}`"
       >
         <v-card class="blog-card">
-          <v-img :src="article.image"></v-img>
+          <v-lazy
+            :value="article.visible"
+            :options="{
+              threshold: 1,
+            }"
+          >
+            <v-img :src="article.image"></v-img>
+          </v-lazy>
 
           <v-card-text class="pb-0">
             {{ formatDate(article.created || article.createdAt) }}
@@ -44,11 +51,12 @@
     </div>
     <div class="text-center">
       <v-pagination
-        v-model="page"
+        v-model="pageSelected"
         :length="numPages()"
         :total-visible="7"
         class="pages"
         color="var(--link)"
+        @input="pageChanged"
       ></v-pagination>
     </div>
   </div>
@@ -63,11 +71,13 @@ export default {
   data() {
     return {
       page: 1,
+      pageSelected: 1,
       search: "",
+      perPage: 12,
+      fadeOut: false
     };
   },
   async asyncData({ $content }) {
-    const perPage = 12;
     let articles = [];
 
     try {
@@ -89,7 +99,6 @@ export default {
 
     return {
       articles,
-      perPage,
     };
   },
   watch: {
@@ -122,27 +131,31 @@ export default {
     pageIndex() {
       return (this.page - 1) * this.perPage;
     },
+    allArticles() {
+      return (this.articles || []).filter((a) => {
+        return (
+          a.title &&
+          (!this.search.trim() ||
+            a.title
+              .toLowerCase()
+              .match(new RegExp(this.search.toLowerCase())) ||
+            (a.description || "")
+              .toLowerCase()
+              .match(new RegExp(this.search.toLowerCase())) ||
+            (a.tags || []).find((t) =>
+              t.toLowerCase().match(new RegExp(this.search.toLowerCase()))
+            ))
+        );
+      });
+    },
     pageArticles() {
-      return (this.articles || [])
-        .filter((a) => {
-          return (
-            a.title &&
-            (!this.search.trim() ||
-              a.title
-                .toLowerCase()
-                .match(new RegExp(this.search.toLowerCase())) ||
-              (a.description || "")
-                .toLowerCase()
-                .match(new RegExp(this.search.toLowerCase())) ||
-              (a.tags || []).find((t) =>
-                t.toLowerCase().match(new RegExp(this.search.toLowerCase()))
-              ))
-          );
-        })
-        .slice(this.pageIndex(), this.pageIndex() + this.perPage);
+      return this.allArticles().slice(
+        this.pageIndex(),
+        this.pageIndex() + this.perPage
+      );
     },
     numPages() {
-      return Math.ceil(this.pageArticles().length / this.perPage);
+      return Math.ceil(this.allArticles().length / this.perPage);
     },
     articleLink(article) {
       return `/blog/${article.slug}`;
@@ -150,6 +163,16 @@ export default {
     setBlogSearch(val) {
       this.$store.dispatch("setBlogSearch", val);
     },
+    pageChanged($page) {
+      this.fadeOut = true;
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        this.page = $page;
+        setTimeout(() => {
+          this.fadeOut = false;
+        }, 100);
+      }, 400);
+    }
   },
 };
 </script>
@@ -171,6 +194,10 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     padding: 10px;
+    transition: opacity 0.4s;
+    &.fade-out {
+      opacity: 0;
+    }
     > a {
       width: calc(100% / 2);
       padding: 10px;
