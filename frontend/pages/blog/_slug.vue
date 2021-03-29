@@ -19,20 +19,22 @@
     <section class="article-body">
       <v-row justify="center" style="max-width: 1000px">
         <v-col cols="12" style="max-width: 800px">
-          <nav class="article-toc">
-            <ul>
-              <li
+          <v-card class="article-toc">
+            <v-list>
+              <v-list-item>
+                <v-list-item-title>Table of Contents</v-list-item-title>
+              </v-list-item>
+              <v-list-item
                 v-for="link of article.toc"
                 :key="link.id"
-                :class="[
-                  link.depth === 2 && 'py-1',
-                  link.depth >= 3 && `ml-${4*(link.depth-2)} pb-2`,
-                ]"
+                :class="[`pl-${4 + 3 * Math.max(0, link.depth - 2)}`]"
+                :to="`#${link.id}`"
+                dense
               >
-                <NuxtLink :to="`#${link.id}`">{{ link.text }}</NuxtLink>
-              </li>
-            </ul>
-          </nav>
+                <v-list-item-title>{{ link.text }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-card>
         </v-col>
         <v-col cols="12" class="article-content" style="max-width: 800px">
           <nuxt-content :document="article" />
@@ -129,6 +131,9 @@ article {
     color: var(--blogHeaderText);
     padding: 20px;
     padding-bottom: 40px;
+    @media (max-width: 600px) {
+      padding-bottom: 20px;
+    }
     .article-header-cover {
       padding: 15px;
       position: absolute;
@@ -158,9 +163,16 @@ article {
     overflow: auto;
     padding: 30px;
     margin-left: 400px;
-    width: calc(100vw - 400px);
+    // width: calc(100vw - 400px);
     .article-toc {
       margin-bottom: 10px;
+      max-width: 400px;
+      a.v-list-item {
+        min-height: 30px;
+        .v-list-item__title {
+          color: var(--link);
+        }
+      }
     }
     .article-content {
       .nuxt-content {
