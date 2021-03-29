@@ -14,32 +14,7 @@
                 threshold: 1,
               }"
             >
-              <v-img :src="article.image" @click.prevent>
-                <v-expand-transition v-if="(article.tags || []).length > 0">
-                  <div
-                    v-if="hover"
-                    class="d-flex transition-fast-in-fast-out grey darken-3 v-card--reveal display-3 white-text align-center"
-                    style="height: 100%"
-                  >
-                    <v-chip-group
-                      class="text-center"
-                      color="var(--link)"
-                      column
-                    >
-                      <v-btn
-                        rounded
-                        class="mr-2 mb-2"
-                        @click.prevent="appendBlogSearch(tag)"
-                        :color="tagIncluded(tag) ? 'var(--link)' : ''"
-                        v-for="(tag, t) in article.tags"
-                        :key="`${article.slug}-tag-${t}`"
-                      >
-                        {{ tag }}
-                      </v-btn>
-                    </v-chip-group>
-                  </div>
-                </v-expand-transition>
-              </v-img>
+              <v-img :src="article.image"></v-img>
             </v-lazy>
 
             <v-card-text class="pb-0">
@@ -53,6 +28,31 @@
             <v-card-text v-if="article.description">
               {{ article.description }}
             </v-card-text>
+
+            <v-card-text class="d-block d-md-none text-center" @click.prevent>
+              <v-icon>mdi-dots-horizontal</v-icon>
+            </v-card-text>
+
+            <v-expand-transition v-if="(article.tags || []).length > 0">
+              <div
+                v-if="hover || article.tags.find((t) => tagIncluded(t)) || $vuetify.breakpoint.mdAndUp"
+                class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
+                style="height: auto;"
+              >
+                <v-chip-group class="text-center" color="var(--link)" column>
+                  <v-btn
+                    rounded
+                    class="mr-2 mb-2"
+                    @click.prevent="appendBlogSearch(tag)"
+                    :color="tagIncluded(tag) ? 'var(--link)' : ''"
+                    v-for="(tag, t) in article.tags"
+                    :key="`${article.slug}-tag-${t}`"
+                  >
+                    {{ tag }}
+                  </v-btn>
+                </v-chip-group>
+              </div>
+            </v-expand-transition>
           </v-card>
         </v-hover>
       </NuxtLink>
@@ -86,7 +86,8 @@ export default {
       fadeOut: false,
     };
   },
-  async asyncData({ $content }) {
+  async asyncData(context) {
+    const { $content } = context;
     let articles = [];
 
     try {
@@ -118,7 +119,7 @@ export default {
   computed: {
     blogSearch() {
       return this.$store.getters.blogSearch;
-    },
+    }
   },
   methods: {
     formatDate(date, time) {
@@ -271,11 +272,12 @@ export default {
 <style lang="scss">
 .blog-card {
   .v-chip-group {
-    width: 100%;
     .v-slide-group__wrapper {
       .v-slide-group__content {
         align-items: center;
-        justify-content: center;
+        button {
+          margin: 4px 6px !important;
+        }
       }
     }
   }
