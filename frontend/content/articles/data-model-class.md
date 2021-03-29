@@ -2,6 +2,7 @@
 title: Data Model Class
 description: A JavaScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
+updated: 2021-03-29T01:13:39.512Z
 image: /images/code.jpg
 tags:
   - JavaScript
@@ -124,7 +125,7 @@ export default class Model {
 
 ## An Example Subclass
 
-You can then extend the base class to define a specific data entity, such as users, orders, etc.
+You can then extend the base class to define a specific data entity, such as users, orders, etc. If specified, a schema will enforce specific object properties. It is not required to have a schema.
 
 ```javascript [db/user.js]
 import Model from "./model.js";
