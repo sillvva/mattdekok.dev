@@ -2,12 +2,14 @@
 title: Data Model Class
 description: A JavaScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-03-29T01:13:39.512Z
-image: /images/code.jpg
+updated: 2021-03-29T17:02:23.184Z
+image: /images/blog/code.jpg
 tags:
   - JavaScript
   - Snippets
 ---
+
+Using a data model class like this makes your database code cleaner and easier to manage. By creating a Model superclass, you eliminate the need to rewrite the fetching and saving logic for all your data models. You then use subclasses to define each data model's collection, schema, and unique properties and methods.
 
 ## Initiate the Database
 
