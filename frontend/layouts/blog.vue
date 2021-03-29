@@ -6,8 +6,8 @@
       color="var(--dropShadow)"
       :src="
         $vuetify.theme.dark
-          ? '/images/blog/dark-hex-wp.jpg'
-          : '/images/blog/light-hex-wp.jpg'
+          ? '/images/blog/dark-hex-wp.webp'
+          : '/images/blog/light-hex-wp.webp'
       "
       class="blog-app-bar"
     >
