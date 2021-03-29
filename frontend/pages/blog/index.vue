@@ -30,6 +30,7 @@
                         rounded
                         class="mr-2 mb-2"
                         @click.prevent="appendBlogSearch(tag)"
+                        :color="tagIncluded(tag) ? 'var(--link)' : ''"
                         v-for="(tag, t) in article.tags"
                         :key="`${article.slug}-tag-${t}`"
                       >
@@ -177,7 +178,16 @@ export default {
       this.$store.dispatch("setBlogSearch", val);
     },
     appendBlogSearch(val) {
-      this.setBlogSearch([...this.search.split(" "), val].join(" "));
+      const words = this.search.split(" ");
+      this.setBlogSearch(
+        [
+          ...words.filter((w) => w !== val),
+          words.includes(val) ? null : val,
+        ].join(" ")
+      );
+    },
+    tagIncluded(tag) {
+      return this.search.toLowerCase().split(" ").includes(tag.toLowerCase());
     },
     pageChanged($page) {
       this.fadeOut = true;
