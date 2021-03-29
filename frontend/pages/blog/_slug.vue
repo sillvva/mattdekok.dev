@@ -24,10 +24,10 @@
               <li
                 v-for="link of article.toc"
                 :key="link.id"
-                :class="{
-                  'py-1': link.depth === 2,
-                  'ml-5 pb-2': link.depth === 3,
-                }"
+                :class="[
+                  link.depth === 2 && 'py-1',
+                  link.depth >= 3 && `ml-${4*(link.depth-2)} pb-2`,
+                ]"
               >
                 <NuxtLink :to="`#${link.id}`">{{ link.text }}</NuxtLink>
               </li>
@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  layout: "blog",
+  layout: "blog-post",
   head() {
     return {
       title: (this.article || {}).title,
@@ -54,15 +54,17 @@ export default {
           name: "description",
           content: (this.article || {}).description,
         },
-        ...['os', 'og', 'twitter'].map(m => {
-          return ['title', 'image', 'description'].map(t => {
-            return {
-              hid: `${m}:${t}`,
-              name: `${m}:${t}`,
-              content: (this.article || {})[t]
-            }
+        ...["os", "og", "twitter"]
+          .map((m) => {
+            return ["title", "image", "description"].map((t) => {
+              return {
+                hid: `${m}:${t}`,
+                name: `${m}:${t}`,
+                content: (this.article || {})[t],
+              };
+            });
           })
-        }).flat()
+          .flat(),
       ],
     };
   },
@@ -154,11 +156,11 @@ article {
   .article-body {
     grid-area: body;
     overflow: auto;
-    padding: 60px 30px;
+    padding: 30px;
     margin-left: 400px;
     width: calc(100vw - 400px);
     .article-toc {
-      margin-bottom: 30px;
+      margin-bottom: 10px;
     }
     .article-content {
       .nuxt-content {
@@ -202,9 +204,6 @@ article {
       width: auto;
       margin-left: 0;
       padding: 40px 20px;
-      .article-toc {
-        margin-bottom: 10px;
-      }
     }
   }
 }

@@ -1,9 +1,18 @@
 <template>
   <v-app class="theme--custom">
-    <v-app-bar fixed color="var(--dropShadow)">
+    <v-app-bar
+      fixed
+      prominent
+      color="var(--dropShadow)"
+      :src="
+        $vuetify.theme.dark
+          ? '/images/blog/dark-hex-wp.jpg'
+          : '/images/blog/light-hex-wp.jpg'
+      "
+      class="blog-app-bar"
+    >
       <v-btn
-        text
-        fab
+        icon
         @click="$router.push('/')"
         :aria-label="`Return to Website`"
         v-if="blogHome()"
@@ -11,36 +20,42 @@
         <v-icon>mdi-home</v-icon>
       </v-btn>
       <v-btn
-        text
-        fab
+        icon
         @click="$router.push('/blog')"
         :aria-label="`Return to Blog`"
         v-if="!blogHome()"
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <v-toolbar-title v-if="!searching()">Blog</v-toolbar-title>
-      <v-spacer v-if="!searching()"></v-spacer>
+      <v-toolbar-title style="position: absolute">Blog</v-toolbar-title>
+      <v-spacer :class="[searching() && 'd-none', 'd-sm-block']"></v-spacer>
       <v-text-field
         v-model="search"
         v-if="searching()"
-        label="Search"
+        placeholder="Search"
         hide-details
         ref="search"
         @blur="searchBlur()"
+        style="margin-top: 5px"
       />
       <v-btn
-        fab
-        text
-        @click="toggleSearch()"
+        icon
+        @click="openSearch()"
         :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
-        v-if="blogHome()"
+        v-if="blogHome() && !searching()"
       >
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn
-        fab
-        text
+        icon
+        @click="closeSearch()"
+        :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
+        v-if="blogHome() && searching()"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+      <v-btn
+        icon
         @click="toggleTheme()"
         :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
       >
@@ -96,16 +111,15 @@ export default {
     searching() {
       return this.searchOpen && this.blogHome();
     },
-    toggleSearch() {
-      this.searchOpen = !this.searchOpen;
+    openSearch() {
+      this.searchOpen = true;
       setTimeout(() => {
-        if (this.searchOpen) {
-          this.$refs.search.focus();
-        }
-        else {
-          this.search = "";
-        }
-      }, 50);
+        this.$refs.search.focus();
+      }, 25);
+    },
+    closeSearch() {
+      this.searchOpen = false;
+      this.search = "";
     },
     searchBlur() {
       if (this.search.trim().length === 0) {
@@ -114,13 +128,35 @@ export default {
     },
     blogHome() {
       return this.$route.path.match(/^\/blog\/?$/);
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .blog-app {
-  padding-top: 64px !important;
+  padding-top: 128px !important;
+  padding-bottom: 48px !important;
+}
+</style>
+
+<style lang="scss">
+.v-app-bar.blog-app-bar {
+  .v-toolbar__title {
+    font-weight: 600;
+  }
+  &.theme--dark {
+    .v-toolbar__title {
+      text-shadow: 1px 1px 2px black;
+    }
+  }
+  &.theme--light {
+    .v-toolbar__title {
+      text-shadow: 1px 1px 2px white;
+    }
+  }
+  .v-image__image.v-image__image--cover {
+    background-position: top center !important;
+  }
 }
 </style>
