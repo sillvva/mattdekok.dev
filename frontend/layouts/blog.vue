@@ -1,5 +1,5 @@
 <template>
-  <v-app class="theme--custom blog-app">
+  <v-app class="theme--custom">
     <v-app-bar fixed color="var(--dropShadow)">
       <v-btn
         text
@@ -47,7 +47,7 @@
         <v-icon>mdi-brightness-6</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-main>
+    <v-main class="blog-app">
       <nuxt style="position: relative" />
     </v-main>
   </v-app>
@@ -121,6 +121,6 @@ export default {
 
 <style lang="scss" scoped>
 .blog-app {
-  padding-top: 60px;
+  padding-top: 64px !important;
 }
 </style>

@@ -9,9 +9,9 @@
         <v-card class="blog-card">
           <v-img height="250" :src="article.image"></v-img>
 
-          <v-card-title
-            ><a>{{ article.title }}</a></v-card-title
-          >
+          <v-card-title>
+            <a>{{ article.title }}</a>
+          </v-card-title>
 
           <v-card-text v-if="article.description">
             {{ article.description }}
@@ -30,7 +30,8 @@
                 @click.prevent="setBlogSearch(tag)"
                 v-for="(tag, t) in article.tags"
                 :key="`${article.slug}-tag-${t}`"
-                >{{ tag }}
+              >
+                {{ tag }}
               </v-btn>
             </v-chip-group>
           </v-card-text>
@@ -67,7 +68,15 @@ export default {
 
     try {
       articles = await $content({ deep: true })
-        .only(["title", "slug", "description", "tags", "createdAt", "image", "date"])
+        .only([
+          "title",
+          "slug",
+          "description",
+          "tags",
+          "createdAt",
+          "image",
+          "date",
+        ])
         .sortBy("date", "desc")
         .fetch();
     } catch (err) {
