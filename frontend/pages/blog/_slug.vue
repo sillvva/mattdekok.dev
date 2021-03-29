@@ -18,8 +18,8 @@
     </section>
     <section class="article-body">
       <v-row justify="center" style="max-width: 1000px">
-        <v-col cols="12" style="max-width: 800px">
-          <v-card class="article-toc">
+        <v-col cols="12" style="width: 800px; max-width: 800px">
+          <v-card class="article-toc" v-if="article.toc.length > 0">
             <v-list>
               <v-list-group :value="tocOpen">
                 <template v-slot:activator>
