@@ -1,5 +1,12 @@
 import colors from "vuetify/es5/util/colors";
 
+const meta = {
+  title: "Matt DeKok",
+  description: "Experienced web developer with a demonstrated history of working in the wireless industry.",
+  image: "https://www.mattdekok.dev/images/preview-me2.jpg",
+  url: "https://www.mattdekok.dev"
+};
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -16,18 +23,16 @@ export default {
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { "http-equiv": "cache-control", content: "max-age=31536000" },
       { hid: "description", name: "description", content: "Experienced web developer with a demonstrated history of working in the wireless industry." },
-      { hid: "os:title", property: 'os:title', content: 'Matt DeKok' },
-      { hid: "os:description", property: 'os:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
-      { hid: "os:image", property: 'os:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
-      { hid: "os:url", property: 'os:url', content: 'https://www.mattdekok.dev' },
-      { hid: "og:title", property: 'og:title', content: 'Matt DeKok' },
-      { hid: "og:description", property: 'og:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
-      { hid: "og:image", property: 'og:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
-      { hid: "og:url", property: 'og:url', content: 'https://www.mattdekok.dev' },
-      { hid: "twitter:title", name: 'twitter:title', content: 'Matt DeKok' },
+      ...['os', 'og', 'twitter'].map(m => {
+        return ['title', 'description', 'image', 'url'].map(t => {
+          return {
+            hid: `${m}:${t}`,
+            name: `${m}:${t}`,
+            content: meta[t]
+          }
+        })
+      }).flat(),
       { hid: "twitter:site", name: 'twitter:site', content: '@sillvvasensei' },
-      { hid: "twitter:description", name: 'twitter:description', content: 'Experienced web developer with a demonstrated history of working in the wireless industry.' },
-      { hid: "twitter:image", name: 'twitter:image', content: 'https://www.mattdekok.dev/images/preview-me2.jpg' },
       { name: 'twitter:card', content: 'summary_large_image' },
     ],
     link: [

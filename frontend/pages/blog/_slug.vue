@@ -50,55 +50,19 @@ export default {
       title: (this.article || {}).title,
       meta: [
         {
-          hid: "os:title",
-          name: "os:title",
-          content: (this.article || {}).title,
-        },
-        {
-          hid: "og:title",
-          name: "og:title",
-          content: (this.article || {}).title,
-        },
-        {
-          hid: "twitter:title",
-          name: "twitter:title",
-          content: (this.article || {}).title,
-        },
-        {
           hid: "description",
           name: "description",
           content: (this.article || {}).description,
         },
-        {
-          hid: "os:description",
-          name: "os:description",
-          content: (this.article || {}).description,
-        },
-        {
-          hid: "og:description",
-          name: "og:description",
-          content: (this.article || {}).description,
-        },
-        {
-          hid: "twitter:description",
-          name: "twitter:description",
-          content: (this.article || {}).description,
-        },
-        {
-          hid: "os:image",
-          name: "os:image",
-          content: (this.article || {}).image,
-        },
-        {
-          hid: "og:image",
-          name: "og:image",
-          content: (this.article || {}).image,
-        },
-        {
-          hid: "twitter:image",
-          name: "twitter:image",
-          content: (this.article || {}).image,
-        },
+        ...['os', 'og', 'twitter'].map(m => {
+          return ['title', 'image', 'description'].map(t => {
+            return {
+              hid: `${m}:${t}`,
+              name: `${m}:${t}`,
+              content: (this.article || {})[t]
+            }
+          })
+        }).flat()
       ],
     };
   },
