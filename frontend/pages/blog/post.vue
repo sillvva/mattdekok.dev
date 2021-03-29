@@ -12,16 +12,6 @@
 <script>
 export default {
   layout: "blog",
-  // asyncData({ $content, route }) {
-
-  //   const pathParts = this.$route.path.split('/');
-  //   if (pathParts[2] === 'post') {
-  //     this.$router.replace('/blog');
-  //   }
-  //   else {
-  //     this.$router.replace(`/blog/${pathParts[2]}`);
-  //   }
-  // },
   async mounted() {
     const pathParts = this.$route.path.split('/');
     if (pathParts[2] === 'post') {
