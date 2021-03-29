@@ -29,6 +29,8 @@
               {{ article.description }}
             </v-card-text>
 
+            <v-divider></v-divider>
+
             <v-card-text class="d-block d-md-none text-center" @click.prevent>
               <v-icon>mdi-dots-horizontal</v-icon>
             </v-card-text>
