@@ -1,50 +1,71 @@
 <template>
   <div class="blog-body">
-    <div class="article-listings">
+    <div :class="['article-listings', fadeOut && 'fade-out']">
       <NuxtLink
         :to="articleLink(article)"
-        v-for="article of pageArticles()"
-        :key="article.slug"
+        v-for="(article, a) of pageArticles()"
+        :key="`${article.slug}${a}`"
       >
-        <v-card class="blog-card">
-          <v-img height="250" :src="article.image"></v-img>
+        <v-hover v-slot="{ hover }">
+          <v-card class="blog-card">
+            <v-lazy
+              :value="article.visible"
+              :options="{
+                threshold: 1,
+              }"
+            >
+              <v-img :src="article.image"></v-img>
+            </v-lazy>
 
-          <v-card-title>
-            <a>{{ article.title }}</a>
-          </v-card-title>
+            <v-card-text class="pb-0">
+              {{ formatDate(article.created || article.createdAt) }}
+            </v-card-text>
 
-          <v-card-text v-if="article.description">
-            {{ article.description }}
-          </v-card-text>
+            <v-card-title class="pt-0">
+              <a>{{ article.title }}</a>
+            </v-card-title>
 
-          <v-divider
-            class="mx-4"
-            v-if="(article.tags || []).length > 0"
-          ></v-divider>
+            <v-card-text v-if="article.description">
+              {{ article.description }}
+            </v-card-text>
 
-          <v-card-text v-if="(article.tags || []).length > 0">
-            <v-chip-group active-class="white--text" color="var(--link)" column>
-              <v-btn
-                rounded
-                class="mr-2 mb-2"
-                @click.prevent="setBlogSearch(tag)"
-                v-for="(tag, t) in article.tags"
-                :key="`${article.slug}-tag-${t}`"
+            <v-card-text class="d-block d-md-none text-center" @click.prevent>
+              <v-icon>mdi-dots-horizontal</v-icon>
+            </v-card-text>
+
+            <v-expand-transition v-if="(article.tags || []).length > 0">
+              <div
+                v-if="hover || article.tags.find((t) => tagIncluded(t)) || $vuetify.breakpoint.mdAndUp"
+                class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
+                style="height: auto;"
               >
-                {{ tag }}
-              </v-btn>
-            </v-chip-group>
-          </v-card-text>
-        </v-card>
+                <v-chip-group class="text-center" color="var(--link)" column>
+                  <v-btn
+                    rounded
+                    class="mr-2 mb-2"
+                    @click.prevent="appendBlogSearch(tag)"
+                    :color="tagIncluded(tag) ? 'var(--link)' : ''"
+                    v-for="(tag, t) in article.tags"
+                    :key="`${article.slug}-tag-${t}`"
+                  >
+                    {{ tag }}
+                  </v-btn>
+                </v-chip-group>
+              </div>
+            </v-expand-transition>
+          </v-card>
+        </v-hover>
       </NuxtLink>
     </div>
     <div class="text-center">
       <v-pagination
-        v-model="page"
+        v-model="pageSelected"
         :length="numPages()"
         :total-visible="7"
         class="pages"
         color="var(--link)"
+        @input="pageChanged"
+        v-if="numPages() > 1"
       ></v-pagination>
     </div>
   </div>
@@ -59,11 +80,14 @@ export default {
   data() {
     return {
       page: 1,
+      pageSelected: 1,
       search: "",
+      perPage: 12,
+      fadeOut: false,
     };
   },
-  async asyncData({ $content }) {
-    const perPage = 12;
+  async asyncData(context) {
+    const { $content } = context;
     let articles = [];
 
     try {
@@ -85,7 +109,6 @@ export default {
 
     return {
       articles,
-      perPage,
     };
   },
   watch: {
@@ -96,7 +119,7 @@ export default {
   computed: {
     blogSearch() {
       return this.$store.getters.blogSearch;
-    },
+    }
   },
   methods: {
     formatDate(date, time) {
@@ -118,33 +141,64 @@ export default {
     pageIndex() {
       return (this.page - 1) * this.perPage;
     },
+    allArticles() {
+      return (this.articles || []).filter((a) => {
+        return a.title && (!this.search.trim() || this.doesMatch(a));
+      });
+    },
+    doesMatch(article) {
+      const searchRegex = this.search
+        .split(" ")
+        .map((s) => new RegExp(s.trim(), "i"));
+      return (
+        searchRegex
+          .map((r) => {
+            return (
+              r.test(article.title) ||
+              r.test(article.description) ||
+              r.test(this.formatDate(article.created)) ||
+              article.tags.filter((t) => r.test(t)).length > 0
+            );
+          })
+          .filter((b) => !b).length === 0
+      );
+    },
     pageArticles() {
-      return (this.articles || [])
-        .filter((a) => {
-          return (
-            a.title &&
-            (!this.search.trim() ||
-              a.title
-                .toLowerCase()
-                .match(new RegExp(this.search.toLowerCase())) ||
-              (a.description || "")
-                .toLowerCase()
-                .match(new RegExp(this.search.toLowerCase())) ||
-              (a.tags || []).find((t) =>
-                t.toLowerCase().match(new RegExp(this.search.toLowerCase()))
-              ))
-          );
-        })
-        .slice(this.pageIndex(), this.pageIndex() + this.perPage);
+      return this.allArticles().slice(
+        this.pageIndex(),
+        this.pageIndex() + this.perPage
+      );
     },
     numPages() {
-      return Math.ceil(this.pageArticles().length / this.perPage);
+      return Math.ceil(this.allArticles().length / this.perPage);
     },
     articleLink(article) {
       return `/blog/${article.slug}`;
     },
     setBlogSearch(val) {
       this.$store.dispatch("setBlogSearch", val);
+    },
+    appendBlogSearch(val) {
+      const words = this.search.split(" ");
+      this.setBlogSearch(
+        [
+          ...words.filter((w) => w !== val),
+          words.includes(val) ? null : val,
+        ].join(" ")
+      );
+    },
+    tagIncluded(tag) {
+      return this.search.toLowerCase().split(" ").includes(tag.toLowerCase());
+    },
+    pageChanged($page) {
+      this.fadeOut = true;
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        this.page = $page;
+        setTimeout(() => {
+          this.fadeOut = false;
+        }, 100);
+      }, 400);
     },
   },
 };
@@ -167,6 +221,10 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     padding: 10px;
+    transition: opacity 0.4s;
+    &.fade-out {
+      opacity: 0;
+    }
     > a {
       width: calc(100% / 2);
       padding: 10px;
@@ -175,12 +233,18 @@ export default {
         height: 100%;
         .v-image {
           background: var(--dropShadow);
+          height: 250px;
         }
+      }
+    }
+    @media (min-width: 1024px) {
+      > a {
+        width: calc(100% / 3);
       }
     }
     @media (min-width: 1400px) {
       > a {
-        width: calc(100% / 3);
+        width: calc(100% / 4);
       }
     }
     @media (max-width: 700px) {
@@ -189,9 +253,33 @@ export default {
         width: 100%;
       }
     }
+    @media (max-width: 450px) {
+      > a {
+        .blog-card {
+          .v-image {
+            height: 150px;
+          }
+        }
+      }
+    }
   }
   .pages {
     margin-top: 20px;
+  }
+}
+</style>
+
+<style lang="scss">
+.blog-card {
+  .v-chip-group {
+    .v-slide-group__wrapper {
+      .v-slide-group__content {
+        align-items: center;
+        button {
+          margin: 4px 6px !important;
+        }
+      }
+    }
   }
 }
 </style>

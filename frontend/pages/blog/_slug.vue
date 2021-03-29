@@ -19,20 +19,24 @@
     <section class="article-body">
       <v-row justify="center" style="max-width: 1000px">
         <v-col cols="12" style="max-width: 800px">
-          <nav class="article-toc">
-            <ul>
-              <li
-                v-for="link of article.toc"
-                :key="link.id"
-                :class="{
-                  'py-1': link.depth === 2,
-                  'ml-5 pb-2': link.depth === 3,
-                }"
-              >
-                <NuxtLink :to="`#${link.id}`">{{ link.text }}</NuxtLink>
-              </li>
-            </ul>
-          </nav>
+          <v-card class="article-toc">
+            <v-list>
+              <v-list-group :value="tocOpen">
+                <template v-slot:activator>
+                  <v-list-item-title>Table of Contents</v-list-item-title>
+                </template>
+                <v-list-item
+                  v-for="link of article.toc"
+                  :key="link.id"
+                  :class="[`pl-${4 + 3 * Math.max(0, link.depth - 2)}`]"
+                  :to="`#${link.id}`"
+                  dense
+                >
+                  <v-list-item-title>{{ link.text }}</v-list-item-title>
+                </v-list-item>
+              </v-list-group>
+            </v-list>
+          </v-card>
         </v-col>
         <v-col cols="12" class="article-content" style="max-width: 800px">
           <nuxt-content :document="article" />
@@ -44,62 +48,33 @@
 
 <script>
 export default {
-  layout: "blog",
+  layout: "blog-post",
   head() {
     return {
       title: (this.article || {}).title,
       meta: [
         {
-          hid: "os:title",
-          name: "os:title",
-          content: (this.article || {}).title,
-        },
-        {
-          hid: "og:title",
-          name: "og:title",
-          content: (this.article || {}).title,
-        },
-        {
-          hid: "twitter:title",
-          name: "twitter:title",
-          content: (this.article || {}).title,
-        },
-        {
           hid: "description",
           name: "description",
           content: (this.article || {}).description,
         },
-        {
-          hid: "os:description",
-          name: "os:description",
-          content: (this.article || {}).description,
-        },
-        {
-          hid: "og:description",
-          name: "og:description",
-          content: (this.article || {}).description,
-        },
-        {
-          hid: "twitter:description",
-          name: "twitter:description",
-          content: (this.article || {}).description,
-        },
-        {
-          hid: "os:image",
-          name: "os:image",
-          content: (this.article || {}).image,
-        },
-        {
-          hid: "og:image",
-          name: "og:image",
-          content: (this.article || {}).image,
-        },
-        {
-          hid: "twitter:image",
-          name: "twitter:image",
-          content: (this.article || {}).image,
-        },
+        ...["os", "og", "twitter"]
+          .map((m) => {
+            return ["title", "image", "description"].map((t) => {
+              return {
+                hid: `${m}:${t}`,
+                name: `${m}:${t}`,
+                content: (this.article || {})[t],
+              };
+            });
+          })
+          .flat(),
       ],
+    };
+  },
+  data() {
+    return {
+      tocOpen: false,
     };
   },
   async asyncData({ $content, params, redirect }) {
@@ -163,6 +138,9 @@ article {
     color: var(--blogHeaderText);
     padding: 20px;
     padding-bottom: 40px;
+    @media (max-width: 600px) {
+      padding-bottom: 20px;
+    }
     .article-header-cover {
       padding: 15px;
       position: absolute;
@@ -190,11 +168,18 @@ article {
   .article-body {
     grid-area: body;
     overflow: auto;
-    padding: 60px 30px;
+    padding: 30px;
     margin-left: 400px;
-    width: calc(100vw - 400px);
+    // width: calc(100vw - 400px);
     .article-toc {
-      margin-bottom: 30px;
+      margin-bottom: 10px;
+      max-width: 400px;
+      a.v-list-item {
+        min-height: 30px;
+        .v-list-item__title {
+          color: var(--link);
+        }
+      }
     }
     .article-content {
       .nuxt-content {
@@ -238,9 +223,16 @@ article {
       width: auto;
       margin-left: 0;
       padding: 40px 20px;
-      .article-toc {
-        margin-bottom: 10px;
-      }
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.article-body {
+  .nuxt-content-highlight {
+    code {
+      padding: 0;
     }
   }
 }

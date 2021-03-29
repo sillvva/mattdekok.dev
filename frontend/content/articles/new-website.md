@@ -5,7 +5,7 @@ date: 2021-03-27T23:09:21.438Z
 image: /images/preview-me.jpg
 tags:
   - Valley365
-  - Valmont Industries
+  - Valmont
   - Udemy
   - Nuxt
   - Vue
