@@ -6,47 +6,54 @@
         v-for="(article, a) of pageArticles()"
         :key="`${article.slug}${a}`"
       >
-        <v-card class="blog-card">
-          <v-lazy
-            :value="article.visible"
-            :options="{
-              threshold: 1,
-            }"
-          >
-            <v-img :src="article.image"></v-img>
-          </v-lazy>
+        <v-hover v-slot="{ hover }">
+          <v-card class="blog-card">
+            <v-lazy
+              :value="article.visible"
+              :options="{
+                threshold: 1,
+              }"
+            >
+              <v-img :src="article.image" @click.prevent>
+                <v-expand-transition v-if="(article.tags || []).length > 0">
+                  <div
+                    v-if="hover"
+                    class="d-flex transition-fast-in-fast-out grey darken-3 v-card--reveal display-3 white-text align-center"
+                    style="height: 100%"
+                  >
+                    <v-chip-group
+                      class="text-center"
+                      color="var(--link)"
+                      column
+                    >
+                      <v-btn
+                        rounded
+                        class="mr-2 mb-2"
+                        @click.prevent="appendBlogSearch(tag)"
+                        v-for="(tag, t) in article.tags"
+                        :key="`${article.slug}-tag-${t}`"
+                      >
+                        {{ tag }}
+                      </v-btn>
+                    </v-chip-group>
+                  </div>
+                </v-expand-transition>
+              </v-img>
+            </v-lazy>
 
-          <v-card-text class="pb-0">
-            {{ formatDate(article.created || article.createdAt) }}
-          </v-card-text>
+            <v-card-text class="pb-0">
+              {{ formatDate(article.created || article.createdAt) }}
+            </v-card-text>
 
-          <v-card-title class="pt-0">
-            <a>{{ article.title }}</a>
-          </v-card-title>
+            <v-card-title class="pt-0">
+              <a>{{ article.title }}</a>
+            </v-card-title>
 
-          <v-card-text v-if="article.description">
-            {{ article.description }}
-          </v-card-text>
-
-          <v-divider
-            class="mx-4"
-            v-if="(article.tags || []).length > 0"
-          ></v-divider>
-
-          <v-card-text v-if="(article.tags || []).length > 0">
-            <v-chip-group active-class="white--text" color="var(--link)" column>
-              <v-btn
-                rounded
-                class="mr-2 mb-2"
-                @click.prevent="setBlogSearch(tag)"
-                v-for="(tag, t) in article.tags"
-                :key="`${article.slug}-tag-${t}`"
-              >
-                {{ tag }}
-              </v-btn>
-            </v-chip-group>
-          </v-card-text>
-        </v-card>
+            <v-card-text v-if="article.description">
+              {{ article.description }}
+            </v-card-text>
+          </v-card>
+        </v-hover>
       </NuxtLink>
     </div>
     <div class="text-center">
@@ -75,7 +82,7 @@ export default {
       pageSelected: 1,
       search: "",
       perPage: 12,
-      fadeOut: false
+      fadeOut: false,
     };
   },
   async asyncData({ $content }) {
@@ -134,23 +141,25 @@ export default {
     },
     allArticles() {
       return (this.articles || []).filter((a) => {
-        return (
-          a.title &&
-          (!this.search.trim() ||
-            a.title
-              .toLowerCase()
-              .match(new RegExp(this.search.toLowerCase())) ||
-            (a.description || "")
-              .toLowerCase()
-              .match(new RegExp(this.search.toLowerCase())) ||
-            (this.formatDate(a.created || a.createdAt) || "")
-              .toLowerCase()
-              .match(new RegExp(this.search.toLowerCase())) ||
-            (a.tags || []).find((t) =>
-              t.toLowerCase().match(new RegExp(this.search.toLowerCase()))
-            ))
-        );
+        return a.title && (!this.search.trim() || this.doesMatch(a));
       });
+    },
+    doesMatch(article) {
+      const searchRegex = this.search
+        .split(" ")
+        .map((s) => new RegExp(s.trim(), "i"));
+      return (
+        searchRegex
+          .map((r) => {
+            return (
+              r.test(article.title) ||
+              r.test(article.description) ||
+              r.test(this.formatDate(article.created)) ||
+              article.tags.filter((t) => r.test(t)).length > 0
+            );
+          })
+          .filter((b) => !b).length === 0
+      );
     },
     pageArticles() {
       return this.allArticles().slice(
@@ -167,6 +176,9 @@ export default {
     setBlogSearch(val) {
       this.$store.dispatch("setBlogSearch", val);
     },
+    appendBlogSearch(val) {
+      this.setBlogSearch([...this.search.split(" "), val].join(" "));
+    },
     pageChanged($page) {
       this.fadeOut = true;
       setTimeout(() => {
@@ -176,7 +188,7 @@ export default {
           this.fadeOut = false;
         }, 100);
       }, 400);
-    }
+    },
   },
 };
 </script>
@@ -214,9 +226,14 @@ export default {
         }
       }
     }
-    @media (min-width: 1400px) {
+    @media (min-width: 1024px) {
       > a {
         width: calc(100% / 3);
+      }
+    }
+    @media (min-width: 1400px) {
+      > a {
+        width: calc(100% / 4);
       }
     }
     @media (max-width: 700px) {
@@ -237,6 +254,20 @@ export default {
   }
   .pages {
     margin-top: 20px;
+  }
+}
+</style>
+
+<style lang="scss">
+.blog-card {
+  .v-chip-group {
+    width: 100%;
+    .v-slide-group__wrapper {
+      .v-slide-group__content {
+        align-items: center;
+        justify-content: center;
+      }
+    }
   }
 }
 </style>
