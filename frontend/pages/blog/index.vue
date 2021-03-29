@@ -143,6 +143,9 @@ export default {
             (a.description || "")
               .toLowerCase()
               .match(new RegExp(this.search.toLowerCase())) ||
+            (this.formatDate(a.created || a.createdAt) || "")
+              .toLowerCase()
+              .match(new RegExp(this.search.toLowerCase())) ||
             (a.tags || []).find((t) =>
               t.toLowerCase().match(new RegExp(this.search.toLowerCase()))
             ))
