@@ -7,56 +7,66 @@
         :key="`${article.slug}${a}`"
       >
         <v-card :class="['blog-card']">
-          <v-lazy
-            :value="article.visible"
-            :options="{
-              threshold: 1,
-            }"
-          >
-            <v-hover v-slot="{ hover }">
-              <v-img :src="article.image">
-                <div
-                  v-if="(article.tags || []).length > 0"
-                  :class="['article-tags']"
-                  @click.prevent
-                >
-                  <v-card-text
-                    class="text-center"
-                    v-if="!(hover || article.tags.find((t) => tagIncluded(t)))"
-                  >
-                    <v-icon>mdi-dots-horizontal</v-icon>
-                  </v-card-text>
+          <div style="position: relative">
+            <v-lazy
+              :value="article.visible"
+              :options="{
+                threshold: 1,
+              }"
+            >
+              <v-img :src="article.image"></v-img>
+            </v-lazy>
 
-                  <v-expand-transition>
-                    <div
-                      v-if="hover || article.tags.find((t) => tagIncluded(t))"
-                      class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
+            <div
+              v-if="(article.tags || []).length > 0"
+              :class="['article-tags']"
+              @click.prevent="showTags[article.slug] = !showTags[article.slug]" 
+              @mouseleave="showTags[article.slug] = false;"
+            >
+              <v-card-text
+                class="text-center"
+                v-if="
+                  !(
+                    showTags[article.slug] ||
+                    article.tags.find((t) => tagIncluded(t))
+                  )
+                "
+              >
+                <v-icon>mdi-dots-horizontal</v-icon>
+              </v-card-text>
+
+              <v-expand-transition>
+                <div
+                  v-if="
+                    showTags[article.slug] ||
+                    article.tags.find((t) => tagIncluded(t))
+                  "
+                  class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
+                >
+                  <v-chip-group
+                    class="text-center"
+                    style="justify-content: center"
+                    color="var(--link)"
+                    column
+                  >
+                    <v-btn
+                      rounded
+                      class="mr-2 mb-2"
+                      @click.prevent="appendBlogSearch(tag)"
+                      :color="tagIncluded(tag) ? 'var(--link)' : ''"
+                      v-for="(tag, t) in article.tags"
+                      :key="`${article.slug}-tag-${t}`"
                     >
-                      <v-chip-group
-                        class="text-center"
-                        style="justify-content: center"
-                        color="var(--link)"
-                        column
-                      >
-                        <v-btn
-                          rounded
-                          class="mr-2 mb-2"
-                          @click.prevent="appendBlogSearch(tag)"
-                          :color="tagIncluded(tag) ? 'var(--link)' : ''"
-                          v-for="(tag, t) in article.tags"
-                          :key="`${article.slug}-tag-${t}`"
-                        >
-                          {{ tag }}
-                        </v-btn>
-                      </v-chip-group>
-                    </div>
-                  </v-expand-transition>
+                      {{ tag }}
+                    </v-btn>
+                  </v-chip-group>
                 </div>
-              </v-img>
-            </v-hover>
-          </v-lazy>
+              </v-expand-transition>
+            </div>
+          </div>
 
           <v-card-text class="pb-0">
+            {{ article.showTags }}
             {{ formatDate(article.created || article.createdAt) }}
           </v-card-text>
 
@@ -122,8 +132,14 @@ export default {
       console.log(err);
     }
 
+    const showTags = {};
+    articles.forEach((a, i) => {
+      showTags[a.slug] = false;
+    });
+
     return {
       articles,
+      showTags,
     };
   },
   watch: {
@@ -178,7 +194,6 @@ export default {
         .map((a, i) => {
           return {
             ...a,
-            showTags: false,
           };
         })
         .filter((a) => {
