@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="$vuetify.breakpoint.lgAndUp || !full">
+    <div class="codepen-wrapper" v-if="$vuetify.breakpoint.lgAndUp || !full">
       <code-pen
         :hash="hash"
         :user="user"
@@ -8,12 +8,12 @@
         :height="height"
       ></code-pen>
     </div>
-    <span style="height: auto !important" v-else>
-      See the Pen
-      <a :href="`https://codepen.io/${user}/pen/${hash}`"> {{ title }}</a>
-      by <a :href="`https://codepen.io/${user}`">@{{ user }}</a> on
-      <a href="https://codepen.io">CodePen</a>.
-    </span>
+    <p class="codepen-fallback" v-else>
+      See the
+      <a :href="`https://codepen.io/${user}/pen/${hash}`" target="_blank" rel="noopener noreferrer"> {{ title }}</a>
+      pen by <a :href="`https://codepen.io/${user}`" target="_blank" rel="noopener noreferrer">@{{ user }}</a> on
+      <a href="https://codepen.io" target="_blank" rel="noopener noreferrer">CodePen</a>.
+    </p>
   </div>
 </template>
 
