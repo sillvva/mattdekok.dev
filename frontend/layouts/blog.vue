@@ -6,8 +6,8 @@
       color="var(--dropShadow)"
       :src="
         $vuetify.theme.dark
-          ? '/images/blog/dark-hex-wp.jpg'
-          : '/images/blog/light-hex-wp.jpg'
+          ? '/images/blog/dark-hex-wp.webp'
+          : '/images/blog/light-hex-wp.webp'
       "
       class="blog-app-bar"
     >
@@ -92,6 +92,11 @@ export default {
   watch: {
     search(val) {
       this.$store.dispatch("setBlogSearch", val);
+      if (this.$refs.search && !this.$refs.search.isFocused) {
+        if (!val) {
+          this.searchOpen = false;
+        }
+      }
     },
     blogSearch(val) {
       this.search = val.trim();

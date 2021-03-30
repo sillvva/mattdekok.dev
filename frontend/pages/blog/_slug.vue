@@ -16,9 +16,13 @@
         </p>
       </div>
     </section>
-    <section class="article-body">
-      <v-row justify="center" style="max-width: 1000px">
-        <v-col cols="12" style="max-width: 800px">
+    <section :class="['article-body', isCodepen && 'codepen-full']">
+      <v-row justify="center" style="max-width: 1000px; margin: 0">
+        <v-col
+          cols="12"
+          style="width: 800px; max-width: 800px; margin: 0"
+          v-if="article.toc.length > 0"
+        >
           <v-card class="article-toc">
             <v-list>
               <v-list-group :value="tocOpen">
@@ -38,7 +42,7 @@
             </v-list>
           </v-card>
         </v-col>
-        <v-col cols="12" class="article-content" style="max-width: 800px">
+        <v-col cols="12" class="article-content">
           <nuxt-content :document="article" />
         </v-col>
       </v-row>
@@ -95,6 +99,11 @@ export default {
 
     return { article, prev, next };
   },
+  computed: {
+    isCodepen() {
+      return this.article.codepen && this.$vuetify.breakpoint.lgAndUp;
+    },
+  },
   methods: {
     formatDate(date, time) {
       const options = {
@@ -120,6 +129,7 @@ export default {
 article {
   display: grid;
   grid-template-areas: "header body";
+  grid-template-columns: 400px 1fr;
   .article-header {
     grid-area: header;
     background: #181818 var(--bg-image);
@@ -169,8 +179,16 @@ article {
     grid-area: body;
     overflow: auto;
     padding: 30px;
-    margin-left: 400px;
-    // width: calc(100vw - 400px);
+    &.codepen-full {
+      height: 100vh;
+      overflow: hidden;
+      padding: 0 !important;
+      .article-content {
+        height: 100%;
+        padding: 12px 16px;
+        padding-bottom: 0;
+      }
+    }
     .article-toc {
       margin-bottom: 10px;
       max-width: 400px;
@@ -182,6 +200,9 @@ article {
       }
     }
     .article-content {
+      width: 800px;
+      max-width: 800px;
+      margin: 0;
       .nuxt-content {
         h2 {
           font-weight: bold;
@@ -208,6 +229,7 @@ article {
 
   @media (max-width: 1000px) {
     grid-template-areas: "header" "body";
+    grid-template-columns: 1fr;
     .article-header {
       position: relative;
       top: 0;
@@ -220,9 +242,11 @@ article {
       }
     }
     .article-body {
-      width: auto;
       margin-left: 0;
-      padding: 40px 20px;
+      padding: 20px 10px;
+      .article-content {
+        width: 100%;
+      }
     }
   }
 }
@@ -233,6 +257,15 @@ article {
   .nuxt-content-highlight {
     code {
       padding: 0;
+    }
+  }
+  &.codepen-full {
+    .article-content {
+      padding: 0 !important;
+    }
+    * {
+      height: 100vh;
+      max-width: 100% !important;
     }
   }
 }
