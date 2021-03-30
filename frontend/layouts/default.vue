@@ -51,6 +51,11 @@ import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
 
 export default {
   components: { HexMenu },
+  head() {
+    return {
+      titleTemplate: "%s - Matt DeKok",
+    };
+  },
   data() {
     return {
       drawer: false,

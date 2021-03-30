@@ -200,7 +200,7 @@ article {
       }
     }
     .article-content {
-      width: 800px;
+      width: 100%;
       max-width: 800px;
       margin: 0;
       .nuxt-content {

@@ -64,10 +64,7 @@ export default {
   background-size: cover;
   @media (min-width: 1500px) {
     background-size: contain;
-    background-image: image-set(
-      "/images/me3x.webp" 1x,
-      "/images/me4x.webp" 2x
-    );
+    background-image: image-set("/images/me3x.webp" 1x, "/images/me4x.webp" 2x);
   }
   @media (min-width: 960px) {
     background-size: contain;
