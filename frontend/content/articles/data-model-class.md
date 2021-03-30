@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A JavaScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-03-30T16:18:11.798Z
+updated: 2021-03-30T18:28:47.462Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
@@ -71,57 +71,67 @@ import { connection } from "./database.js";
 export default class Model {
   constructor(data) {
     this.db = connection();
-    if (!this.db) throw new Error("No database connection");
+    this.checkCollection();
 
+    this.checkSchema();
     if (data) {
-      this.data = this.enforceSchema(data || {});
+      this.data = this.enforceSchema(data);
     }
+  }
+
+  collection() {
+    this.checkCollection();
+    return this.db.collection(this.constructor.collection);
+  }
+
+  checkCollection() {
+    if (!this.db) this.throw("No database connection");
+    if (!this.constructor.collection)
+      this.throw("Expected a collection property on model");
   }
 
   schema() {
     return this.constructor.schema;
   }
 
-  collection() {
-    if (!this.db) throw new Error("No database connection");
-    if (!this.constructor.collection)
-      throw new Error("Expected a collection property on model");
+  checkSchema() {
+    if (Array.isArray(this.schema())) {
+      const schema = this.schema().map(s => {
+        if (typeof s === "string") {
+          return { name: s, required: false, default: null };
+        }
+        return s;
+      });
 
-    return this.db.collection(this.constructor.collection);
+      schema.forEach((s, i) => {
+        if (!s.name) this.throw(`Schema item ${i} is missing a name`);
+        if (typeof s.default !== "undefined" && s.default !== null) {
+          if (s.type) {
+            if (typeof s.type === "string" && typeof s.default !== s.type) {
+              this.throw(`${s.name}: Schema default has invalid type`);
+            } else if (typeof s.type === "function" && !s.type(s.default)) {
+              this.throw(`${s.name}: Schema default has invalid type`);
+            } else if (!(s.default instanceof s.type)) {
+              this.throw(`${s.name}: Schema default has invalid type`);
+            }
+          }
+        }
+      });
+
+      return schema;
+    }
   }
 
-  enforceSchema(data) {
-    if (!Array.isArray(this.schema())) return data;
-
-    const schema = this.schema().map(s => {
-      if (typeof s === "string") {
-        return { name: s, required: false, default: null };
-      }
-      return s;
-    });
+  enforceSchema(data, soft) {
+    const schema = this.checkSchema();
+    if (!schema) return data;
 
     const defaults = schema
       .forEach((s, i) => {
-        if (!s.name) throw new Error(`Schema item ${i} is missing a name`);
         if (s.required && !data[s.name])
-          throw new Error(`Property ${s.name} is missing from the data`);
+          this.throw(`${s.data}: Required property is missing`, soft);
       })
-      .filter(s => {
-        if (!!s.default) {
-          if (s.type) {
-            if (typeof s.type === "string" && typeof s.default !== s.type)
-              throw new Error(
-                `${s.name}: Default schema value has invalid type`
-              );
-            else if (!(val instanceof s.type))
-              throw new Error(
-                `${s.name}: Default schema value has invalid type`
-              );
-          }
-          return true;
-        }
-        return false;
-      })
+      .filter(s => !!s.default)
       .reduce((obj, s) => {
         obj[s.name] = s.default;
         return obj;
@@ -132,10 +142,13 @@ export default class Model {
         return schema.find((s, i) => {
           if (s.name === key) {
             if (s.type) {
-              if (typeof s.type === "string" && typeof val !== s.type)
-                throw new Error(`${key}: Invalid type`);
-              else if (!(val instanceof s.type))
-                throw new Error(`${key}: Invalid type`);
+              if (typeof s.type === "string" && typeof val !== s.type) {
+                this.throw(`${key}: Invalid type`, soft);
+              } else if (typeof s.type === "function" && !s.type(val)) {
+                this.throw(`${key}: Invalid type`, soft);
+              } else if (!(val instanceof s.type)) {
+                this.throw(`${key}: Invalid type`, soft);
+              }
             }
             return true;
           }
@@ -148,18 +161,23 @@ export default class Model {
       }, defaults);
   }
 
+  throw(msg, soft) {
+    if (soft) console.warn(msg);
+    else throw new Error(msg);
+  }
+
   async fetch(query) {
     if (!(query instanceof Object))
-      throw new Error("Expected query as instance of Object");
+      this.throw("Expected query as instance of Object");
 
     this.data = await this.collection().findOne(query);
-    return this.data;
+    return this.data && this.enforceSchema(this.data, true);
   }
 
   async save(data) {
-    if (!this.data._id) throw new Error("Instance is missing an id");
+    if (!this.data._id) this.throw("Instance is missing an id");
     if (!(data instanceof Object))
-      throw new Error("Expected data as instance of Object");
+      this.throw("Expected data as instance of Object");
 
     const saveData = this.enforceSchema({ ...this.data, ...data });
     delete saveData._id;
@@ -187,7 +205,7 @@ export default class User extends Model {
     { name: "_id", type: "string", required: true },
     { name: "username", type: "string", required: true },
     { name: "email", type: "string", required: true },
-    { name: "age", type: "number", required: false, default: 0 },
+    { name: "age", type: "number", required: false, default: 0 }
   ];
   static collection = "users";
 
