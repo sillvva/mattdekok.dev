@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A JavaScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-03-30T15:23:37.745Z
+updated: 2021-03-30T16:18:11.798Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
@@ -182,7 +182,12 @@ You can then extend the base class to define a specific data entity, such as use
 import Model from "./model.js";
 
 export default class User extends Model {
-  static schema = ["_id", "username", "age"];
+  static schema = [
+    { name: "_id", type: "string", required: true },
+    { name: "username", type: "string", required: true },
+    { name: "email", type: "string", required: true },
+    { name: "age", type: "number", required: false, default: 0 },
+  ];
   static collection = "users";
 
   constructor(data) {
