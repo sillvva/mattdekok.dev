@@ -6,61 +6,68 @@
         v-for="(article, a) of pageArticles()"
         :key="`${article.slug}${a}`"
       >
-        <v-hover v-slot="{ hover }">
-          <v-card class="blog-card">
-            <v-lazy
-              :value="article.visible"
-              :options="{
-                threshold: 1,
-              }"
-            >
-              <v-img :src="article.image"></v-img>
-            </v-lazy>
-
-            <v-card-text class="pb-0">
-              {{ formatDate(article.created || article.createdAt) }}
-            </v-card-text>
-
-            <v-card-title class="pt-0">
-              <a>{{ article.title }}</a>
-            </v-card-title>
-
-            <v-card-text v-if="article.description">
-              {{ article.description }}
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-text class="d-block d-md-none text-center" @click.prevent>
-              <v-icon>mdi-dots-horizontal</v-icon>
-            </v-card-text>
-
-            <v-expand-transition v-if="(article.tags || []).length > 0">
-              <div
-                v-if="
-                  hover ||
-                  article.tags.find((t) => tagIncluded(t)) ||
-                  $vuetify.breakpoint.mdAndUp
-                "
-                class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
-                style="height: auto"
-              >
-                <v-chip-group class="text-center" color="var(--link)" column>
-                  <v-btn
-                    rounded
-                    class="mr-2 mb-2"
-                    @click.prevent="appendBlogSearch(tag)"
-                    :color="tagIncluded(tag) ? 'var(--link)' : ''"
-                    v-for="(tag, t) in article.tags"
-                    :key="`${article.slug}-tag-${t}`"
+        <v-card :class="['blog-card']">
+          <v-lazy
+            :value="article.visible"
+            :options="{
+              threshold: 1,
+            }"
+          >
+            <v-hover v-slot="{ hover }">
+              <v-img :src="article.image">
+                <div
+                  v-if="(article.tags || []).length > 0"
+                  :class="['article-tags']"
+                  @click.prevent
+                >
+                  <v-card-text
+                    class="text-center"
+                    v-if="!(hover || article.tags.find((t) => tagIncluded(t)))"
                   >
-                    {{ tag }}
-                  </v-btn>
-                </v-chip-group>
-              </div>
-            </v-expand-transition>
-          </v-card>
-        </v-hover>
+                    <v-icon>mdi-dots-horizontal</v-icon>
+                  </v-card-text>
+
+                  <v-expand-transition>
+                    <div
+                      v-if="hover || article.tags.find((t) => tagIncluded(t))"
+                      class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
+                    >
+                      <v-chip-group
+                        class="text-center"
+                        style="justify-content: center"
+                        color="var(--link)"
+                        column
+                      >
+                        <v-btn
+                          rounded
+                          class="mr-2 mb-2"
+                          @click.prevent="appendBlogSearch(tag)"
+                          :color="tagIncluded(tag) ? 'var(--link)' : ''"
+                          v-for="(tag, t) in article.tags"
+                          :key="`${article.slug}-tag-${t}`"
+                        >
+                          {{ tag }}
+                        </v-btn>
+                      </v-chip-group>
+                    </div>
+                  </v-expand-transition>
+                </div>
+              </v-img>
+            </v-hover>
+          </v-lazy>
+
+          <v-card-text class="pb-0">
+            {{ formatDate(article.created || article.createdAt) }}
+          </v-card-text>
+
+          <v-card-title class="pt-0">
+            <a>{{ article.title }}</a>
+          </v-card-title>
+
+          <v-card-text v-if="article.description" style="height: 48px">
+            {{ article.description }}
+          </v-card-text>
+        </v-card>
       </NuxtLink>
     </div>
     <div class="text-center">
@@ -149,11 +156,6 @@ export default {
     pageIndex() {
       return (this.page - 1) * this.perPage;
     },
-    allArticles() {
-      return (this.articles || []).filter((a) => {
-        return a.title && (!this.search.trim() || this.doesMatch(a));
-      });
-    },
     doesMatch(article) {
       const searchRegex = this.search
         .split(" ")
@@ -170,6 +172,18 @@ export default {
           })
           .filter((b) => !b).length === 0
       );
+    },
+    allArticles() {
+      return (this.articles || [])
+        .map((a, i) => {
+          return {
+            ...a,
+            showTags: false,
+          };
+        })
+        .filter((a) => {
+          return a.title && (!this.search.trim() || this.doesMatch(a));
+        });
     },
     pageArticles() {
       return this.allArticles().slice(
@@ -239,9 +253,20 @@ export default {
       .blog-card {
         width: 100%;
         height: 100%;
+        padding-bottom: 20px;
         .v-image {
           background: var(--dropShadow);
           height: 250px;
+          position: relative;
+        }
+        .article-tags {
+          background-color: var(--background-transparent);
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          min-height: 58px;
+          z-index: 2;
         }
       }
     }
@@ -284,7 +309,7 @@ export default {
       .v-slide-group__content {
         align-items: center;
         button {
-          margin: 4px 6px !important;
+          margin: 6.5px 6px !important;
         }
       }
     }
