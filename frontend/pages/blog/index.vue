@@ -20,8 +20,8 @@
             <div
               v-if="(article.tags || []).length > 0"
               :class="['article-tags']"
-              @click.prevent="showTags[article.slug] = !showTags[article.slug]" 
-              @mouseleave="showTags[article.slug] = false;"
+              @click.prevent="openTagPanel(article.slug);" 
+              @mouseleave="closeTagPanel(article.slug);"
             >
               <v-card-text
                 class="text-center"
@@ -217,12 +217,16 @@ export default {
     },
     appendBlogSearch(val) {
       const words = this.search.split(" ");
-      this.setBlogSearch(
-        [
+      const search = [
           ...words.filter((w) => w !== val),
           words.includes(val) ? null : val,
-        ].join(" ")
+        ];
+      this.setBlogSearch(
+        search.join(" ")
       );
+      if (search.length === 0) {
+        this.closeTagPanels();
+      }
     },
     tagIncluded(tag) {
       return this.search.toLowerCase().split(" ").includes(tag.toLowerCase());
@@ -237,6 +241,20 @@ export default {
         }, 100);
       }, 400);
     },
+    openTagPanel(slug) {
+      this.closeTagPanels();
+      this.showTags[slug] = true;
+    },
+    closeTagPanel(slug) {
+      setTimeout(() => {
+        this.showTags[slug] = false;
+      }, 100);
+    },
+    closeTagPanels() {
+      for(let i in this.showTags) {
+        this.showTags[i] = false;
+      }
+    }
   },
 };
 </script>
