@@ -242,9 +242,11 @@ article {
       }
     }
     .article-body {
-      width: auto;
       margin-left: 0;
-      padding: 40px 20px;
+      padding: 20px 10px;
+      .article-content {
+        width: 100%;
+      }
     }
   }
 }
