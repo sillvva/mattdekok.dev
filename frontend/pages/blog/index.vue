@@ -290,7 +290,7 @@ export default {
       > a {
         .blog-card {
           .v-image {
-            height: 150px;
+            height: 200px;
           }
         }
       }
