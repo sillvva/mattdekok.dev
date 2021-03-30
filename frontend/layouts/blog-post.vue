@@ -32,6 +32,11 @@
 
 <script>
 export default {
+  head() {
+    return {
+      titleTemplate: "%s - Matt's Blog",
+    };
+  },
   created() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||

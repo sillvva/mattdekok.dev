@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A JavaScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-03-29T17:02:23.184Z
+updated: 2021-03-30T16:18:11.798Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
@@ -73,7 +73,9 @@ export default class Model {
     this.db = connection();
     if (!this.db) throw new Error("No database connection");
 
-    this.data = this.filterDataBySchema(data || {});
+    if (data) {
+      this.data = this.enforceSchema(data || {});
+    }
   }
 
   schema() {
@@ -88,15 +90,62 @@ export default class Model {
     return this.db.collection(this.constructor.collection);
   }
 
-  filterDataBySchema(data) {
-    return this.schema() instanceof Array
-      ? Object.entries(data)
-          .filter(([key]) => this.schema().find(k => k === key))
-          .reduce((obj, [key, val]) => {
-            obj[key] = val;
-            return obj;
-          }, {})
-      : data;
+  enforceSchema(data) {
+    if (!Array.isArray(this.schema())) return data;
+
+    const schema = this.schema().map(s => {
+      if (typeof s === "string") {
+        return { name: s, required: false, default: null };
+      }
+      return s;
+    });
+
+    const defaults = schema
+      .forEach((s, i) => {
+        if (!s.name) throw new Error(`Schema item ${i} is missing a name`);
+        if (s.required && !data[s.name])
+          throw new Error(`Property ${s.name} is missing from the data`);
+      })
+      .filter(s => {
+        if (!!s.default) {
+          if (s.type) {
+            if (typeof s.type === "string" && typeof s.default !== s.type)
+              throw new Error(
+                `${s.name}: Default schema value has invalid type`
+              );
+            else if (!(val instanceof s.type))
+              throw new Error(
+                `${s.name}: Default schema value has invalid type`
+              );
+          }
+          return true;
+        }
+        return false;
+      })
+      .reduce((obj, s) => {
+        obj[s.name] = s.default;
+        return obj;
+      }, {});
+
+    return Object.entries(data)
+      .filter(([key, val]) => {
+        return schema.find((s, i) => {
+          if (s.name === key) {
+            if (s.type) {
+              if (typeof s.type === "string" && typeof val !== s.type)
+                throw new Error(`${key}: Invalid type`);
+              else if (!(val instanceof s.type))
+                throw new Error(`${key}: Invalid type`);
+            }
+            return true;
+          }
+          return false;
+        });
+      })
+      .reduce((obj, [key, val]) => {
+        obj[key] = val;
+        return obj;
+      }, defaults);
   }
 
   async fetch(query) {
@@ -112,7 +161,8 @@ export default class Model {
     if (!(data instanceof Object))
       throw new Error("Expected data as instance of Object");
 
-    const saveData = this.filterDataBySchema(data);
+    const saveData = this.enforceSchema({ ...this.data, ...data });
+    delete saveData._id;
     const result = await this.collection().updateOne(
       { _id: this.data.id },
       { $set: { ...saveData } },
@@ -133,7 +183,12 @@ You can then extend the base class to define a specific data entity, such as use
 import Model from "./model.js";
 
 export default class User extends Model {
-  static schema = ["_id", "username", "age"];
+  static schema = [
+    { name: "_id", type: "string", required: true },
+    { name: "username", type: "string", required: true },
+    { name: "email", type: "string", required: true },
+    { name: "age", type: "number", required: false, default: 0 },
+  ];
   static collection = "users";
 
   constructor(data) {
@@ -152,7 +207,7 @@ async function updateUserAge(userId, age) {
   await user.fetch({ _id: userId });
   console.log("Before", user.data);
 
-  const result = await user.save({ ...user.data, age: age });
+  const result = await user.save({ age: age });
   console.log("After", result);
 }
 ```

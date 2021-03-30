@@ -70,6 +70,11 @@
 
 <script>
 export default {
+  head() {
+    return {
+      titleTemplate: "%s",
+    };
+  },
   data() {
     return {
       search: "",

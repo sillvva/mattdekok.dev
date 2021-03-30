@@ -37,9 +37,13 @@
 
             <v-expand-transition v-if="(article.tags || []).length > 0">
               <div
-                v-if="hover || article.tags.find((t) => tagIncluded(t)) || $vuetify.breakpoint.mdAndUp"
+                v-if="
+                  hover ||
+                  article.tags.find((t) => tagIncluded(t)) ||
+                  $vuetify.breakpoint.mdAndUp
+                "
                 class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
-                style="height: auto;"
+                style="height: auto"
               >
                 <v-chip-group class="text-center" color="var(--link)" column>
                   <v-btn
@@ -76,8 +80,10 @@
 <script>
 export default {
   layout: "blog",
-  head: {
-    title: "Blog",
+  head() {
+    return {
+      title: "Matt's Blog",
+    };
   },
   data() {
     return {
@@ -121,7 +127,7 @@ export default {
   computed: {
     blogSearch() {
       return this.$store.getters.blogSearch;
-    }
+    },
   },
   methods: {
     formatDate(date, time) {
