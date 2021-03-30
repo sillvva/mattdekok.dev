@@ -8,6 +8,7 @@
     :data-slug-hash="hash"
     :data-pen-title="title"
   >
+    <slot></slot>
   </div>
 </template>
 

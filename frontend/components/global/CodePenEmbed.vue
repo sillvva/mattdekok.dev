@@ -6,14 +6,16 @@
         :user="user"
         :title="title"
         :height="height"
-      ></code-pen>
+      >
+        Loading CodePen...
+      </code-pen>
     </div>
-    <p class="codepen-fallback" v-else>
+    <span class="codepen-fallback" v-else>
       See the
       <a :href="`https://codepen.io/${user}/pen/${hash}`" target="_blank" rel="noopener noreferrer"> {{ title }}</a>
       pen by <a :href="`https://codepen.io/${user}`" target="_blank" rel="noopener noreferrer">@{{ user }}</a> on
       <a href="https://codepen.io" target="_blank" rel="noopener noreferrer">CodePen</a>.
-    </p>
+    </span>
   </div>
 </template>
 
