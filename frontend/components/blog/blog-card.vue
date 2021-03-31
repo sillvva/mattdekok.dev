@@ -1,9 +1,5 @@
 <template>
-  <NuxtLink
-    class="blog-link"
-    :to="articleLink(article)"
-    v-if="doesMatch(article)"
-  >
+  <NuxtLink class="blog-link" :to="articleLink(article)">
     <v-card :class="['blog-card']">
       <div style="position: relative">
         <v-lazy
@@ -21,16 +17,13 @@
           @click.prevent="openTagPanel()"
           @mouseleave="closeTagPanel()"
         >
-          <v-card-text
-            class="text-center tag-handle"
-            v-if="!(showTags || article.tags.find((t) => tagIncluded(t)))"
-          >
+          <v-card-text class="text-center tag-handle" v-if="!tagsVisible()">
             <v-icon>mdi-dots-horizontal</v-icon>
           </v-card-text>
 
           <v-expand-transition>
             <div
-              v-if="showTags || article.tags.find((t) => tagIncluded(t))"
+              v-if="tagsVisible()"
               class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
             >
               <v-chip-group
@@ -56,7 +49,6 @@
       </div>
 
       <v-card-text class="pb-0">
-        {{ article.showTags }}
         {{ formatDate(article.created || article.createdAt) }}
       </v-card-text>
 
@@ -72,6 +64,8 @@
 </template>
 
 <script>
+import { formatDate } from "@/components/aux-functions";
+
 export default {
   props: {
     article: {
@@ -82,13 +76,9 @@ export default {
   data() {
     return {
       showTags: false,
-      search: ""
     };
   },
   watch: {
-    blogSearch(val) {
-      this.search = val;
-    },
     blogCardTags(val) {
       if (this.article.slug === val) {
         this.showTags = true;
@@ -107,20 +97,7 @@ export default {
   },
   methods: {
     formatDate(date, time) {
-      const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      };
-      return time
-        ? new Date(date).toLocaleString("en", {
-            ...options,
-            hour: "numeric",
-            minute: "numeric",
-            timeZoneName: "short",
-          })
-        : new Date(date).toLocaleDateString("en", options);
+      return formatDate(date, time);
     },
     articleLink(article) {
       return `/blog/${article.slug}`;
@@ -132,7 +109,7 @@ export default {
       this.$store.dispatch("setBlogCardTags", val);
     },
     appendBlogSearch(val) {
-      const words = this.search.split(" ");
+      const words = this.blogSearch.split(" ");
       const search = [
         ...words.filter((w) => w !== val),
         words.includes(val) ? null : val,
@@ -143,7 +120,12 @@ export default {
       }
     },
     tagIncluded(tag) {
-      return this.search.toLowerCase().split(" ").includes(tag.toLowerCase());
+      return this.blogSearch.toLowerCase().split(" ").includes(tag.toLowerCase());
+    },
+    tagsVisible() {
+      return (
+        this.showTags || this.article.tags.find((t) => this.tagIncluded(t))
+      );
     },
     openTagPanel() {
       this.setBlogCardTags(this.article.slug);

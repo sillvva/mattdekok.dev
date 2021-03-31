@@ -23,6 +23,7 @@
 
 <script>
 import blogCard from "@/components/blog/blog-card.vue";
+import { formatDate } from "@/components/aux-functions.js";
 
 export default {
   components: { blogCard },
@@ -36,7 +37,6 @@ export default {
     return {
       page: 1,
       pageSelected: 1,
-      search: "",
       perPage: 12,
       fadeOut: false,
     };
@@ -66,10 +66,12 @@ export default {
       articles,
     };
   },
-  methods: {
-    pageIndex() {
-      return (this.page - 1) * this.perPage;
+  computed: {
+    blogSearch() {
+      return this.$store.getters.blogSearch;
     },
+  },
+  methods: {
     allArticles() {
       return (this.articles || [])
         .map((a, i) => {
@@ -78,7 +80,7 @@ export default {
           };
         })
         .filter((a) => {
-          return a.title && (!this.search.trim() || this.doesMatch(a));
+          return a.title && (!this.blogSearch.trim() || this.doesMatch(a));
         });
     },
     pageArticles() {
@@ -88,7 +90,7 @@ export default {
       );
     },
     doesMatch(article) {
-      const searchRegex = this.search
+      const searchRegex = this.blogSearch
         .split(" ")
         .map((s) => new RegExp(s.trim(), "i"));
       return (
@@ -97,7 +99,7 @@ export default {
             return (
               r.test(article.title) ||
               r.test(article.description) ||
-              r.test(this.formatDate(article.created)) ||
+              r.test(formatDate(article.created)) ||
               article.tags.filter((t) => r.test(t)).length > 0
             );
           })
@@ -106,6 +108,9 @@ export default {
     },
     numPages() {
       return Math.ceil(this.allArticles().length / this.perPage);
+    },
+    pageIndex() {
+      return (this.page - 1) * this.perPage;
     },
     pageChanged($page) {
       this.fadeOut = true;
