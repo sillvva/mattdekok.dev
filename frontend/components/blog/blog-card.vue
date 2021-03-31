@@ -1,66 +1,68 @@
 <template>
-  <NuxtLink class="blog-link" :to="articleLink(article)">
-    <v-card :class="['blog-card']">
-      <div style="position: relative">
-        <v-lazy
-          :value="article.visible"
-          :options="{
-            threshold: 1,
-          }"
-        >
-          <v-img :src="article.image"></v-img>
-        </v-lazy>
+  <div class="blog-item">
+    <NuxtLink class="blog-link" :to="articleLink(article)">
+      <v-card :class="['blog-card']">
+        <div style="position: relative">
+          <v-lazy
+            :value="article.visible"
+            :options="{
+              threshold: 1,
+            }"
+          >
+            <v-img :src="article.image"></v-img>
+          </v-lazy>
 
-        <div
-          v-if="(article.tags || []).length > 0"
-          :class="['article-tags']"
-          @click.prevent="openTagPanel()"
-          @mouseleave="closeTagPanel()"
-        >
-          <v-card-text class="text-center tag-handle" v-if="!tagsVisible()">
-            <v-icon>mdi-dots-horizontal</v-icon>
-          </v-card-text>
+          <div
+            v-if="(article.tags || []).length > 0"
+            :class="['article-tags']"
+            @click.prevent="openTagPanel()"
+            @mouseleave="closeTagPanel()"
+          >
+            <v-card-text class="text-center tag-handle" v-if="!tagsVisible()">
+              <v-icon>mdi-dots-horizontal</v-icon>
+            </v-card-text>
 
-          <v-expand-transition>
-            <div
-              v-if="tagsVisible()"
-              class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
-            >
-              <v-chip-group
-                class="text-center"
-                style="justify-content: center"
-                color="var(--link)"
-                column
+            <v-expand-transition>
+              <div
+                v-if="tagsVisible()"
+                class="d-flex transition-fast-in-fast-out v-card--reveal display-3 white-text align-center"
               >
-                <v-btn
-                  rounded
-                  class="mr-2 mb-2"
-                  @click.prevent="appendBlogSearch(tag)"
-                  :color="tagIncluded(tag) ? 'var(--link)' : ''"
-                  v-for="(tag, t) in article.tags"
-                  :key="`${article.slug}-tag-${t}`"
+                <v-chip-group
+                  class="text-center"
+                  style="justify-content: center"
+                  color="var(--link)"
+                  column
                 >
-                  {{ tag }}
-                </v-btn>
-              </v-chip-group>
-            </div>
-          </v-expand-transition>
+                  <v-btn
+                    rounded
+                    class="mr-2 mb-2"
+                    @click.prevent="appendBlogSearch(tag)"
+                    :color="tagIncluded(tag) ? 'var(--link)' : ''"
+                    v-for="(tag, t) in article.tags"
+                    :key="`${article.slug}-tag-${t}`"
+                  >
+                    {{ tag }}
+                  </v-btn>
+                </v-chip-group>
+              </div>
+            </v-expand-transition>
+          </div>
         </div>
-      </div>
 
-      <v-card-text class="pb-0">
-        {{ formatDate(article.created || article.createdAt) }}
-      </v-card-text>
+        <v-card-text class="pb-0">
+          {{ formatDate(article.created || article.createdAt) }}
+        </v-card-text>
 
-      <v-card-title class="pt-0">
-        <a>{{ article.title }}</a>
-      </v-card-title>
+        <v-card-title class="article-title pt-0">
+          <a>{{ article.title }}</a>
+        </v-card-title>
 
-      <v-card-text v-if="article.description" style="height: 48px">
-        {{ article.description }}
-      </v-card-text>
-    </v-card>
-  </NuxtLink>
+        <v-card-text v-if="article.description" style="height: 48px">
+          {{ article.description }}
+        </v-card-text>
+      </v-card>
+    </NuxtLink>
+  </div>
 </template>
 
 <script>
@@ -120,7 +122,10 @@ export default {
       }
     },
     tagIncluded(tag) {
-      return this.blogSearch.toLowerCase().split(" ").includes(tag.toLowerCase());
+      return this.blogSearch
+        .toLowerCase()
+        .split(" ")
+        .includes(tag.toLowerCase());
     },
     tagsVisible() {
       return (
@@ -140,28 +145,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.blog-link {
+.blog-item {
   width: calc(100% / 2);
   padding: 10px;
-  .blog-card {
-    width: 100%;
-    height: 100%;
-    padding-bottom: 20px;
-    .v-image {
-      background: var(--dropShadow);
-      height: 250px;
-      position: relative;
-    }
-    .article-tags {
-      background-color: var(--background-transparent);
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      min-height: 58px;
-      z-index: 2;
-      .tag-handle {
-        height: 58px;
+  .blog-link {
+    .blog-card {
+      width: 100%;
+      height: 100%;
+      padding-bottom: 20px;
+      .v-image {
+        background: var(--dropShadow);
+        height: 250px;
+        position: relative;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+      }
+      .article-title {
+        a {
+          word-break: break-word;
+          letter-spacing: 2px;
+        }
+      }
+      .article-tags {
+        background-color: var(--background-transparent);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        min-height: 58px;
+        z-index: 2;
+        .tag-handle {
+          height: 58px;
+        }
       }
     }
   }
