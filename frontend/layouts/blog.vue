@@ -27,7 +27,7 @@
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <v-toolbar-title style="position: absolute">Blog</v-toolbar-title>
+      <v-toolbar-title class="header-title">Blog</v-toolbar-title>
       <v-spacer :class="[searching() && 'd-none', 'd-sm-block']"></v-spacer>
       <v-text-field
         v-model="search"
@@ -147,6 +147,10 @@ export default {
 .blog-app {
   padding-top: 128px !important;
   padding-bottom: 48px !important;
+}
+.header-title {
+  position: absolute;
+  left: 0;
 }
 </style>
 
