@@ -68,6 +68,7 @@ export default {
               return {
                 hid: `${m}:${t}`,
                 name: `${m}:${t}`,
+                property: `${m}:${t}`,
                 content: (this.article || {})[t],
               };
             });
