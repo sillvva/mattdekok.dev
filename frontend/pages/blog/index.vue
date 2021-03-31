@@ -87,6 +87,23 @@ export default {
         this.pageIndex() + this.perPage
       );
     },
+    doesMatch(article) {
+      const searchRegex = this.search
+        .split(" ")
+        .map((s) => new RegExp(s.trim(), "i"));
+      return (
+        searchRegex
+          .map((r) => {
+            return (
+              r.test(article.title) ||
+              r.test(article.description) ||
+              r.test(this.formatDate(article.created)) ||
+              article.tags.filter((t) => r.test(t)).length > 0
+            );
+          })
+          .filter((b) => !b).length === 0
+      );
+    },
     numPages() {
       return Math.ceil(this.allArticles().length / this.perPage);
     },
