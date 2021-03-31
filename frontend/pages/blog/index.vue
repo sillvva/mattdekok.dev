@@ -24,7 +24,7 @@
               @mouseleave="closeTagPanel(article.slug);"
             >
               <v-card-text
-                class="text-center"
+                class="text-center tag-handle"
                 v-if="
                   !(
                     showTags[article.slug] ||
@@ -300,6 +300,9 @@ export default {
           right: 0;
           min-height: 58px;
           z-index: 2;
+          .tag-handle {
+            height: 58px;
+          }
         }
       }
     }
