@@ -98,7 +98,7 @@ export default class Model {
     let schema = this.constructor.schema;
     const _id = schema.find(s => s && (s === '_id' || s.name === '_id'));
     if (!_id) schema = [ 
-      { name: '_id', required: false, default: new ObjectId() }, 
+      { name: '_id', default: new ObjectId() }, 
       ...schema 
     ];
     return schema;
@@ -121,7 +121,7 @@ export default class Model {
               this.throw(`${s.name}: Schema default has invalid type`);
             } else if (typeof s.type === "function" && !s.type(s.default)) {
               this.throw(`${s.name}: Schema default has invalid type`);
-            } else if (!(s.default instanceof s.type)) {
+            } else if (typeof val === "object" && !(s.default instanceof s.type)) {
               this.throw(`${s.name}: Schema default has invalid type`);
             }
           }
@@ -136,11 +136,12 @@ export default class Model {
     const schema = this.checkSchema();
     if (!schema) return data;
 
+    schema.forEach(s => {
+      if (s.required && !data[s.name])
+        this.throw(`${s.name}: Required property is missing`, soft);
+    });
+
     const defaults = schema
-      .forEach((s, i) => {
-        if (s.required && !data[s.name])
-          this.throw(`${s.data}: Required property is missing`, soft);
-      })
       .filter(s => !!s.default)
       .reduce((obj, s) => {
         obj[s.name] = s.default;
@@ -200,9 +201,6 @@ export default class Model {
    * @returns {Object} - Returns document as instance of the class
    */
   static async fetch(query) {
-    if (!(query instanceof Object))
-      this.throw("Expected query as instance of Object");
-    
     const instance = new this();
     instance.fetch(query);
     return instance;
@@ -220,21 +218,21 @@ export default class Model {
    */
   static async fetchAll(query, options) {
     if (!(query instanceof Object))
-      this.throw("Expected query as instance of Object");
+      throw new Error("Expected query as instance of Object");
     if (options && options.skip && (
       !(
         typeof options.skip === "number") || 
         options.skip < 0 || 
         options.skip % 1 !== 0
       )
-    ) this.throw("Expected options.skip as null or positive whole number");
+    ) throw new Error("Expected options.skip as null or positive whole number");
     if (options && options.limit && (
       !(
         typeof options.limit === "number") || 
         options.limit < 0 || 
         options.limit % 1 !== 0
       )
-    ) this.throw("Expected options.limit as null or positive whole number");
+    ) throw new Error("Expected options.limit as null or positive whole number");
     
     const instance = new this();
     let results = instance.collection().find(query);
