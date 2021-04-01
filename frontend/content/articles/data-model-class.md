@@ -11,6 +11,8 @@ tags:
 
 Using a data model class like this makes your database code cleaner and easier to manage. By creating a Model superclass, you eliminate the need to rewrite the fetching and saving logic for all your data models. You then use subclasses to define each data model's collection, schema, and unique properties and methods.
 
+This example uses MongoDB, though you can rewrite it to use any database.
+
 ## Initiate the Database
 
 First, you'll need to create a database connection.
@@ -54,6 +56,7 @@ export default {
 
 ```javascript [index.js]
 import { database } from "./db/database.js";
+import { ObjectId } from "mongodb";
 
 (async () => {
   const connected = await database.connect();
@@ -67,15 +70,16 @@ The base class is a data model template with generic fetch and save methods.
 
 ```javascript [db/model.js]
 import { connection } from "./database.js";
+import { ObjectId } from "mongodb";
 
 export default class Model {
   constructor(data) {
     this.db = connection();
-    this.checkCollection();
 
+    this.checkCollection();
     this.checkSchema();
     if (data) {
-      this.data = this.enforceSchema(data);
+      this.data = this.enforceSchema(data, true);
     }
   }
 
@@ -91,7 +95,13 @@ export default class Model {
   }
 
   schema() {
-    return this.constructor.schema;
+    let schema = this.constructor.schema;
+    const _id = schema.find(s => s && (s === '_id' || s.name === '_id'));
+    if (!_id) schema = [ 
+      { name: '_id', default: new ObjectId() }, 
+      ...schema 
+    ];
+    return schema;
   }
 
   checkSchema() {
@@ -111,7 +121,7 @@ export default class Model {
               this.throw(`${s.name}: Schema default has invalid type`);
             } else if (typeof s.type === "function" && !s.type(s.default)) {
               this.throw(`${s.name}: Schema default has invalid type`);
-            } else if (!(s.default instanceof s.type)) {
+            } else if (typeof val === "object" && !(s.default instanceof s.type)) {
               this.throw(`${s.name}: Schema default has invalid type`);
             }
           }
@@ -126,11 +136,12 @@ export default class Model {
     const schema = this.checkSchema();
     if (!schema) return data;
 
+    schema.forEach(s => {
+      if (s.required && !data[s.name])
+        this.throw(`${s.name}: Required property is missing`, soft);
+    });
+
     const defaults = schema
-      .forEach((s, i) => {
-        if (s.required && !data[s.name])
-          this.throw(`${s.data}: Required property is missing`, soft);
-      })
       .filter(s => !!s.default)
       .reduce((obj, s) => {
         obj[s.name] = s.default;
@@ -166,23 +177,87 @@ export default class Model {
     else throw new Error(msg);
   }
 
+  /**
+   * Fetches a single document from a collection.
+   * 
+   * @param {Object} query - The database query object
+   * 
+   * @returns {Object} - Returns document
+   */
   async fetch(query) {
     if (!(query instanceof Object))
       this.throw("Expected query as instance of Object");
 
-    this.data = await this.collection().findOne(query);
-    return this.data && this.enforceSchema(this.data, true);
+    const data = await this.collection().findOne(query);
+    this.data = data && this.enforceSchema(data, true);
+    return this.data;
   }
 
+  /**
+   * Fetches a single document from a collection and returns an instance of the class.
+   * 
+   * @param {Object} query - The database query object
+   * 
+   * @returns {Object} - Returns document as instance of the class
+   */
+  static async fetch(query) {
+    const instance = new this();
+    instance.fetch(query);
+    return instance;
+  }
+
+  /**
+   * Fetches multiple documents from a collection and returns them as instances of the class.
+   * 
+   * @param {Object} query - The database query object
+   * @param {Object} [options] - The query options object
+   * @param {number} [options.skip] - The number of documents to skip
+   * @param {number} [options.limit] - The number of documents to return
+   * 
+   * @returns {Object} - Returns documents as instances of the class
+   */
+  static async fetchAll(query, options) {
+    if (!(query instanceof Object))
+      throw new Error("Expected query as instance of Object");
+    if (options && options.skip && (
+      !(
+        typeof options.skip === "number") || 
+        options.skip < 0 || 
+        options.skip % 1 !== 0
+      )
+    ) throw new Error("Expected options.skip as null or positive whole number");
+    if (options && options.limit && (
+      !(
+        typeof options.limit === "number") || 
+        options.limit < 0 || 
+        options.limit % 1 !== 0
+      )
+    ) throw new Error("Expected options.limit as null or positive whole number");
+    
+    const instance = new this();
+    let results = instance.collection().find(query);
+    if (options.skip) results.skip(options.skip);
+    if (options.limit) results.limit(options.limit);
+    results = await results.toArray();
+    return results.map(r => new this(r));
+  }
+
+  /**
+   * Saves instance data to the corresponding document by its _id. If no _id is specified, one will be created.
+   * 
+   * @param {Object} [data] - An object containing updated properties of the instance data.
+   * 
+   * @returns {Object} - Returns the database write result
+   */
   async save(data) {
-    if (!this.data._id) this.throw("Instance is missing an id");
-    if (!(data instanceof Object))
+    if (data && !(data instanceof Object))
       this.throw("Expected data as instance of Object");
 
     const saveData = this.enforceSchema({ ...this.data, ...data });
+    const _id = saveData._id;
     delete saveData._id;
     const result = await this.collection().updateOne(
-      { _id: this.data.id },
+      { _id: _id },
       { $set: { ...saveData } },
       { upsert: true }
     );
@@ -201,13 +276,13 @@ You can then extend the base class to define a specific data entity, such as use
 import Model from "./model.js";
 
 export default class User extends Model {
+  static collection = "users";
   static schema = [
     { name: "_id", type: "string", required: true },
     { name: "username", type: "string", required: true },
     { name: "email", type: "string", required: true },
     { name: "age", type: "number", required: false, default: 0 }
   ];
-  static collection = "users";
 
   constructor(data) {
     super(data);
@@ -221,11 +296,11 @@ export default class User extends Model {
 import User from "../db/user.js";
 
 async function updateUserAge(userId, age) {
-  const user = new User();
-  await user.fetch({ _id: userId });
+  const user = await User.fetch({ _id: userId })
   console.log("Before", user.data);
 
   const result = await user.save({ age: age });
-  console.log("After", result);
+  console.log("Result", result);
+  console.log("After", user.data);
 }
 ```
