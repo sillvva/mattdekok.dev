@@ -255,7 +255,7 @@ export default class Model {
     if (data && !(data instanceof Object))
       this.throw("Expected data as instance of Object");
 
-    const saveData = this.enforceSchema({ ...this.data, ...data });
+    const saveData = this.enforceSchema({ ...this.data, ...(data || {}) });
     const _id = saveData._id;
     delete saveData._id;
     const result = await this.collection().updateOne(
