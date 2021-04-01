@@ -7,6 +7,7 @@ image: /images/blog/code.jpg
 tags:
   - JavaScript
   - Snippets
+  - Database
 ---
 
 Using a data model class like this makes your database code cleaner and easier to manage. By creating a Model superclass, you eliminate the need to rewrite the fetching and saving logic for all your data models. You then use subclasses to define each data model's collection, schema, and unique properties and methods.
@@ -304,3 +305,8 @@ async function updateUserAge(userId, age) {
   console.log("After", user.data);
 }
 ```
+## Demo
+
+Here is a demo using dummy data:
+
+https://codepen.io/Sillvva/pen/BMNrdG?editors=0011
