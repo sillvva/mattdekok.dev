@@ -240,7 +240,8 @@ export default class Model {
     let results = instance.collection().find(query);
     if (options.skip) results.skip(options.skip);
     if (options.limit) results.limit(options.limit);
-    return results.toArray().map(r => new this(r));
+    results = await results.toArray();
+    return results.map(r => new this(r));
   }
 
   /**
