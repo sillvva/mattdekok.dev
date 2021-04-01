@@ -97,6 +97,7 @@ export default class Model {
 
   schema() {
     let schema = this.constructor.schema;
+    if (!schema) return null;
     const _id = schema.find(s => s && (s === '_id' || s.name === '_id'));
     if (!_id) schema = [ 
       { name: '_id', default: new ObjectId() }, 
