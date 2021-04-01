@@ -258,6 +258,7 @@ article {
   .nuxt-content-highlight {
     code {
       padding: 0;
+      font-size: 100%;
     }
   }
   &.codepen-full {
