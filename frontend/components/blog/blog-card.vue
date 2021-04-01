@@ -50,7 +50,7 @@
         </div>
 
         <v-card-text class="pb-0">
-          {{ formatDate(article.created || article.createdAt) }}
+          {{ formatDate(article.date) }}
         </v-card-text>
 
         <v-card-title class="article-title pt-0">
