@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A JavaScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-04-02T01:58:24.045Z
+updated: 2021-04-02T16:16:36.534Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
@@ -84,13 +84,14 @@ interface Schema {
 
 interface FetchAllOptions {
   skip?: number,
-  limit?: number
+  limit?: number,
+  projection?: Object
 }
 
 class Model {
   private _db: Db;
   private _collection: string;
-  private _schema: Schema[];
+  private _schema: (Schema | string)[];
   data: any;
 
   constructor() {
@@ -134,19 +135,22 @@ class Model {
   protected get schema() {
     let schema = this._schema;
     if (!schema) return null;
-    const _id = schema.find(s => s && s.name === "_id");
+    const _id = schema.find(s => s && (
+      (typeof s === "string" && s === "_id") || 
+      (typeof s === "object" && s.name === "_id")
+    ));
     if (!_id) schema = [{ name: "_id", default: new ObjectId() }, ...schema];
     return schema;
   }
 
-  protected set schema(schema: Schema[]) {
+  protected set schema(schema: (Schema | string)[]) {
     this._schema = schema;
   }
 
   private checkSchema() {
     if (Array.isArray(this.schema)) {
       const schema = this.schema.map(s => {
-        if (typeof s === "string") {
+        if (s instanceof String) {
           return { name: s, required: false, default: null };
         }
         return s;
@@ -156,11 +160,9 @@ class Model {
         if (!s.name) this.throw(`Schema item ${i} is missing a name`);
         if (typeof s.default !== "undefined" && s.default !== null) {
           if (s.type) {
-            if (typeof s.type === "string" && typeof s.default !== s.type) {
+            if (s.type instanceof String && typeof s.default !== s.type) {
               this.throw(`${s.name}: Schema default has invalid type`);
-            } else if (typeof s.type === "function" && !s.type(s.default)) {
-              this.throw(`${s.name}: Schema default has invalid type`);
-            } else if (typeof s.type === "object" && !(s.default instanceof s.type)) {
+            } else if (s.type instanceof Function && !(s.type(s.default) || s.default instanceof s.type)) {
               this.throw(`${s.name}: Schema default has invalid type`);
             }
           }
@@ -192,11 +194,9 @@ class Model {
         return schema.find((s, i) => {
           if (s.name === key) {
             if (s.type) {
-              if (typeof s.type === "string" && typeof val !== s.type) {
+              if (s.type instanceof String && typeof val !== s.type) {
                 this.throw(`${key}: Invalid type`, soft);
-              } else if (typeof s.type === "function" && !s.type(val)) {
-                this.throw(`${key}: Invalid type`, soft);
-              } else if (typeof s.type === "object" && !(val instanceof s.type)) {
+              } else if (s.type instanceof Function && !(s.type(val) || val instanceof s.type)) {
                 this.throw(`${key}: Invalid type`, soft);
               }
             }
@@ -219,11 +219,14 @@ class Model {
   /**
    * Fetches a single document from a collection.
    *
-   * @param query The database query object
+   * @param query Sepecifies selection filter using query operators.
+   * @param projection Specifies the fields to return in the documents that match the query filter.
+   * 
+   * For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
    * @returns Returns document
    */
-  async fetch(query: Object) {
+  async fetch(query: Object, projection?: Object) {
     const data = await this.dbCollection.findOne(query);
     this.data = data && this.enforceSchema(data, true);
     return this.data;
@@ -233,13 +236,16 @@ class Model {
    * Fetches a single document from a collection and returns an instance of the class.
    *
    * @param Type The subclass used to invoke this method (ex. User)
-   * @param query The database query object
+   * @param query Sepecifies selection filter using query operators.
+   * @param projection Specifies the fields to return in the documents that match the query filter.
+   * 
+   * For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch(Type: any, query: Object) {
+  static async fetch(Type: any, query: Object, projection?: Object) {
     const instance = new Type();
-    instance.fetch(query);
+    instance.fetch(query, projection);
     return instance;
   }
 
@@ -247,21 +253,25 @@ class Model {
    * Fetches multiple documents from a collection and returns them as instances of the class.
    *
    * @param type The subclass used to invoke this method (ex. User)
-   * @param query - The database query object
+   * @param [query] - Sepecifies selection filter using query operators. 
+   * If a query is not specified, this method will return all documents in the collection.
    * @param [options] - The query options object
    * @param [options.skip] - The number of documents to skip
    * @param [options.limit] - The number of documents to return
+   * @param [options.projection] - Specifies the fields to return in the documents that match the query filter.
+   * 
+   * For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
    * @returns Returns documents as instances of the class
    */
-  static async fetchAll(Type: any, query: Object, options?: FetchAllOptions) {
+  static async fetchAll(Type: any, query?: Object, options?: FetchAllOptions) {
     if (options && options.skip && (!(options.skip < 0 || options.skip % 1 !== 0)))
       throw new Error("Expected options.skip as null or positive whole number");
     if (options && options.limit && (!(options.limit < 0 || options.limit % 1 !== 0)))
       throw new Error("Expected options.limit as null or positive whole number");
 
     const instance = new Type();
-    const cursor = instance.dbCollection.find(query);
+    const cursor = instance.dbCollection.find(query, options && options.projection);
     if (options.skip) cursor.skip(options.skip);
     if (options.limit) cursor.limit(options.limit);
     const results = await cursor.toArray();
@@ -308,7 +318,11 @@ class User extends Model {
     this.schema = [
       { name: "username", type: "string", required: true },
       { name: "email", type: "string", required: true },
-      { name: "age", type: "number", required: false, default: 0 }
+      // Schemas defined as strings will be optional 
+      // fields with no required type or default value
+      "firstName",
+      "lastName",
+      "age",
     ];
     this.init(data);
   }
