@@ -74,7 +74,7 @@ The base class is a data model template with generic fetch and save methods.
 ```typescript [db/model.ts]
 interface Schema {
   name: string,
-  type?: any,
+  type?: string | object | function,
   required?: boolean,
   default?: any
 }
