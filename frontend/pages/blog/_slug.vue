@@ -204,24 +204,6 @@ article {
       width: 100%;
       max-width: 800px;
       margin: 0;
-      .nuxt-content {
-        h2 {
-          font-weight: bold;
-          font-size: 28px;
-          margin-top: 40px;
-          &:first-of-type {
-            margin-top: 0;
-          }
-        }
-        h3 {
-          font-weight: bold;
-          font-size: 22px;
-          margin-top: 20px;
-        }
-        p {
-          margin: 10px 0 15px;
-        }
-      }
       .nuxt-content-editor {
         background: white;
       }
@@ -258,6 +240,7 @@ article {
   .nuxt-content-highlight {
     code {
       padding: 0;
+      font-size: 100%;
     }
   }
   &.codepen-full {
@@ -268,6 +251,29 @@ article {
       height: 100vh;
       max-width: 100% !important;
     }
+  }
+}
+.nuxt-content {
+  h2 {
+    font-weight: bold;
+    font-size: 28px;
+    margin-top: 30px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  h3 {
+    font-weight: bold;
+    font-size: 22px;
+    margin-top: 20px;
+  }
+  h4 {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  p {
+    margin: 10px 0 15px;
   }
 }
 </style>
