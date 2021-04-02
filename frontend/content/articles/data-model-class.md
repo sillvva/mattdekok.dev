@@ -2,12 +2,14 @@
 title: Data Model Class
 description: A JavaScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-03-30T18:28:47.462Z
+updated: 2021-04-02T01:58:24.045Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
+  - TypeScript
   - Snippets
   - Database
+  - MongoDB
 ---
 
 Using a data model class like this makes your database code cleaner and easier to manage. By creating a Model superclass, you eliminate the need to rewrite the fetching and saving logic for all your data models. You then use subclasses to define each data model's collection, schema, and unique properties and methods.
@@ -18,7 +20,7 @@ This example uses MongoDB, though you can rewrite it to use any database.
 
 First, you'll need to create a database connection.
 
-```javascript [db/database.js]
+```typescript [db/database.ts]
 import mongodb from "mongodb";
 
 let _db: mongodb.Db;
@@ -28,7 +30,7 @@ class database {
   connected = false;
 
   async connect() {
-    let result;
+    let result: mongodb.MongoClient;
     try {
       result = await this.client.connect(process.env.MONGODB_URL, {
         useNewUrlParser: true
@@ -55,8 +57,8 @@ export default {
 };
 ```
 
-```javascript [index.js]
-import { database } from "./db/database.js";
+```typescript [index.ts]
+import { database } from "./db/database";
 import { ObjectId } from "mongodb";
 
 (async () => {
@@ -69,14 +71,38 @@ import { ObjectId } from "mongodb";
 
 The base class is a data model template with generic fetch and save methods.
 
-```javascript [db/model.js]
-import { connection } from "./database.js";
-import { ObjectId } from "mongodb";
+```typescript [db/model.ts]
+interface Schema {
+  name: string,
+  type?: any,
+  required?: boolean,
+  default?: any
+}
 
-export default class Model {
-  constructor(data) {
-    this.db = connection();
+interface FetchAllOptions {
+  skip?: number,
+  limit?: number
+}
 
+class Model {
+  private _db: Db;
+  private _collection: string;
+  private _schema: Schema[];
+  data: any;
+
+  constructor() {
+    this._db = connection();
+  }
+
+  /**
+   * Validates the collection, schema, and initial data.
+   * 
+   * This method should be called by the constuctor of subclasses that extend this class
+   * after setting the collection and (optionally) the schema.
+   * 
+   * @param [data] Data that initializes an instance of the class.
+   */
+  protected init(data?: Object) {
     this.checkCollection();
     this.checkSchema();
     if (data) {
@@ -84,31 +110,39 @@ export default class Model {
     }
   }
 
-  collection() {
+  protected get collection() {
+    return this._collection;
+  }
+
+  protected set collection(collection: string) {
+    this._collection = collection;
+  }
+
+  private get dbCollection() {
     this.checkCollection();
-    return this.db.collection(this.constructor.collection);
+    return this._db.collection(this._collection);
   }
 
-  checkCollection() {
-    if (!this.db) this.throw("No database connection");
-    if (!this.constructor.collection)
-      this.throw("Expected a collection property on model");
+  private checkCollection() {
+    if (!this._db) this.throw("No database connection");
+    if (!this._collection) this.throw("Expected a collection property on model");
   }
 
-  schema() {
-    let schema = this.constructor.schema;
+  protected get schema() {
+    let schema = this._schema;
     if (!schema) return null;
-    const _id = schema.find(s => s && (s === '_id' || s.name === '_id'));
-    if (!_id) schema = [ 
-      { name: '_id', default: new ObjectId() }, 
-      ...schema 
-    ];
+    const _id = schema.find(s => s && s.name === "_id");
+    if (!_id) schema = [{ name: "_id", default: new ObjectId() }, ...schema];
     return schema;
   }
 
-  checkSchema() {
-    if (Array.isArray(this.schema())) {
-      const schema = this.schema().map(s => {
+  protected set schema(schema: Schema[]) {
+    this._schema = schema;
+  }
+
+  private checkSchema() {
+    if (Array.isArray(this.schema)) {
+      const schema = this.schema.map(s => {
         if (typeof s === "string") {
           return { name: s, required: false, default: null };
         }
@@ -123,7 +157,7 @@ export default class Model {
               this.throw(`${s.name}: Schema default has invalid type`);
             } else if (typeof s.type === "function" && !s.type(s.default)) {
               this.throw(`${s.name}: Schema default has invalid type`);
-            } else if (typeof val === "object" && !(s.default instanceof s.type)) {
+            } else if (typeof s.type === "object" && !(s.default instanceof s.type)) {
               this.throw(`${s.name}: Schema default has invalid type`);
             }
           }
@@ -134,12 +168,12 @@ export default class Model {
     }
   }
 
-  enforceSchema(data, soft) {
+  private enforceSchema(data: Object, soft?: boolean) {
     const schema = this.checkSchema();
     if (!schema) return data;
 
     schema.forEach(s => {
-      if (s.required && !data[s.name])
+      if (s.required && !data[s.name]) 
         this.throw(`${s.name}: Required property is missing`, soft);
     });
 
@@ -174,97 +208,82 @@ export default class Model {
       }, defaults);
   }
 
-  throw(msg, soft) {
+  private throw(msg: string, soft?: boolean) {
     if (soft) console.warn(msg);
     else throw new Error(msg);
   }
 
   /**
    * Fetches a single document from a collection.
-   * 
-   * @param {Object} query - The database query object
-   * 
-   * @returns {Object} - Returns document
+   *
+   * @param query The database query object
+   *
+   * @returns Returns document
    */
-  async fetch(query) {
-    if (!(query instanceof Object))
-      this.throw("Expected query as instance of Object");
-
-    const data = await this.collection().findOne(query);
+  async fetch(query: Object) {
+    const data = await this.dbCollection.findOne(query);
     this.data = data && this.enforceSchema(data, true);
     return this.data;
   }
 
   /**
    * Fetches a single document from a collection and returns an instance of the class.
-   * 
-   * @param {Object} query - The database query object
-   * 
-   * @returns {Object} - Returns document as instance of the class
+   *
+   * @param Type The subclass used to invoke this method (ex. User)
+   * @param query The database query object
+   *
+   * @returns Returns document as instance of the class
    */
-  static async fetch(query) {
-    const instance = new this();
+  static async fetch(Type: any, query: Object) {
+    const instance = new Type();
     instance.fetch(query);
     return instance;
   }
 
   /**
    * Fetches multiple documents from a collection and returns them as instances of the class.
-   * 
-   * @param {Object} query - The database query object
-   * @param {Object} [options] - The query options object
-   * @param {number} [options.skip] - The number of documents to skip
-   * @param {number} [options.limit] - The number of documents to return
-   * 
-   * @returns {Object} - Returns documents as instances of the class
+   *
+   * @param type The subclass used to invoke this method (ex. User)
+   * @param query - The database query object
+   * @param [options] - The query options object
+   * @param [options.skip] - The number of documents to skip
+   * @param [options.limit] - The number of documents to return
+   *
+   * @returns Returns documents as instances of the class
    */
-  static async fetchAll(query, options) {
-    if (!(query instanceof Object))
-      throw new Error("Expected query as instance of Object");
-    if (options && options.skip && (
-      !(
-        typeof options.skip === "number") || 
-        options.skip < 0 || 
-        options.skip % 1 !== 0
-      )
-    ) throw new Error("Expected options.skip as null or positive whole number");
-    if (options && options.limit && (
-      !(
-        typeof options.limit === "number") || 
-        options.limit < 0 || 
-        options.limit % 1 !== 0
-      )
-    ) throw new Error("Expected options.limit as null or positive whole number");
-    
-    const instance = new this();
-    let results = instance.collection().find(query);
-    if (options.skip) results.skip(options.skip);
-    if (options.limit) results.limit(options.limit);
-    results = await results.toArray();
-    return results.map(r => new this(r));
+  static async fetchAll(Type: any, query: Object, options?: FetchAllOptions) {
+    if (options && options.skip && (!(options.skip < 0 || options.skip % 1 !== 0)))
+      throw new Error("Expected options.skip as null or positive whole number");
+    if (options && options.limit && (!(options.limit < 0 || options.limit % 1 !== 0)))
+      throw new Error("Expected options.limit as null or positive whole number");
+
+    const instance = new (<any>this.constructor);
+    const cursor = instance.dbCollection.find(query);
+    if (options.skip) cursor.skip(options.skip);
+    if (options.limit) cursor.limit(options.limit);
+    const results = await cursor.toArray();
+    return results.map((r: Object) => new Type(r));
   }
 
   /**
-   * Saves instance data to the corresponding document by its _id. If no _id is specified, one will be created.
-   * 
-   * @param {Object} [data] - An object containing updated properties of the instance data.
-   * 
-   * @returns {Object} - Returns the database write result
+   * Saves instance data to the corresponding document by its _id. 
+   * If no _id is specified, one will be created.
+   *
+   * @param [data] - An object containing updated properties of the instance data.
+   *
+   * @returns Returns the database write result
    */
-  async save(data) {
-    if (data && !(data instanceof Object))
-      this.throw("Expected data as instance of Object");
-
-    const saveData = this.enforceSchema({ ...this.data, ...(data || {}) });
+  async save(data?: Object) {
+    const saveData: any = this.enforceSchema({ ...this.data, ...(data || {}) });
     const _id = saveData._id;
     delete saveData._id;
-    const result = await this.collection().updateOne(
-      { _id: _id },
-      { $set: { ...saveData } },
+    
+    const result = await this.dbCollection.updateOne(
+      { _id: _id }, 
+      { $set: { ...saveData } }, 
       { upsert: true }
     );
-
-    this.data = { _id: this.data._id, ...saveData };
+    this.data = { _id: (<any>this.data)._id, ...saveData };
     return result;
   }
 }
@@ -274,31 +293,33 @@ export default class Model {
 
 You can then extend the base class to define a specific data entity, such as users, orders, etc. If specified, a schema will enforce specific object properties. It is not required to have a schema.
 
-```javascript [db/user.js]
-import Model from "./model.js";
+After you have defined the collection and schema, you need to initialize the subclass with the init method built into the Model class.
 
-export default class User extends Model {
-  static collection = "users";
-  static schema = [
-    { name: "_id", type: "string", required: true },
-    { name: "username", type: "string", required: true },
-    { name: "email", type: "string", required: true },
-    { name: "age", type: "number", required: false, default: 0 }
-  ];
+```javascript [db/user.ts]
+import Model from "./model";
 
-  constructor(data) {
-    super(data);
+class User extends Model {
+  constructor(data: Object) {
+    super();
+    this.collection = "users";
+    this.schema = [
+      { name: "username", type: "string", required: true },
+      { name: "email", type: "string", required: true },
+      { name: "age", type: "number", required: false, default: 0 }
+    ];
+    this.init(data);
   }
 }
 ```
 
 ## Example Usage
 
-```javascript
-import User from "../db/user.js";
+```typescript [./example.ts]
+import Model from "../db/model";
+import User from "../db/user";
 
-async function updateUserAge(userId, age) {
-  const user = await User.fetch({ _id: userId })
+async function updateUserAge(userId: any, age: number) {
+  const user = await Model.fetch(User, { _id: userId })
   console.log("Before", user.data);
 
   const result = await user.save({ age: age });
