@@ -302,7 +302,7 @@ After you have defined the collection and schema, you need to initialize the sub
 import Model from "./model";
 
 class User extends Model {
-  constructor(data: Object) {
+  constructor(data?: Object) {
     super();
     this.collection = "users";
     this.schema = [
