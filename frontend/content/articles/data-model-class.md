@@ -252,7 +252,7 @@ class Model {
   /**
    * Fetches multiple documents from a collection and returns them as instances of the class.
    *
-   * @param type The subclass used to invoke this method (ex. User)
+   * @param Type The subclass used to invoke this method (ex. User)
    * @param [query] - Sepecifies selection filter using query operators. 
    * If a query is not specified, this method will return all documents in the collection.
    * @param [options] - The query options object
