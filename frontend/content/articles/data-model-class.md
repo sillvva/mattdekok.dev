@@ -260,7 +260,7 @@ class Model {
     if (options && options.limit && (!(options.limit < 0 || options.limit % 1 !== 0)))
       throw new Error("Expected options.limit as null or positive whole number");
 
-    const instance = new (<any>this.constructor);
+    const instance = new Type();
     const cursor = instance.dbCollection.find(query);
     if (options.skip) cursor.skip(options.skip);
     if (options.limit) cursor.limit(options.limit);
