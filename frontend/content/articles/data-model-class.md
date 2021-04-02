@@ -72,6 +72,9 @@ import { ObjectId } from "mongodb";
 The base class is a data model template with generic fetch and save methods.
 
 ```typescript [db/model.ts]
+import { connection } from "./database";
+import { ObjectId, Db } from "mongodb";
+
 interface Schema {
   name: string,
   type?: string | object | function,
