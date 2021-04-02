@@ -77,7 +77,7 @@ import { ObjectId, Db } from "mongodb";
 
 interface Schema {
   name: string,
-  type?: string | object | function,
+  type?: string | Object | Function,
   required?: boolean,
   default?: any
 }
