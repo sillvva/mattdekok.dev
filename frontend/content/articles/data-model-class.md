@@ -1,6 +1,6 @@
 ---
 title: Data Model Class
-description: A JavaScript class for creating data models
+description: A TypeScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
 updated: 2021-04-02T16:16:36.534Z
 image: /images/blog/code.jpg
@@ -76,16 +76,15 @@ import { connection } from "./database";
 import { ObjectId, Db } from "mongodb";
 
 interface Schema {
-  name: string,
-  type?: string | Object | Function,
-  required?: boolean,
-  default?: any
+  name: string;
+  type?: string | Object | Function;
+  required?: boolean;
+  default?: any;
 }
 
 interface FetchAllOptions {
-  skip?: number,
-  limit?: number,
-  projection?: Object
+  skip?: number;
+  limit?: number;
 }
 
 class Model {
@@ -226,7 +225,7 @@ class Model {
    *
    * @returns Returns document
    */
-  async fetch(query: Object, projection?: Object) {
+  async fetch(query: Object) {
     const data = await this.dbCollection.findOne(query);
     this.data = data && this.enforceSchema(data, true);
     return this.data;
@@ -243,9 +242,9 @@ class Model {
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch(Type: any, query: Object, projection?: Object) {
+  static async fetch(Type: any, query: Object) {
     const instance = new Type();
-    instance.fetch(query, projection);
+    instance.fetch(query);
     return instance;
   }
 
@@ -271,11 +270,11 @@ class Model {
       throw new Error("Expected options.limit as null or positive whole number");
 
     const instance = new Type();
-    const cursor = instance.dbCollection.find(query, options && options.projection);
+    const cursor = instance.dbCollection.find(query);
     if (options.skip) cursor.skip(options.skip);
     if (options.limit) cursor.limit(options.limit);
     const results = await cursor.toArray();
-    return results.map((r: Object) => new Type(r));
+    return results.map((doc: Object) => new Type(doc, true));
   }
 
   /**
