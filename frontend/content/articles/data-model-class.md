@@ -193,7 +193,7 @@ class Model {
                 this.throw(`${key}: Invalid type`, soft);
               } else if (typeof s.type === "function" && !s.type(val)) {
                 this.throw(`${key}: Invalid type`, soft);
-              } else if (!(val instanceof s.type)) {
+              } else if (typeof s.type === "object" && !(val instanceof s.type)) {
                 this.throw(`${key}: Invalid type`, soft);
               }
             }
