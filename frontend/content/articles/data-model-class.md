@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A TypeScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-04-02T16:16:36.534Z
+updated: 2021-04-03T04:23:09.592Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
@@ -21,16 +21,16 @@ This example uses MongoDB, though you can rewrite it to use any database.
 First, you'll need to create a database connection.
 
 ```typescript [db/database.ts]
-import mongodb from "mongodb";
+import { Db, MongoClient } from "mongodb";
 
-let _db: mongodb.Db;
+let _db: Db;
 
 class database {
-  client = mongodb.MongoClient;
+  private client = MongoClient;
   connected = false;
 
   async connect() {
-    let result: mongodb.MongoClient;
+    let result: MongoClient;
     try {
       result = await this.client.connect(process.env.MONGODB_URL, {
         useNewUrlParser: true
@@ -73,7 +73,7 @@ The base class is a data model template with generic fetch and save methods.
 
 ```typescript [db/model.ts]
 import { connection } from "./database";
-import { ObjectId, Db } from "mongodb";
+import { Db } from "mongodb";
 
 interface Schema {
   name: string;
@@ -87,6 +87,8 @@ interface FetchAllOptions {
   limit?: number;
   projection?: Object;
 }
+
+type Constructor<T extends {} = {}> = new (...args: any[]) => T;
 
 class Model {
   private _db: Db;
@@ -122,7 +124,7 @@ class Model {
     this._collection = collection;
   }
 
-  private get dbCollection() {
+  get dbCollection() {
     this.checkCollection();
     return this._db.collection(this._collection);
   }
@@ -166,7 +168,7 @@ class Model {
     }
   }
 
-  private enforceSchema(data: any, soft?: boolean) {
+  enforceSchema(data: any, soft?: boolean) {
     const schema = this.checkSchema();
     if (!schema) return data;
 
@@ -237,9 +239,9 @@ class Model {
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch(Type: any, query: Object, projection?: Object) {
+  static async fetch<T extends Model>(Type: Constructor<T>, query: Object, projection?: Object): Promise<T> {
     const instance = new Type();
-    instance.fetch(query, projection);
+    await instance.fetch(query, projection);
     return instance;
   }
 
@@ -258,7 +260,7 @@ class Model {
    *
    * @returns Returns documents as instances of the class
    */
-  static async fetchAll(Type: any, query?: Object, options?: FetchAllOptions) {
+  static async fetchAll<T extends Model>(Type: Constructor<T>, query?: Object, options?: FetchAllOptions): Promise<T[]> {
     if (options && options.skip && !(options.skip < 0 || options.skip % 1 !== 0))
       throw new Error("Expected options.skip as null or positive whole number");
     if (options && options.limit && !(options.limit < 0 || options.limit % 1 !== 0))
@@ -286,8 +288,38 @@ class Model {
     const _id = saveData._id;
     delete saveData._id;
 
-    const result = await this.dbCollection.updateOne({ _id: _id }, { $set: { ...saveData } }, { upsert: true });
-    this.data = { _id: this.data._id, ...saveData };
+    const result = await this.dbCollection.updateOne({ _id: _id }, { $set: saveData }, { upsert: true });
+    if (result.modifiedCount) this.data = { _id: this.data._id, ...saveData };
+    return result;
+  }
+
+  /**
+   * Saves multiple instances to their corresponding documents by their _id.
+   *
+   * @param instances - Instances of the subclass calling this method (ex. User[]);
+   * @param data - An object containing updated properties of the instance data.
+   *
+   * @returns Returns the database write result
+   */
+  static async saveAll<T extends Model>(instances: T[], data: Object) {
+    const instanceData = instances.filter(i => i instanceof Model).filter(i => i.data._id);
+    if (instanceData.length === 0) throw new Error("Instances must have an _id.");
+
+    const saveData = instanceData[0].enforceSchema(data);
+    delete saveData._id;
+
+    const result = await instanceData[0].dbCollection.updateMany(
+      { _id: { $in: instanceData.map(i => i.data._id) } },
+      { $set: saveData },
+      { upsert: true }
+    );
+    
+    if (result.modifiedCount) {
+      instances.forEach(instance => {
+        instance.data = { ...instance.data, ...saveData };
+      });
+    }
+    
     return result;
   }
 }
@@ -327,12 +359,13 @@ import Model from "../db/model";
 import User from "../db/user";
 
 async function updateUserAge(userId: any, age: number) {
-  const user = await Model.fetch(User, { _id: userId })
-  console.log("Before", user.data);
+  const user = await Model.fetch(User, { _id: userId });
+  return await user.save({ age: age });
+}
 
-  const result = await user.save({ age: age });
-  console.log("Result", result);
-  console.log("After", user.data);
+async function incrementUserAges(byYears = 1) {
+  const users = await Model.fetchAll(User);
+  return await Model.saveAll(users, { $inc: { age: byYears } });
 }
 ```
 ## Demo
