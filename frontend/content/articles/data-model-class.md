@@ -77,7 +77,7 @@ import { ObjectId, Db } from "mongodb";
 
 interface Schema {
   name: string;
-  type?: string | Object | Function;
+  type?: string | Function;
   required?: boolean;
   default?: any;
 }
@@ -85,6 +85,7 @@ interface Schema {
 interface FetchAllOptions {
   skip?: number;
   limit?: number;
+  projection?: Object;
 }
 
 class Model {
@@ -99,10 +100,10 @@ class Model {
 
   /**
    * Validates the collection, schema, and initial data.
-   * 
+   *
    * This method should be called by the constuctor of subclasses that extend this class
    * after setting the collection and (optionally) the schema.
-   * 
+   *
    * @param [data] Data that initializes an instance of the class.
    */
   protected init(data?: Object) {
@@ -132,25 +133,18 @@ class Model {
   }
 
   protected get schema() {
-    let schema = this._schema;
-    if (!schema) return null;
-    const _id = schema.find(s => s && (
-      (typeof s === "string" && s === "_id") || 
-      (typeof s === "object" && s.name === "_id")
-    ));
-    if (!_id) schema = [{ name: "_id", default: new ObjectId() }, ...schema];
-    return schema;
+    return this._schema;
   }
 
-  protected set schema(schema: (Schema | string)[]) {
+  protected set schema(schema) {
     this._schema = schema;
   }
 
   private checkSchema() {
     if (Array.isArray(this.schema)) {
       const schema = this.schema.map(s => {
-        if (s instanceof String) {
-          return { name: s, required: false, default: null };
+        if (typeof s === "string") {
+          return { name: s };
         }
         return s;
       });
@@ -159,7 +153,7 @@ class Model {
         if (!s.name) this.throw(`Schema item ${i} is missing a name`);
         if (typeof s.default !== "undefined" && s.default !== null) {
           if (s.type) {
-            if (s.type instanceof String && typeof s.default !== s.type) {
+            if (typeof s.type === "string" && typeof s.default !== s.type) {
               this.throw(`${s.name}: Schema default has invalid type`);
             } else if (s.type instanceof Function && !(s.type(s.default) || s.default instanceof s.type)) {
               this.throw(`${s.name}: Schema default has invalid type`);
@@ -172,14 +166,15 @@ class Model {
     }
   }
 
-  private enforceSchema(data: Object, soft?: boolean) {
+  private enforceSchema(data: any, soft?: boolean) {
     const schema = this.checkSchema();
     if (!schema) return data;
 
-    schema.forEach(s => {
-      if (s.required && !data[s.name]) 
-        this.throw(`${s.name}: Required property is missing`, soft);
-    });
+    if (!data._id) {
+      schema.forEach(s => {
+        if (s.required && !data[s.name]) this.throw(`${s.name}: Required property is missing`, soft);
+      });
+    }
 
     const defaults = schema
       .filter(s => !!s.default)
@@ -190,10 +185,10 @@ class Model {
 
     return Object.entries(data)
       .filter(([key, val]) => {
-        return schema.find((s, i) => {
+        return schema.find(s => {
           if (s.name === key) {
             if (s.type) {
-              if (s.type instanceof String && typeof val !== s.type) {
+              if (typeof s.type === "string" && typeof val !== s.type) {
                 this.throw(`${key}: Invalid type`, soft);
               } else if (s.type instanceof Function && !(s.type(val) || val instanceof s.type)) {
                 this.throw(`${key}: Invalid type`, soft);
@@ -220,13 +215,13 @@ class Model {
    *
    * @param query Sepecifies selection filter using query operators.
    * @param projection Specifies the fields to return in the documents that match the query filter.
-   * 
-   * For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
+   *
+   * @description For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
    * @returns Returns document
    */
-  async fetch(query: Object) {
-    const data = await this.dbCollection.findOne(query);
+  async fetch(query: Object, projection?: Object) {
+    const data = await this.dbCollection.findOne(query, projection);
     this.data = data && this.enforceSchema(data, true);
     return this.data;
   }
@@ -237,14 +232,14 @@ class Model {
    * @param Type The subclass used to invoke this method (ex. User)
    * @param query Sepecifies selection filter using query operators.
    * @param projection Specifies the fields to return in the documents that match the query filter.
-   * 
-   * For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
+   *
+   * @description For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch(Type: any, query: Object) {
+  static async fetch(Type: any, query: Object, projection?: Object) {
     const instance = new Type();
-    instance.fetch(query);
+    instance.fetch(query, projection);
     return instance;
   }
 
@@ -252,32 +247,34 @@ class Model {
    * Fetches multiple documents from a collection and returns them as instances of the class.
    *
    * @param Type The subclass used to invoke this method (ex. User)
-   * @param [query] - Sepecifies selection filter using query operators. 
-   * If a query is not specified, this method will return all documents in the collection.
+   * @param [query] - Sepecifies selection filter using query operators.
+   * If a query is not specified, this method will fetch all documents in the collection.
    * @param [options] - The query options object
    * @param [options.skip] - The number of documents to skip
    * @param [options.limit] - The number of documents to return
-   * 
-   * For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
+   * @param [options.projection] - Specifies the fields to return in the documents that match the query filter.
+   *
+   * @description For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
    * @returns Returns documents as instances of the class
    */
   static async fetchAll(Type: any, query?: Object, options?: FetchAllOptions) {
-    if (options && options.skip && (!(options.skip < 0 || options.skip % 1 !== 0)))
+    if (options && options.skip && !(options.skip < 0 || options.skip % 1 !== 0))
       throw new Error("Expected options.skip as null or positive whole number");
-    if (options && options.limit && (!(options.limit < 0 || options.limit % 1 !== 0)))
+    if (options && options.limit && !(options.limit < 0 || options.limit % 1 !== 0))
       throw new Error("Expected options.limit as null or positive whole number");
+    if (options && options.projection) (<any>options.projection)._id = 1;
 
     const instance = new Type();
-    const cursor = instance.dbCollection.find(query);
+    const cursor = instance.dbCollection.find(query, options && options.projection);
     if (options.skip) cursor.skip(options.skip);
     if (options.limit) cursor.limit(options.limit);
     const results = await cursor.toArray();
-    return results.map((doc: Object) => new Type(doc, true));
+    return results.map((doc: Object) => new Type(doc));
   }
 
   /**
-   * Saves instance data to the corresponding document by its _id. 
+   * Saves instance data to the corresponding document by its _id.
    * If no _id is specified, one will be created.
    *
    * @param [data] - An object containing updated properties of the instance data.
@@ -288,13 +285,9 @@ class Model {
     const saveData: any = this.enforceSchema({ ...this.data, ...(data || {}) });
     const _id = saveData._id;
     delete saveData._id;
-    
-    const result = await this.dbCollection.updateOne(
-      { _id: _id }, 
-      { $set: { ...saveData } }, 
-      { upsert: true }
-    );
-    this.data = { _id: (<any>this.data)._id, ...saveData };
+
+    const result = await this.dbCollection.updateOne({ _id: _id }, { $set: { ...saveData } }, { upsert: true });
+    this.data = { _id: this.data._id, ...saveData };
     return result;
   }
 }
