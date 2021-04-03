@@ -20,7 +20,7 @@
       <v-row justify="center" style="max-width: 1000px; margin: 0">
         <v-col
           cols="12"
-          style="width: 800px; max-width: 800px; margin: 0"
+          class="article-toc-wrapper"
           v-if="article.toc.length > 0"
         >
           <v-card class="article-toc">
@@ -200,12 +200,12 @@ article {
         }
       }
     }
-    .article-content {
+    .article-content, .article-toc-wrapper {
       width: 100%;
       max-width: 800px;
       margin: 0;
-      .nuxt-content-editor {
-        background: white;
+      @media (min-width: 1400px) {
+        max-width: 1000px;
       }
     }
   }
@@ -251,6 +251,11 @@ article {
       height: 100vh;
       max-width: 100% !important;
     }
+  }
+  .nuxt-content-editor {
+    color: var(--text);
+    font-family: monospace;
+    white-space: nowrap;
   }
 }
 .nuxt-content {
