@@ -239,8 +239,8 @@ class Model {
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch<T>(Type: Constructor<T>, query: Object, projection?: Object): Promise<T> {
-    const instance: any = new Type();
+  static async fetch<T extends Model>(Type: Constructor<T>, query: Object, projection?: Object): Promise<T> {
+    const instance = new Type();
     await instance.fetch(query, projection);
     return instance;
   }
