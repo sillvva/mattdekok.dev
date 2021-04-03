@@ -257,7 +257,6 @@ class Model {
    * @param [options] - The query options object
    * @param [options.skip] - The number of documents to skip
    * @param [options.limit] - The number of documents to return
-   * @param [options.projection] - Specifies the fields to return in the documents that match the query filter.
    * 
    * For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
