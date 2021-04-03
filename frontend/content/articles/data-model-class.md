@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A TypeScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-04-02T16:16:36.534Z
+updated: 2021-04-03T04:23:09.592Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
@@ -21,16 +21,16 @@ This example uses MongoDB, though you can rewrite it to use any database.
 First, you'll need to create a database connection.
 
 ```typescript [db/database.ts]
-import mongodb from "mongodb";
+import { Db, MongoClient } from "mongodb";
 
-let _db: mongodb.Db;
+let _db: Db;
 
 class database {
-  client = mongodb.MongoClient;
+  private client = MongoClient;
   connected = false;
 
   async connect() {
-    let result: mongodb.MongoClient;
+    let result: MongoClient;
     try {
       result = await this.client.connect(process.env.MONGODB_URL, {
         useNewUrlParser: true
