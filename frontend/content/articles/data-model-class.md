@@ -93,7 +93,7 @@ type Constructor<T extends {} = {}> = new (...args: any[]) => T;
 class Model {
   private _db: Db;
   private _collection: string;
-  private _schema: (Schema | string)[];
+  private _schema: (string | Schema)[];
   data: any;
 
   constructor() {
@@ -120,7 +120,7 @@ class Model {
     return this._collection;
   }
 
-  protected set collection(collection: string) {
+  protected set collection(collection) {
     this._collection = collection;
   }
 
@@ -131,7 +131,7 @@ class Model {
 
   private checkCollection() {
     if (!this._db) this.throw("No database connection");
-    if (!this._collection) this.throw("Expected a collection property on model");
+    if (!this._collection) this.throw("Expected a 'collection' property on model.");
   }
 
   protected get schema() {
@@ -180,7 +180,7 @@ class Model {
 
     const defaults = schema
       .filter(s => !!s.default)
-      .reduce((obj, s) => {
+      .reduce((obj: any, s) => {
         obj[s.name] = s.default;
         return obj;
       }, {});
@@ -201,7 +201,7 @@ class Model {
           return false;
         });
       })
-      .reduce((obj, [key, val]) => {
+      .reduce((obj: any, [key, val]) => {
         obj[key] = val;
         return obj;
       }, defaults);
@@ -239,8 +239,8 @@ class Model {
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch<T extends Model>(Type: Constructor<T>, query: Object, projection?: Object): Promise<T> {
-    const instance = new Type();
+  static async fetch<T extends Model>(ModelType: Constructor<T>, query: Object, projection?: Object) {
+    const instance = new ModelType();
     await instance.fetch(query, projection);
     return instance;
   }
@@ -260,19 +260,19 @@ class Model {
    *
    * @returns Returns documents as instances of the class
    */
-  static async fetchAll<T extends Model>(Type: Constructor<T>, query?: Object, options?: FetchAllOptions): Promise<T[]> {
+  static async fetchAll<T extends Model>(ModelType: Constructor<T>, query?: Object, options?: FetchAllOptions) {
     if (options && options.skip && !(options.skip < 0 || options.skip % 1 !== 0))
       throw new Error("Expected options.skip as null or positive whole number");
     if (options && options.limit && !(options.limit < 0 || options.limit % 1 !== 0))
       throw new Error("Expected options.limit as null or positive whole number");
     if (options && options.projection) (<any>options.projection)._id = 1;
 
-    const instance = new Type();
+    const instance = new ModelType();
     const cursor = instance.dbCollection.find(query, options && options.projection);
     if (options.skip) cursor.skip(options.skip);
     if (options.limit) cursor.limit(options.limit);
-    const results = await cursor.toArray();
-    return results.map((doc: Object) => new Type(doc));
+    const docs = await cursor.toArray();
+    return new ModelCollection(ModelType, docs.map((doc: Object) => new ModelType(doc)));
   }
 
   /**
@@ -292,6 +292,15 @@ class Model {
     if (result.modifiedCount) this.data = { _id: this.data._id, ...saveData };
     return result;
   }
+}
+
+class ModelCollection<T extends Model> extends Array<T> {
+  constructor(instances: T[]) {
+    super();
+    instances.forEach(instance => {
+      this.push(instance);
+    });
+  }
 
   /**
    * Saves multiple instances to their corresponding documents by their _id.
@@ -301,25 +310,27 @@ class Model {
    *
    * @returns Returns the database write result
    */
-  static async saveAll<T extends Model>(instances: T[], data: Object) {
-    const instanceData = instances.filter(i => i instanceof Model).filter(i => i.data._id);
-    if (instanceData.length === 0) throw new Error("Instances must have an _id.");
+  async saveAll(data: Object) {
+    if (this.length === 0) throw new Error("Model collection is empty.");
 
-    const saveData = instanceData[0].enforceSchema(data);
+    const instanceData = this.filter(i => i instanceof Model && i.data._id);
+    if (instanceData.length === 0) throw new Error("Documents must have an _id property.");
+
+    const constructor = <Constructor<T>>instanceData[0].constructor;
+    const model = new constructor();
+    const saveData = model.enforceSchema(data);
     delete saveData._id;
 
-    const result = await instanceData[0].dbCollection.updateMany(
+    const result = await model.dbCollection.updateMany(
       { _id: { $in: instanceData.map(i => i.data._id) } },
       { $set: saveData },
       { upsert: true }
     );
-    
+
     if (result.modifiedCount) {
-      instances.forEach(instance => {
-        instance.data = { ...instance.data, ...saveData };
-      });
+      this.splice(0, this.length, ...this.map(instance => ({ ...instance.data, ...saveData })));
     }
-    
+
     return result;
   }
 }
@@ -365,7 +376,7 @@ async function updateUserAge(userId: any, age: number) {
 
 async function incrementUserAges(byYears = 1) {
   const users = await Model.fetchAll(User);
-  return await Model.saveAll(users, { $inc: { age: byYears } });
+  return await users.saveAll({ $inc: { age: byYears } });
 }
 ```
 ## Demo
