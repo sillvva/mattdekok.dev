@@ -67,7 +67,7 @@ import { ObjectId } from "mongodb";
 })();
 ```
 
-## The Base Class
+## The Base Model Class
 
 The base class is a data model template with generic fetch and save methods.
 
@@ -293,7 +293,15 @@ class Model {
     return result;
   }
 }
+```
 
+### The ModelCollection Class
+
+This purpose of this class is to contain the array of document instances returned by the `Model.fetchAll` method. It extends the built-in Array
+class to add the Array methods and properties. It also has one additional method called `saveAll` to save all the instances in the array to their
+corresponding documents by their `_id`.
+
+```typescript [db/model.ts]
 class ModelCollection<T extends Model> extends Array<T> {
   constructor(instances: T[]) {
     super();
