@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A TypeScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-04-03T04:23:09.592Z
+updated: 2021-04-04T01:33:57.536Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
@@ -67,7 +67,9 @@ import { ObjectId } from "mongodb";
 })();
 ```
 
-## The Base Model Class
+## The Base Classes
+
+### The Model Class
 
 The base class is a data model template with generic fetch and save methods.
 
@@ -216,7 +218,7 @@ class Model {
    * Fetches a single document from a collection.
    *
    * @param query Sepecifies selection filter using query operators.
-   * @param projection Specifies the fields to return in the documents that match the query filter.
+   * @param [projection] Specifies the fields to return in the documents that match the query filter.
    *
    * @description For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
@@ -233,7 +235,7 @@ class Model {
    *
    * @param Type The subclass used to invoke this method (ex. User)
    * @param query Sepecifies selection filter using query operators.
-   * @param projection Specifies the fields to return in the documents that match the query filter.
+   * @param [projection] Specifies the fields to return in the documents that match the query filter.
    *
    * @description For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
@@ -272,7 +274,7 @@ class Model {
     if (options.skip) cursor.skip(options.skip);
     if (options.limit) cursor.limit(options.limit);
     const docs = await cursor.toArray();
-    return new ModelCollection(ModelType, docs.map((doc: Object) => new ModelType(doc)));
+    return new ModelCollection(docs.map((doc: Object) => new ModelType(doc)));
   }
 
   /**
