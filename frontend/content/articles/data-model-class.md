@@ -1,5 +1,5 @@
 ---
-title: Data Model Class
+title: MongoDB Model Class
 description: A TypeScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
 updated: 2021-04-04T14:24:34.618Z
@@ -9,8 +9,9 @@ tags:
   - TypeScript
   - Snippets
   - Database
-  - MongoDB
 ---
+
+## Introduction
 
 Using a data model class like this makes your database code cleaner and easier to manage. By creating a Model superclass, you eliminate the need to rewrite the fetching and saving logic for all your data models. You then use subclasses to define each data model's collection, schema, and unique properties and methods.
 
@@ -67,9 +68,9 @@ import { ObjectId } from "mongodb";
 })();
 ```
 
-## The Base Classes
+## Base Classes
 
-### The Model Class
+### Model Class
 
 The base class is a data model template with generic fetch and save methods.
 
@@ -232,7 +233,7 @@ class Model<T extends Model<T>> {
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch<T extends Model<T>>(query: Object, projection?: Object) {
+  static async fetch(query: Object, projection?: Object) {
     const instance = new this();
     await instance.fetch(query, projection);
     return instance;
@@ -253,7 +254,7 @@ class Model<T extends Model<T>> {
    *
    * @returns Returns documents as instances of the class
    */
-  static async fetchAll<T extends Model<T>>(query?: Object, options?: FetchAllOptions) {
+  static async fetchAll(query?: Object, options?: FetchAllOptions) {
     if (options && options.skip && !(options.skip < 0 || options.skip % 1 !== 0))
       throw new Error("Expected options.skip as null or positive whole number");
     if (options && options.limit && !(options.limit < 0 || options.limit % 1 !== 0))
@@ -288,7 +289,7 @@ class Model<T extends Model<T>> {
 }
 ```
 
-### The ModelCollection Class
+### ModelCollection Class
 
 This purpose of this class is to contain the array of document instances returned by the `Model.fetchAll` method. It extends the built-in Array
 class to add the Array methods and properties. It also has one additional method called `saveAll` to save all the instances in the array to their
@@ -337,7 +338,7 @@ class ModelCollection<T extends Model<T>> extends Array<T> {
 }
 ```
 
-## An Example Subclass
+## Example Subclass
 
 You can then extend the base class to define a specific collection, such as users, orders, etc. Defining a collection is required. If specified, a schema will enforce specific object properties. It is not required to have a schema.
 
