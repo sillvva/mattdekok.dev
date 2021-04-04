@@ -274,7 +274,7 @@ class Model {
     if (options.skip) cursor.skip(options.skip);
     if (options.limit) cursor.limit(options.limit);
     const docs = await cursor.toArray();
-    return new ModelCollection(ModelType, docs.map((doc: Object) => new ModelType(doc)));
+    return new ModelCollection(docs.map((doc: Object) => new ModelType(doc)));
   }
 
   /**
