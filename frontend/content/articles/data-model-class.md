@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A TypeScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-04-04T01:33:57.536Z
+updated: 2021-04-04T14:24:34.618Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
@@ -92,24 +92,21 @@ interface FetchAllOptions {
 
 type Constructor<T extends {} = {}> = new (...args: any[]) => T;
 
-class Model {
+class Model<T extends Model<T>> {
   private _db: Db;
+  protected static collection: string;
+  protected static schema: (string | Schema)[];
   private _collection: string;
   private _schema: (string | Schema)[];
   data: any;
 
-  constructor() {
+  constructor(data?: Object) {
     this._db = connection();
+    this._collection = (<any>this.constructor).collection;
+    this._schema = (<any>this.constructor).schema;
+    this.init(data);
   }
 
-  /**
-   * Validates the collection, schema, and initial data.
-   *
-   * This method should be called by the constuctor of subclasses that extend this class
-   * after setting the collection and (optionally) the schema.
-   *
-   * @param [data] Data that initializes an instance of the class.
-   */
   protected init(data?: Object) {
     this.checkCollection();
     this.checkSchema();
@@ -118,30 +115,22 @@ class Model {
     }
   }
 
-  protected get collection() {
+  private get collection() {
     return this._collection;
   }
 
-  protected set collection(collection) {
-    this._collection = collection;
+  private checkCollection() {
+    if (!this._collection) this.throw("Expected a 'collection' property on model.");
   }
 
   get dbCollection() {
+    if (!this._db) this.throw("No database connection");
     this.checkCollection();
     return this._db.collection(this._collection);
   }
 
-  private checkCollection() {
-    if (!this._db) this.throw("No database connection");
-    if (!this._collection) this.throw("Expected a 'collection' property on model.");
-  }
-
-  protected get schema() {
+  private get schema() {
     return this._schema;
-  }
-
-  protected set schema(schema) {
-    this._schema = schema;
   }
 
   private checkSchema() {
@@ -168,6 +157,8 @@ class Model {
 
       return schema;
     }
+
+    return null;
   }
 
   enforceSchema(data: any, soft?: boolean) {
@@ -218,9 +209,9 @@ class Model {
    * Fetches a single document from a collection.
    *
    * @param query Sepecifies selection filter using query operators.
-   * @param [projection] Specifies the fields to return in the documents that match the query filter.
+   * @param projection Specifies the fields to return in the documents that match the query filter.
    *
-   * @description For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
+   * @see https://docs.mongodb.com/manual/reference/method/db.collection.findOne
    *
    * @returns Returns document
    */
@@ -235,14 +226,14 @@ class Model {
    *
    * @param Type The subclass used to invoke this method (ex. User)
    * @param query Sepecifies selection filter using query operators.
-   * @param [projection] Specifies the fields to return in the documents that match the query filter.
+   * @param projection Specifies the fields to return in the documents that match the query filter.
    *
-   * @description For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
+   * @see https://docs.mongodb.com/manual/reference/method/db.collection.findOne
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch<T extends Model>(ModelType: Constructor<T>, query: Object, projection?: Object) {
-    const instance = new ModelType();
+  static async fetch<T extends Model<T>>(query: Object, projection?: Object) {
+    const instance = new this();
     await instance.fetch(query, projection);
     return instance;
   }
@@ -258,23 +249,23 @@ class Model {
    * @param [options.limit] - The number of documents to return
    * @param [options.projection] - Specifies the fields to return in the documents that match the query filter.
    *
-   * @description For more information: https://docs.mongodb.com/manual/reference/method/db.collection.find
+   * @see https://docs.mongodb.com/manual/reference/method/db.collection.find
    *
    * @returns Returns documents as instances of the class
    */
-  static async fetchAll<T extends Model>(ModelType: Constructor<T>, query?: Object, options?: FetchAllOptions) {
+  static async fetchAll<T extends Model<T>>(query?: Object, options?: FetchAllOptions) {
     if (options && options.skip && !(options.skip < 0 || options.skip % 1 !== 0))
       throw new Error("Expected options.skip as null or positive whole number");
     if (options && options.limit && !(options.limit < 0 || options.limit % 1 !== 0))
       throw new Error("Expected options.limit as null or positive whole number");
     if (options && options.projection) (<any>options.projection)._id = 1;
 
-    const instance = new ModelType();
+    const instance = new this();
     const cursor = instance.dbCollection.find(query, options && options.projection);
     if (options.skip) cursor.skip(options.skip);
     if (options.limit) cursor.limit(options.limit);
     const docs = await cursor.toArray();
-    return new ModelCollection(docs.map((doc: Object) => new ModelType(doc)));
+    return new ModelCollection(docs.map((doc: Object) => new this(doc)));
   }
 
   /**
@@ -304,7 +295,7 @@ class to add the Array methods and properties. It also has one additional method
 corresponding documents by their `_id`.
 
 ```typescript [db/model.ts]
-class ModelCollection<T extends Model> extends Array<T> {
+class ModelCollection<T extends Model<T>> extends Array<T> {
   constructor(instances: T[]) {
     super();
     instances.forEach(instance => {
@@ -348,27 +339,24 @@ class ModelCollection<T extends Model> extends Array<T> {
 
 ## An Example Subclass
 
-You can then extend the base class to define a specific data entity, such as users, orders, etc. If specified, a schema will enforce specific object properties. It is not required to have a schema.
-
-After you have defined the collection and schema, you need to initialize the subclass with the init method built into the Model class.
+You can then extend the base class to define a specific collection, such as users, orders, etc. Defining a collection is required. If specified, a schema will enforce specific object properties. It is not required to have a schema.
 
 ```javascript [db/user.ts]
 import Model from "./model";
 
-class User extends Model {
+class User extends Model<User> {
+  protected static collection = "users";
+  protected static schema = [
+    { name: "username", type: "string", required: true },
+    { name: "email", type: "string", required: true },
+    { name: "age", type: "number", required: true, default: 0 },
+    // Schemas defined as strings will be optional 
+    // fields with no required type or default value
+    "hobbies",
+  ];
+
   constructor(data?: Object) {
-    super();
-    this.collection = "users";
-    this.schema = [
-      { name: "username", type: "string", required: true },
-      { name: "email", type: "string", required: true },
-      // Schemas defined as strings will be optional 
-      // fields with no required type or default value
-      "firstName",
-      "lastName",
-      "age",
-    ];
-    this.init(data);
+    super(data);
   }
 }
 ```
@@ -376,16 +364,15 @@ class User extends Model {
 ## Example Usage
 
 ```typescript [./example.ts]
-import Model from "../db/model";
 import User from "../db/user";
 
 async function updateUserAge(userId: any, age: number) {
-  const user = await Model.fetch(User, { _id: userId });
+  const user = await User.fetch({ _id: userId });
   return await user.save({ age: age });
 }
 
 async function incrementUserAges(byYears = 1) {
-  const users = await Model.fetchAll(User);
+  const users = await User.fetchAll();
   return await users.saveAll({ $inc: { age: byYears } });
 }
 ```
