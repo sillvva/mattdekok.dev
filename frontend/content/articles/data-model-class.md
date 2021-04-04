@@ -115,12 +115,12 @@ class Model<T extends Model<T>> {
     }
   }
 
-  protected get collection() {
+  private get collection() {
     return this._collection;
   }
 
-  protected set collection(collection) {
-    this._collection = collection;
+  private checkCollection() {
+    if (!this._collection) this.throw("Expected a 'collection' property on model.");
   }
 
   get dbCollection() {
@@ -129,23 +129,8 @@ class Model<T extends Model<T>> {
     return this._db.collection(this._collection);
   }
 
-  private checkCollection() {
-    if (!this._collection) this.throw("Expected a 'collection' property on model.");
-  }
-
-  protected get schema() {
+  private get schema() {
     return this._schema;
-  }
-
-  protected set schema(schema) {
-    this._schema = schema;
-  }
-
-  get setup() {
-    return {
-      collection: this._collection,
-      schema: this._schema
-    }
   }
 
   private checkSchema() {
