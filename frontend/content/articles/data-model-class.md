@@ -339,9 +339,7 @@ class ModelCollection<T extends Model<T>> extends Array<T> {
 
 ## An Example Subclass
 
-You can then extend the base class to define a specific data entity, such as users, orders, etc. If specified, a schema will enforce specific object properties. It is not required to have a schema.
-
-After you have defined the collection and schema, you need to initialize the subclass with the init method built into the Model class.
+You can then extend the base class to define a specific collection, such as users, orders, etc. Defining a collection is required. If specified, a schema will enforce specific object properties. It is not required to have a schema.
 
 ```javascript [db/user.ts]
 import Model from "./model";
