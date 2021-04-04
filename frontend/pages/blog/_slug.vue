@@ -190,17 +190,26 @@ article {
         padding-bottom: 0;
       }
     }
-    .article-toc {
-      margin-bottom: 10px;
-      max-width: 400px;
-      a.v-list-item {
-        min-height: 30px;
-        .v-list-item__title {
-          color: var(--link);
+    .article-toc-wrapper {
+      position: fixed;
+      top: 0;
+      left: 80px;
+      z-index: 10;
+      .article-toc {
+        margin-bottom: 10px;
+        max-width: 300px;
+        .v-list {
+          a.v-list-item {
+            min-height: 30px;
+            .v-list-item__title {
+              color: var(--link);
+            }
+          }
         }
       }
     }
-    .article-content, .article-toc-wrapper {
+    .article-content,
+    .article-toc-wrapper {
       width: 100%;
       max-width: 800px;
       margin: 0;
@@ -227,6 +236,12 @@ article {
     .article-body {
       margin-left: 0;
       padding: 20px 10px;
+      .article-toc-wrapper {
+        position: static;
+        .article-toc {
+          max-width: 400px;
+        }
+      }
       .article-content {
         width: 100%;
       }
