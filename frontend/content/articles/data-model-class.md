@@ -232,7 +232,7 @@ class Model<T extends Model<T>> {
    *
    * @returns Returns document as instance of the class
    */
-  static async fetch<T extends Model<T>>(query: Object, projection?: Object) {
+  static async fetch(query: Object, projection?: Object) {
     const instance = new this();
     await instance.fetch(query, projection);
     return instance;
@@ -253,7 +253,7 @@ class Model<T extends Model<T>> {
    *
    * @returns Returns documents as instances of the class
    */
-  static async fetchAll<T extends Model<T>>(query?: Object, options?: FetchAllOptions) {
+  static async fetchAll(query?: Object, options?: FetchAllOptions) {
     if (options && options.skip && !(options.skip < 0 || options.skip % 1 !== 0))
       throw new Error("Expected options.skip as null or positive whole number");
     if (options && options.limit && !(options.limit < 0 || options.limit % 1 !== 0))
