@@ -2,7 +2,7 @@
 title: Data Model Class
 description: A TypeScript class for creating data models
 date: 2021-03-28T23:07:22.325Z
-updated: 2021-04-03T04:23:09.592Z
+updated: 2021-04-04T01:33:57.536Z
 image: /images/blog/code.jpg
 tags:
   - JavaScript
