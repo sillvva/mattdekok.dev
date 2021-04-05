@@ -7,6 +7,8 @@ export default async (object: functions.storage.ObjectMetadata) => {
   const fileExtension = path.extname(filePath);
   const fileDir = path.dirname(filePath);
 
+  functions.logger.log(`Storage Trigger: ${filePath}`);
+
   if (fileDir === "blog/articles" && fileExtension == ".md") {
     const octokit = new Octokit({ auth: functions.config().github.personal_access_token });
     try {
