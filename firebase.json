@@ -12,11 +12,15 @@
     "rewrites": [
       {
         "source": "/stripeKey",
-        "function": "payments-api"
+        "function": "restful-api"
       },
       {
         "source": "/payment",
-        "function": "payments-api"
+        "function": "restful-api"
+      },
+      {
+        "source": "/blogAPI",
+        "function": "restful-api"
       },
       {
         "source": "/blog/**",

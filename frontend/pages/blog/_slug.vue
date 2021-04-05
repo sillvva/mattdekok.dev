@@ -21,7 +21,7 @@
         <v-col
           cols="12"
           class="article-toc-wrapper"
-          v-if="article.toc.length > 0"
+          v-if="article.toc && article.toc.length > 0"
         >
           <v-card class="article-toc">
             <v-list>
@@ -43,7 +43,20 @@
           </v-card>
         </v-col>
         <v-col cols="12" class="article-content">
-          <nuxt-content :document="article" />
+          <v-row
+            justify="center"
+            align="center"
+            style="height: 100%"
+            v-if="!article"
+          >
+            <v-progress-circular
+              :size="70"
+              :width="7"
+              color="var(--link)"
+              indeterminate
+            ></v-progress-circular>
+          </v-row>
+          <nuxt-content :document="article" v-else />
         </v-col>
       </v-row>
     </section>
@@ -105,7 +118,14 @@ export default {
       return this.article.codepen && this.$vuetify.breakpoint.lgAndUp;
     },
   },
+  mounted() {
+    // this.fetchPost(this.$route.params.slug);
+  },
   methods: {
+    // async fetchPost(slug) {
+    //   const content = await this.$store.dispatch("getBlogPost", slug);
+    //   console.log(content);
+    // },
     formatDate(date, time) {
       const options = {
         weekday: "long",
