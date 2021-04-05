@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
 import { Endpoint, RequestType } from "firebase-backend";
-import { initializeApp, storage } from "firebase-admin";
 import { load } from "js-yaml";
-
-const app = initializeApp({}, "matt-dekok-dev");
-const bucket = storage(app).bucket("matt-dekok-dev.appspot.com");
+import fbInit from '../../init';
 
 export default new Endpoint("blogAPI", RequestType.GET, async (req: Request, res: Response) => {
   try {
-    const files = await bucket.getFiles({ directory: "blog/articles" });
+    const files = await fbInit.bucket().getFiles({ directory: "blog/articles" });
     if (req.query.slug) {
       const file = files[0].find(file => file.name.includes(`/${req.query.slug}.md`));
       if (!file) throw new Error("Post not found");
@@ -35,7 +32,7 @@ export default new Endpoint("blogAPI", RequestType.GET, async (req: Request, res
         text: post
       });
     } else {
-      const files = await bucket.getFiles({ directory: "blog/articles" });
+      const files = await fbInit.bucket().getFiles({ directory: "blog/articles" });
       const fileCount = files[0].filter(file => file.name.includes(".md")).length;
       const fileData: any[] = await new Promise(resolve => {
         const data: any[] = [];

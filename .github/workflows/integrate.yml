@@ -26,7 +26,10 @@ jobs:
           node-version: 12
       
       - name: Generate Frontend
-        run: cd frontend && npm ci && npm run generate
+        env:
+          FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+        run: cd frontend && npm ci && npm run update-blog && npm run generate
 
       - name: Build Functions
         run: cd functions && npm ci && npm run build
