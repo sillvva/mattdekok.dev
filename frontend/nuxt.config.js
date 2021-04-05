@@ -2,7 +2,8 @@ import colors from "vuetify/es5/util/colors";
 
 const meta = {
   title: "Matt DeKok",
-  description: "Experienced web developer with a demonstrated history of working in the wireless industry.",
+  description:
+    "Experienced web developer with a demonstrated history of working in the wireless industry.",
   image: "https://www.mattdekok.dev/images/preview-me2.jpg",
   url: "https://www.mattdekok.dev"
 };
@@ -22,19 +23,26 @@ export default {
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { "http-equiv": "cache-control", content: "max-age=31536000" },
-      { hid: "description", name: "description", content: "Experienced web developer with a demonstrated history of working in the wireless industry." },
-      ...['os', 'og', 'twitter'].map(m => {
-        return ['title', 'description', 'image', 'url'].map(t => {
-          return {
-            hid: `${m}:${t}`,
-            name: `${m}:${t}`,
-            property: `${m}:${t}`,
-            content: meta[t]
-          }
+      {
+        hid: "description",
+        name: "description",
+        content:
+          "Experienced web developer with a demonstrated history of working in the wireless industry."
+      },
+      ...["os", "og", "twitter"]
+        .map(m => {
+          return ["title", "description", "image", "url"].map(t => {
+            return {
+              hid: `${m}:${t}`,
+              name: `${m}:${t}`,
+              property: `${m}:${t}`,
+              content: meta[t]
+            };
+          });
         })
-      }).flat(),
-      { hid: "twitter:site", name: 'twitter:site', content: '@sillvvasensei' },
-      { name: 'twitter:card', content: 'summary_large_image' },
+        .flat(),
+      { hid: "twitter:site", name: "twitter:site", content: "@sillvvasensei" },
+      { name: "twitter:card", content: "summary_large_image" }
     ],
     link: [
       { rel: "icon", type: "image/png", href: "/favicon-32x32.png" },
@@ -48,10 +56,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-      '@/assets/global.scss',
-      '@/assets/animations.scss',
-  ],
+  css: ["@/assets/global.scss", "@/assets/animations.scss"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -63,6 +68,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     "@nuxt/typescript-build",
+    // https://go.nuxtjs.dev/content
     // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify"
   ],
@@ -71,7 +77,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
-    // https://go.nuxtjs.dev/constent
+    // https://go.nuxtjs.dev/content
     "@nuxt/content",
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa",
@@ -81,7 +87,7 @@ export default {
   content: {
     markdown: {
       prism: {
-        theme: 'prism-themes/themes/prism-vsc-dark-plus.css'
+        theme: "prism-themes/themes/prism-vsc-dark-plus.css"
       }
     }
   },
@@ -171,7 +177,7 @@ export default {
 
     beforeEnter(el) {
       this.$gsap.set(el, {
-        opacity: 0,
+        opacity: 0
       });
     },
 
@@ -180,7 +186,7 @@ export default {
         opacity: 1,
         duration: 0.25,
         ease: "power2.inOut",
-        onComplete: done,
+        onComplete: done
       });
     },
 
@@ -189,8 +195,8 @@ export default {
         opacity: 0,
         duration: 0.25,
         ease: "power2.inOut",
-        onComplete: done,
+        onComplete: done
       });
-    },
+    }
   }
 };

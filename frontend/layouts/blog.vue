@@ -63,6 +63,14 @@
       </v-btn>
     </v-app-bar>
     <v-main class="blog-app">
+      <!-- <v-row justify="center" align="center" style="height: 100%;" v-if="!blogPosts.length">
+        <v-progress-circular
+          :size="70"
+          :width="7"
+          color="var(--link)"
+          indeterminate
+        ></v-progress-circular>
+      </v-row> -->
       <nuxt style="position: relative" />
     </v-main>
   </v-app>
@@ -88,11 +96,15 @@ export default {
   },
   mounted() {
     this.$store.dispatch("setBlogSearch", this.search);
+    // this.$store.dispatch("getBlogPosts");
   },
   computed: {
     blogSearch() {
       return this.$store.getters.blogSearch;
     },
+    // blogPosts() {
+    //   return this.$store.getters.blogPosts;
+    // }
   },
   watch: {
     search(val) {

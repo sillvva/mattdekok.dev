@@ -7,6 +7,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+.fbadmin
+content/articles/**.*
+
 # Runtime data
 pids
 *.pid

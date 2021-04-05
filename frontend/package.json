@@ -6,14 +6,19 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "update-blog": "node updateBlog.js",
+    "update-blog-test": "node updateBlogTest"
   },
   "dependencies": {
     "@nuxt/content": "^1.14.0",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/pwa": "^3.3.5",
     "@vue-stripe/vue-stripe": "^4.1.5",
+    "axios": "^0.21.1",
     "core-js": "^3.9.1",
+    "dotenv": "^8.2.0",
+    "firebase-admin": "^9.6.0",
     "nuxt": "^2.15.3",
     "nuxt-gsap": "^0.1.4",
     "prism-themes": "^1.6.0",

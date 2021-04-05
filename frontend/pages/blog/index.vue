@@ -70,6 +70,9 @@ export default {
     blogSearch() {
       return this.$store.getters.blogSearch;
     },
+    // blogPosts() {
+    //   return this.$store.getters.blogPosts;
+    // }
   },
   methods: {
     allArticles() {

@@ -19,6 +19,10 @@
         "function": "payments-api"
       },
       {
+        "source": "/blogAPI",
+        "function": "blog-api"
+      },
+      {
         "source": "/blog/**",
         "destination": "/blog/post/index.html"
       }
