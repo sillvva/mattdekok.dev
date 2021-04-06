@@ -1,6 +1,18 @@
 <template>
-  <div class="img">
-    <img :src="src" :width="width" :height="height" :alt="alt" />
+  <div :class="['blog-img']">
+    <img
+      :src="src"
+      :width="width"
+      :height="height"
+      :alt="alt"
+      @click.prevent="openImg"
+    />
+    <div
+      :class="['zoom-img', open && 'open', opening && 'opening']"
+      @click="closeImg"
+    >
+      <img :src="src" :alt="alt" />
+    </div>
   </div>
 </template>
 
@@ -13,25 +25,46 @@ export default {
     },
     width: {
       type: Number | String,
-      required: false
+      required: false,
     },
     height: {
       type: Number | String,
-      required: false
+      required: false,
     },
     alt: {
       type: String,
-      required: false
-    }
+      required: false,
+    },
+  },
+  data() {
+    return {
+      open: false,
+      opening: false,
+    };
+  },
+  methods: {
+    openImg() {
+      this.open = true;
+      setTimeout(() => {
+        this.opening = true;
+      }, 50);
+    },
+    closeImg() {
+      this.opening = false;
+      setTimeout(() => {
+        this.open = false;
+      }, 500);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.img {
+.blog-img {
   margin: 20px 0;
   text-align: center;
-  img {
+  cursor: pointer;
+  > img {
     border: 12px solid grey;
     max-width: 600px;
     @media (max-width: 600px) {
@@ -45,6 +78,36 @@ export default {
     }
     @media (max-width: 450px) {
       max-width: 350px;
+    }
+  }
+  .zoom-img {
+    display: none;
+    opacity: 0;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 500ms;
+    background-color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    > img {
+      max-width: 80vw;
+      max-height: 80vh;
+      border: 12px solid grey;
+    }
+    &.open {
+      display: flex;
+      opacity: 0;
+    }
+    &.open.opening {
+      opacity: 1;
+    }
+    &.open.closing {
+      opacity: 0;
     }
   }
 }
