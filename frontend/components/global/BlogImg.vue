@@ -1,5 +1,5 @@
 <template>
-  <div :class="['blog-img']">
+  <div :class="['blog-img', zoom && 'zoomable']">
     <img
       :src="src"
       :width="width"
@@ -10,6 +10,7 @@
     <div
       :class="['zoom-img', open && 'open', opening && 'opening']"
       @click="closeImg"
+      v-if="zoom"
     >
       <img :src="src" :alt="alt" />
     </div>
@@ -35,6 +36,11 @@ export default {
       type: String,
       required: false,
     },
+    zoom: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
   },
   data() {
     return {
@@ -63,7 +69,6 @@ export default {
 .blog-img {
   margin: 20px 0;
   text-align: center;
-  cursor: pointer;
   > img {
     border: 12px solid grey;
     max-width: 600px;
@@ -79,6 +84,9 @@ export default {
     @media (max-width: 450px) {
       max-width: 350px;
     }
+  }
+  &.zoomable {
+    cursor: pointer;
   }
   .zoom-img {
     display: none;
