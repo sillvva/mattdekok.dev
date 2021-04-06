@@ -1,13 +1,5 @@
 import colors from "vuetify/es5/util/colors";
 
-const meta = {
-  title: "Matt DeKok",
-  description:
-    "Experienced web developer with a demonstrated history of working in the wireless industry.",
-  image: "https://www.mattdekok.dev/images/preview-me2.jpg",
-  url: "https://www.mattdekok.dev"
-};
-
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -18,7 +10,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: "%s",
-    title: meta.title,
+    title: "Matt DeKok",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -29,18 +21,6 @@ export default {
         content:
           "Experienced web developer with a demonstrated history of working in the wireless industry."
       },
-      ...["os", "og", "twitter"]
-        .map(m => {
-          return ["title", "description", "image", "url"].map(t => {
-            return {
-              hid: `${m}:${t}`,
-              name: `${m}:${t}`,
-              property: `${m}:${t}`,
-              content: meta[t]
-            };
-          });
-        })
-        .flat(),
       { hid: "twitter:site", name: "twitter:site", content: "@sillvvasensei" },
       { name: "twitter:card", content: "summary_large_image" }
     ],

@@ -75,9 +75,17 @@ export default {
           name: "description",
           content: (this.article || {}).description,
         },
-        ...["os", "og", "twitter"]
+        ...["og", "twitter"]
           .map((m) => {
-            return ["title", "image", "description"].map((t) => {
+            return ["title", "image", "description", "url"].map((t) => {
+              if (t === "url") {
+                return {
+                  hid: `${m}:${t}`,
+                  name: `${m}:${t}`,
+                  property: `${m}:${t}`,
+                  content: `https://www.mattdekok.dev/${this.$route.path}`,
+                }
+              }
               return {
                 hid: `${m}:${t}`,
                 name: `${m}:${t}`,
@@ -118,14 +126,7 @@ export default {
       return this.article.codepen && this.$vuetify.breakpoint.lgAndUp;
     },
   },
-  mounted() {
-    // this.fetchPost(this.$route.params.slug);
-  },
   methods: {
-    // async fetchPost(slug) {
-    //   const content = await this.$store.dispatch("getBlogPost", slug);
-    //   console.log(content);
-    // },
     formatDate(date, time) {
       const options = {
         weekday: "long",

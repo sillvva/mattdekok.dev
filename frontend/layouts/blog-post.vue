@@ -6,7 +6,7 @@
       top
       left
       fixed
-      style="background-color: var(--background);"
+      style="background-color: var(--background)"
       @click="$router.push('/blog')"
       :aria-label="`Return to Blog`"
     >
@@ -18,7 +18,7 @@
       top
       right
       fixed
-      style="background-color: var(--background);"
+      style="background-color: var(--background)"
       @click="toggleTheme()"
       :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
     >

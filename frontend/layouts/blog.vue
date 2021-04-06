@@ -36,7 +36,7 @@
         hide-details
         ref="search"
         @blur="searchBlur()"
-        style="margin-top: 5px"
+        style="margin-top: 5px; max-width: 500px;"
       />
       <v-btn
         icon
@@ -77,10 +77,31 @@
 </template>
 
 <script>
+const meta = {
+  title: "Matt's Blog",
+  description: "Experienced web developer with a demonstrated history of working in the wireless industry.",
+  image: "https://www.mattdekok.dev/images/preview-me.jpg",
+  url: "https://www.mattdekok.dev/blog",
+};
+
 export default {
   head() {
     return {
       titleTemplate: "%s",
+      meta: [
+        ...["og", "twitter"]
+          .map((m) => {
+            return ["title", "description", "image", "url"].map((t) => {
+              return {
+                hid: `${m}:${t}`,
+                name: `${m}:${t}`,
+                property: `${m}:${t}`,
+                content: meta[t],
+              };
+            });
+          })
+          .flat(),
+      ],
     };
   },
   data() {
@@ -96,15 +117,11 @@ export default {
   },
   mounted() {
     this.$store.dispatch("setBlogSearch", this.search);
-    // this.$store.dispatch("getBlogPosts");
   },
   computed: {
     blogSearch() {
       return this.$store.getters.blogSearch;
     },
-    // blogPosts() {
-    //   return this.$store.getters.blogPosts;
-    // }
   },
   watch: {
     search(val) {
