@@ -36,7 +36,7 @@
         hide-details
         ref="search"
         @blur="searchBlur()"
-        style="margin-top: 5px"
+        style="margin-top: 5px; max-width: 500px;"
       />
       <v-btn
         icon

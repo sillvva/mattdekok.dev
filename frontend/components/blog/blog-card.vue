@@ -113,8 +113,8 @@ export default {
     appendBlogSearch(val) {
       const words = this.blogSearch.split(" ");
       const search = [
-        ...words.filter((w) => w !== val),
-        words.includes(val) ? null : val,
+        ...words.filter((w) => w.toLowerCase() !== val.toLowerCase()),
+        words.find((w) => w.toLowerCase() === val.toLowerCase()) ? null : val,
       ];
       this.setBlogSearch(search.join(" "));
       if (search.length === 0 && this.showTags) {
