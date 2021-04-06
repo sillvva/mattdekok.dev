@@ -12,24 +12,62 @@
 <script>
 export default {
   layout: "blog",
-  async mounted() {
-    const pathParts = this.$route.path.split('/');
-    if (pathParts[2] === 'post') {
-      this.$router.replace('/blog');
-    }
-    else {
+  head() {
+    return {
+      title: (this.article || {}).title,
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: (this.article || {}).description,
+        },
+        ...["og", "twitter"]
+          .map((m) => {
+            return ["title", "image", "description", "url"].map((t) => {
+              if (t === "url") {
+                return {
+                  hid: `${m}:${t}`,
+                  name: `${m}:${t}`,
+                  property: `${m}:${t}`,
+                  content: `https://www.mattdekok.dev${this.$route.path}`,
+                }
+              }
+              return {
+                hid: `${m}:${t}`,
+                name: `${m}:${t}`,
+                property: `${m}:${t}`,
+                content: (this.article || {})[t],
+              };
+            });
+          })
+          .flat(),
+      ],
+    };
+  },
+  async asyncData({ $content, route, redirect }) {
+    const pathParts = route.path.split("/");
+    let article;
+
+    if (pathParts[2] === "post") {
+      redirect("/blog");
+    } else {
       try {
-        const article = await this.$content(`articles`, pathParts[2]).fetch();
-        if (article) {
-          this.$router.replace(`/blog/${pathParts[2]}`);
-        }
-        else {
-          this.$router.replace('/blog');
-        }
+        article = await $content(`articles`, pathParts[2]).fetch();
       } catch (err) {
-        this.$router.replace('/blog');
+        redirect("/blog");
       }
     }
-  }
+
+    return {
+      article,
+    };
+  },
+  mounted() {
+    if (this.article) {
+      this.$router.replace(`/blog/${pathParts[2]}`);
+    } else {
+      this.$router.replace("/blog");
+    }
+  },
 };
 </script>

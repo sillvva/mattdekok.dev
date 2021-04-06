@@ -83,7 +83,7 @@ export default {
                   hid: `${m}:${t}`,
                   name: `${m}:${t}`,
                   property: `${m}:${t}`,
-                  content: `https://www.mattdekok.dev/${this.$route.path}`,
+                  content: `https://www.mattdekok.dev${this.$route.path}`,
                 }
               }
               return {
