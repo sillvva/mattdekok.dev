@@ -49,11 +49,32 @@
 <script>
 import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
 
+const meta = {
+  title: "Matt DeKok",
+  description: "Experienced web developer with a demonstrated history of working in the wireless industry.",
+  image: "https://www.mattdekok.dev/images/preview-me2.jpg",
+  url: "https://www.mattdekok.dev",
+};
+
 export default {
   components: { HexMenu },
   head() {
     return {
       titleTemplate: "%s - Matt DeKok",
+      meta: [
+        ...["og", "twitter"]
+          .map((m) => {
+            return ["title", "description", "image", "url"].map((t) => {
+              return {
+                hid: `${m}:${t}`,
+                name: `${m}:${t}`,
+                property: `${m}:${t}`,
+                content: meta[t],
+              };
+            });
+          })
+          .flat(),
+      ],
     };
   },
   data() {
