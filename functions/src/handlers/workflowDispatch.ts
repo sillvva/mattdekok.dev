@@ -2,14 +2,21 @@ import * as functions from "firebase-functions";
 import * as path from "path";
 import { Octokit } from "@octokit/core";
 
-export default async (object: functions.storage.ObjectMetadata) => {
+let lastRun = 0;
+let lastFile = "";
+
+export default async (object: functions.storage.ObjectMetadata, context: functions.EventContext) => {
   const filePath = object.name || "";
   const fileExtension = path.extname(filePath);
   const fileDir = path.dirname(filePath);
 
-  functions.logger.log(`Storage Trigger: ${filePath}`);
-
   if (fileDir === "blog/articles" && fileExtension == ".md") {
+    if (new Date().getTime() - lastRun < 5 * 1000 && filePath === lastFile) return;
+    lastRun = new Date().getTime();
+    lastFile = filePath;
+
+    functions.logger.log(`Storage Trigger: ${context.eventType.replace("google.storage.object.", "")}: ${filePath}`);
+
     const octokit = new Octokit({ auth: functions.config().github.personal_access_token });
     try {
       await octokit.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
