@@ -2,17 +2,12 @@ import * as functions from "firebase-functions";
 import * as path from "path";
 import { Octokit } from "@octokit/core";
 
-let lastRuns: any = {};
-
 export default async (object: functions.storage.ObjectMetadata, context: functions.EventContext) => {
   const filePath = object.name || "";
   const fileExtension = path.extname(filePath);
   const fileDir = path.dirname(filePath);
 
   if (fileDir === "blog/articles" && fileExtension == ".md") {
-    if (new Date().getTime() - (lastRuns[filePath] || 0) < 5 * 1000) return;
-    lastRuns[filePath] = new Date().getTime();
-
     functions.logger.log(`Storage Trigger: ${context.eventType.replace("google.storage.object.", "")}: ${filePath}`);
 
     const octokit = new Octokit({ auth: functions.config().github.personal_access_token });
@@ -28,10 +23,6 @@ export default async (object: functions.storage.ObjectMetadata, context: functio
       console.log("Documentation:", err.documentation_url);
       return false;
     }
-    
-    setTimeout(() => {
-      delete lastRuns[filePath];
-    }, 10 * 60 * 1000);
   }
 
   return true;
