@@ -1,5 +1,13 @@
 import colors from "vuetify/es5/util/colors";
 
+const meta = {
+  title: "Matt DeKok",
+  description:
+    "Experienced web developer with a demonstrated history of working in the wireless industry.",
+  image: "https://www.mattdekok.dev/images/preview-me2.jpg",
+  url: "https://www.mattdekok.dev/"
+};
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -22,7 +30,19 @@ export default {
           "Experienced web developer with a demonstrated history of working in the wireless industry."
       },
       { hid: "twitter:site", name: "twitter:site", content: "@sillvvasensei" },
-      { name: "twitter:card", content: "summary_large_image" }
+      { name: "twitter:card", content: "summary_large_image" },
+      ...["og", "os", "twitter"]
+        .map(m => {
+          return ["title", "image", "description", "url"].map(t => {
+            return {
+              hid: `${m}:${t}`,
+              name: `${m}:${t}`,
+              property: `${m}:${t}`,
+              content: meta[t]
+            };
+          });
+        })
+        .flat()
     ],
     link: [
       { rel: "icon", type: "image/png", href: "/favicon-32x32.png" },
