@@ -8,7 +8,7 @@
     "serve": "cd functions && npm run serve",
     "shell": "cd functions & npm run shell",
     "build": "cd frontend && npm run update-blog-test && npm run build",
-    "prod": "cd frontend && npm ci && npm run update-blog-test && npm start",
+    "prod": "cd frontend && npm ci && npm run update-blog && npm start",
     "start": "cd frontend && npm run update-blog-test && npm run build && npm start"
   }
 }
