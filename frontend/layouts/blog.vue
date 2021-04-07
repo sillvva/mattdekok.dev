@@ -102,12 +102,10 @@ export default {
       searchOpen: false,
     };
   },
-  created() {
+  mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
-  },
-  mounted() {
     this.$store.dispatch("setBlogSearch", this.search);
   },
   computed: {

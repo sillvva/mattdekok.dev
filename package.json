@@ -6,6 +6,7 @@
     "test": "cd frontend && npm run update-blog-test && npm run generate && cd ../functions && npm run serve",
     "dev": "cd frontend && npm run update-blog-test && npm run dev",
     "serve": "cd functions && npm run serve",
-    "shell": "cd functions && npm run shell"
+    "shell": "cd functions && npm run shell",
+    "start": "cd frontend && npm run update-blog-test && npm run build && npm start"
   }
 }
