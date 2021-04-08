@@ -48,7 +48,6 @@
 
 <script>
 import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
-import { apiRedirect } from "@/components/aux-functions.js";
 
 const meta = {
   title: "Matt DeKok",
