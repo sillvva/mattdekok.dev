@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import { apiRedirect } from "@/components/aux-functions.js";
+
 const meta = {
   title: "Matt's Blog",
   description: "Experienced web developer with a demonstrated history of working in the wireless industry.",
@@ -101,6 +103,9 @@ export default {
       search: "",
       searchOpen: false,
     };
+  },
+  created() {
+    apiRedirect();
   },
   mounted() {
     this.$vuetify.theme.dark =

@@ -31,11 +31,16 @@
 </template>
 
 <script>
+import { apiRedirect } from "@/components/aux-functions.js";
+
 export default {
   head() {
     return {
       titleTemplate: "%s - Matt's Blog",
     };
+  },
+  created() {
+    apiRedirect();
   },
   mounted() {
     this.$vuetify.theme.dark =
