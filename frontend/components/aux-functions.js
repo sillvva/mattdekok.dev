@@ -7,23 +7,14 @@ export const formatDate = (date, time) => {
   };
   return time
     ? new Date(date).toLocaleString("en", {
-        ...options,
-        hour: "numeric",
-        minute: "numeric",
-        timeZoneName: "short"
-      })
+      ...options,
+      hour: "numeric",
+      minute: "numeric",
+      timeZoneName: "short"
+    })
     : new Date(date).toLocaleDateString("en", options);
 };
 
-export const apiRedirect = () => {
-  if (!process.server) {
-    if (window.location.host.includes("api.mattdekok.dev")) {
-      window.location.replace("https://www.mattdekok.dev");
-    }
-  }
-}
-
 export default {
-  apiRedirect,
   formatDate
 };

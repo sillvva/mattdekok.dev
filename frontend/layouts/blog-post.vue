@@ -39,9 +39,6 @@ export default {
       titleTemplate: "%s - Matt's Blog",
     };
   },
-  created() {
-    apiRedirect();
-  },
   mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||

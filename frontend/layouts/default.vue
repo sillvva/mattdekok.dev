@@ -97,9 +97,6 @@ export default {
       ],
     };
   },
-  created() {
-    apiRedirect();
-  },
   mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||

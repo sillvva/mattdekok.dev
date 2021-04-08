@@ -104,9 +104,6 @@ export default {
       searchOpen: false,
     };
   },
-  created() {
-    apiRedirect();
-  },
   mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||

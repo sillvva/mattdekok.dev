@@ -24,9 +24,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      
-      - name: Generate Hosting Directory
-        run: cd frontend && npm ci && npm run generate
 
       - name: Build Functions
         run: cd functions && npm ci && npm run build
