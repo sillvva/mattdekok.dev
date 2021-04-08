@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 12
       
-      - name: Generate Frontend
+      - name: Generate Hosting Directory
         run: cd frontend && npm ci && npm run generate
       
       - name: Build Functions
