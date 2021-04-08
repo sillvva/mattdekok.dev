@@ -95,7 +95,7 @@ export default {
       ],
     };
   },
-  created() {
+  mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";

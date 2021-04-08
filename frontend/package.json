@@ -22,9 +22,7 @@
     "nuxt": "^2.15.3",
     "nuxt-gsap": "^0.1.4",
     "prism-themes": "^1.6.0",
-    "vuetify": "^2.4.8"
-  },
-  "devDependencies": {
+    "vuetify": "^2.4.8",
     "@nuxt/types": "^2.15.3",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/vuetify": "^1.11.3"

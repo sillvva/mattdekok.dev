@@ -25,11 +25,18 @@ jobs:
         with:
           node-version: 12
       
-      - name: Generate Frontend
-        env:
-          FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
-          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-        run: cd frontend && npm ci && npm run update-blog && npm run generate
+      # - name: Generate Frontend
+      #   env:
+      #     FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
+      #     FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+      #   run: cd frontend && npm ci && npm run update-blog && npm run generate
 
       - name: Build Functions
         run: cd functions && npm ci && npm run build
+
+      - name: Deploy to Heroku STG
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "mattdekok-stg"
+          heroku_email: "matt.dekok@gmail.com"
