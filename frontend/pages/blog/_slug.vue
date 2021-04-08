@@ -75,7 +75,7 @@ export default {
           name: "description",
           content: (this.article || {}).description,
         },
-        ...["og", "twitter"]
+        ...["og", "os", "twitter"]
           .map((m) => {
             return ["title", "image", "description", "url"].map((t) => {
               if (t === "url") {
@@ -84,7 +84,18 @@ export default {
                   name: `${m}:${t}`,
                   property: `${m}:${t}`,
                   content: `https://www.mattdekok.dev${this.$route.path}`,
-                }
+                };
+              }
+              if (t === "image") {
+                const image = (this.article || {})["image"];
+                return {
+                  hid: `${m}:${t}`,
+                  name: `${m}:${t}`,
+                  property: `${m}:${t}`,
+                  content: image.startsWith("/")
+                    ? `https://www.mattdekok.dev${image}`
+                    : image,
+                };
               }
               return {
                 hid: `${m}:${t}`,
