@@ -1,7 +1,7 @@
 <template>
   <div class="blog-item">
     <NuxtLink class="blog-link" :to="articleLink(article)">
-      <v-card :class="['blog-card']">
+      <v-card :class="['blog-card']" @click="doNothing">
         <div style="position: relative">
           <v-lazy
             :value="article.visible"
@@ -140,6 +140,7 @@ export default {
         this.setBlogCardTags("");
       }, 100);
     },
+    doNothing() {}
   },
 };
 </script>
