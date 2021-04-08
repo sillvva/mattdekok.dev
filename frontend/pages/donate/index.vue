@@ -212,7 +212,6 @@
 import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
 import PageArticleSection from "@/components/page-article/page-article-section.vue";
 import PageArticle from "@/components/page-article/page-article.vue";
-import { StripeElementCard } from "@vue-stripe/vue-stripe";
 
 export default {
   head() {
@@ -220,7 +219,7 @@ export default {
       title: "Donate",
     };
   },
-  components: { PageArticle, PageArticleSection, StripeElementCard, HexMenu },
+  components: { PageArticle, PageArticleSection, HexMenu },
   data() {
     return {
       stripeKey: null,
