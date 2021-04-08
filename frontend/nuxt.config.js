@@ -53,7 +53,13 @@ export default {
   css: ["@/assets/global.scss", "@/assets/animations.scss"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    { src: '~/plugins/vue-stripe.js', ssr: false },
+  ],
+
+  env: {
+    STRIPE_PK: process.env.STRIPE_PK,
+  },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
