@@ -48,10 +48,12 @@
 
 <script>
 import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
+import { apiRedirect } from "@/components/aux-functions.js";
 
 const meta = {
   title: "Matt DeKok",
-  description: "Experienced web developer with a demonstrated history of working in the wireless industry.",
+  description:
+    "Experienced web developer with a demonstrated history of working in the wireless industry.",
   image: "https://www.mattdekok.dev/images/preview-me2.jpg",
   url: "https://www.mattdekok.dev",
 };
@@ -94,6 +96,9 @@ export default {
         { link: "/donate", label: "Donate" },
       ],
     };
+  },
+  created() {
+    apiRedirect();
   },
   mounted() {
     this.$vuetify.theme.dark =
