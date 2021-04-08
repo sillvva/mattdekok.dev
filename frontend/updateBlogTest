@@ -1,2 +1,2 @@
-require('dotenv').config({ path: './.fbadmin' });
+require('dotenv').config({ path: './.env' });
 require('./updateBlog.js');

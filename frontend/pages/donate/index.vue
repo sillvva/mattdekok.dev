@@ -74,7 +74,7 @@
                         @click="generateToken"
                         :disabled="!valid || !cardComplete"
                         :color="valid && cardComplete ? 'primary' : 'dark'"
-                        style="height: 42px;"
+                        style="height: 42px"
                       >
                         Send
                       </v-btn>
@@ -212,7 +212,6 @@
 import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
 import PageArticleSection from "@/components/page-article/page-article-section.vue";
 import PageArticle from "@/components/page-article/page-article.vue";
-import { StripeElementCard } from "@vue-stripe/vue-stripe";
 
 export default {
   head() {
@@ -220,13 +219,15 @@ export default {
       title: "Donate",
     };
   },
-  components: { PageArticle, PageArticleSection, StripeElementCard, HexMenu },
+  components: { PageArticle, PageArticleSection, HexMenu },
   data() {
     return {
       stripeKey: null,
       name: "",
       email: "",
       amount: "5.00",
+      stripeKey: process.env.STRIPE_PK,
+      showForm: true,
       showThanks: false,
       paymentError: false,
       paymentErrorType: "",
@@ -258,32 +259,6 @@ export default {
       rules: [],
     };
   },
-  async asyncData() {
-    let stripeKey = null;
-    let showForm = true;
-
-    if (window.location.host === "localhost:3000") {
-      stripeKey = "pk_test_bC4lCA3Dje38ZMelZUpXaU9700RpKxjEW7";
-    } else if (showForm) {
-      try {
-        const response = await fetch("/stripeKey");
-        if (response.status === 200) {
-          const data = await response.json();
-          stripeKey = (data || {}).key;
-        } else {
-          showForm = false;
-        }
-      } catch (err) {
-        console.log(err);
-        showForm = false;
-      }
-    }
-
-    return {
-      stripeKey: stripeKey,
-      showForm: showForm,
-    };
-  },
   methods: {
     copyTokenAddress(address) {
       const el = document.createElement("textarea");
@@ -305,8 +280,7 @@ export default {
       this.$refs.stripeForm.validate();
       if (window.location.host === "localhost:3000") {
         this.sendPayment();
-      }
-      else if (this.valid && this.cardComplete) {
+      } else if (this.valid && this.cardComplete) {
         this.$refs.cardRef.submit();
       }
     },
@@ -351,14 +325,15 @@ export default {
         } else {
           this.paymentError = true;
           this.paymentErrorType = "Stripe Error";
-          this.paymentErrorMessage = "Cannot reach Stripe right now. Please try again later.";
+          this.paymentErrorMessage =
+            "Cannot reach Stripe right now. Please try again later.";
         }
       } catch (err) {
         this.paymentError = true;
         this.paymentErrorType = "";
         this.paymentErrorMessage = err.message;
       }
-      
+
       this.sending = false;
     },
   },
