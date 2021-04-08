@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import { apiRedirect } from "@/components/aux-functions.js";
-
 export default {
   head() {
     return {

@@ -2,7 +2,6 @@
   <v-app class="theme--custom">
     <v-app-bar
       fixed
-      prominent
       color="var(--dropShadow)"
       :src="
         $vuetify.theme.dark
@@ -10,24 +9,18 @@
           : '/images/blog/light-hex-wp.webp'
       "
       class="blog-app-bar"
+      ref="blogAppBar"
     >
-      <v-btn
-        icon
-        @click="$router.push('/')"
-        :aria-label="`Return to Website`"
-        v-if="blogHome()"
-      >
+      <v-btn icon @click="$router.push('/')" :aria-label="`Return to Website`">
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-btn
-        icon
-        @click="$router.push('/blog')"
-        :aria-label="`Return to Blog`"
-        v-if="!blogHome()"
+      <v-img src="/images/me-icon.webp" id="header-img" />
+      <v-toolbar-title
+        style="width: 120px"
+        v-if="!(window.innerWidth < 600 && searching())"
       >
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title class="header-title">Blog</v-toolbar-title>
+        Matt's Blog
+      </v-toolbar-title>
       <v-spacer :class="[searching() && 'd-none', 'd-sm-block']"></v-spacer>
       <v-text-field
         v-model="search"
@@ -36,13 +29,13 @@
         hide-details
         ref="search"
         @blur="searchBlur()"
-        style="margin-top: 5px; max-width: 500px;"
+        style="margin-top: 5px; max-width: 500px"
       />
       <v-btn
         icon
         @click="openSearch()"
         :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
-        v-if="blogHome() && !searching()"
+        v-if="!searching()"
       >
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -50,7 +43,7 @@
         icon
         @click="closeSearch()"
         :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
-        v-if="blogHome() && searching()"
+        v-if="searching()"
       >
         <v-icon>mdi-close</v-icon>
       </v-btn>
@@ -69,11 +62,10 @@
 </template>
 
 <script>
-import { apiRedirect } from "@/components/aux-functions.js";
-
 const meta = {
   title: "Matt's Blog",
-  description: "Experienced web developer with a demonstrated history of working in the wireless industry.",
+  description:
+    "Experienced web developer with a demonstrated history of working in the wireless industry.",
   image: "https://www.mattdekok.dev/images/preview-me.jpg",
   url: "https://www.mattdekok.dev/blog",
 };
@@ -102,6 +94,8 @@ export default {
     return {
       search: "",
       searchOpen: false,
+      blogBarHeight: 128,
+      window: process.client ? window : {},
     };
   },
   mounted() {
@@ -140,13 +134,13 @@ export default {
       );
     },
     searching() {
-      return this.searchOpen && this.blogHome();
+      return this.searchOpen;
     },
     openSearch() {
-      this.searchOpen = true;
       setTimeout(() => {
+        this.searchOpen = true;
         this.$refs.search.focus();
-      }, 25);
+      }, 100);
     },
     closeSearch() {
       this.searchOpen = false;
@@ -154,11 +148,10 @@ export default {
     },
     searchBlur() {
       if (this.search.trim().length === 0) {
-        this.searchOpen = false;
+        setTimeout(() => {
+          this.closeSearch();
+        }, 1000);
       }
-    },
-    blogHome() {
-      return this.$route.path.match(/^\/blog\/?$/);
     },
   },
 };
@@ -166,12 +159,13 @@ export default {
 
 <style lang="scss" scoped>
 .blog-app {
-  padding-top: 128px !important;
+  padding-top: 64px !important;
   padding-bottom: 48px !important;
 }
-.header-title {
-  position: absolute;
-  left: 0;
+#header-img {
+  flex: none;
+  max-width: 80px;
+  max-height: 60px;
 }
 </style>
 
