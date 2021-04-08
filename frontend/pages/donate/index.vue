@@ -280,7 +280,11 @@ export default {
     generateToken() {
       this.$refs.stripeForm.validate();
       if (window.location.host === "localhost:3000") {
-        this.sendPayment();
+        this.sending = true;
+        setTimeout(() => {
+          this.showThanks = true;
+          this.sending = false;
+        }, 1000);
       } else if (this.valid && this.cardComplete) {
         this.$refs.cardRef.submit();
       }
@@ -290,14 +294,6 @@ export default {
     },
     async sendPayment(tokenId) {
       this.sending = true;
-
-      if (window.location.host === "localhost:3000") {
-        setTimeout(() => {
-          this.showThanks = true;
-          this.sending = false;
-        }, 1000);
-        return;
-      }
 
       try {
         const options = {

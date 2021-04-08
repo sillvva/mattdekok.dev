@@ -15,15 +15,6 @@ export const formatDate = (date, time) => {
     : new Date(date).toLocaleDateString("en", options);
 };
 
-export const apiRedirect = () => {
-  if (!process.server) {
-    if (window.location.host.includes("api.mattdekok.dev")) {
-      window.location.replace(window.location.toString().replace('api.matt', 'www.matt'));
-    }
-  }
-}
-
 export default {
-  apiRedirect,
   formatDate
 };

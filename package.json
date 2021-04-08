@@ -3,13 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "generate": "cd frontend && npm run generate",
-    "serve": "cd frontend && npm run generate && cd ../functions && npm run serve",
     "test": "cd frontend && npm run update-blog-test && npm run build && npm start",
     "dev": "cd frontend && npm run update-blog-test && npm run dev",
 
     "shell": "cd functions & npm run shell",
-    "serve:functions": "cd functions && npm run serve",
+    "serve": "cd functions && npm run serve",
 
     "build": "cd frontend && npm install --save && npm run update-blog && npm run build",
     "start": "cd frontend && npm start"
