@@ -74,7 +74,7 @@
                         @click="generateToken"
                         :disabled="!valid || !cardComplete"
                         :color="valid && cardComplete ? 'primary' : 'dark'"
-                        style="height: 42px;"
+                        style="height: 42px"
                       >
                         Send
                       </v-btn>
@@ -226,8 +226,8 @@ export default {
       name: "",
       email: "",
       amount: "5.00",
-      stripeKey: null,
-      showForm: false,
+      stripeKey: process.env.STRIPE_PK,
+      showForm: true,
       showThanks: false,
       paymentError: false,
       paymentErrorType: "",
@@ -259,25 +259,6 @@ export default {
       rules: [],
     };
   },
-  async mounted() {
-    if (window.location.host === "localhost:3000") {
-      this.stripeKey = process.env.STRIPE_PK;
-      this.showForm = true;
-    } else {
-      try {
-        const response = await fetch("/stripeKey");
-        if (response.status === 200) {
-          const data = await response.json();
-          this.stripeKey = (data || {}).key;
-        } else {
-          this.showForm = false;
-        }
-      } catch (err) {
-        console.log(err);
-        this.showForm = false;
-      }
-    }
-  },
   methods: {
     copyTokenAddress(address) {
       const el = document.createElement("textarea");
@@ -299,8 +280,7 @@ export default {
       this.$refs.stripeForm.validate();
       if (window.location.host === "localhost:3000") {
         this.sendPayment();
-      }
-      else if (this.valid && this.cardComplete) {
+      } else if (this.valid && this.cardComplete) {
         this.$refs.cardRef.submit();
       }
     },
@@ -345,14 +325,15 @@ export default {
         } else {
           this.paymentError = true;
           this.paymentErrorType = "Stripe Error";
-          this.paymentErrorMessage = "Cannot reach Stripe right now. Please try again later.";
+          this.paymentErrorMessage =
+            "Cannot reach Stripe right now. Please try again later.";
         }
       } catch (err) {
         this.paymentError = true;
         this.paymentErrorType = "";
         this.paymentErrorMessage = err.message;
       }
-      
+
       this.sending = false;
     },
   },
