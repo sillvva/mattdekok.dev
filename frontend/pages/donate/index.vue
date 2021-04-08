@@ -212,7 +212,7 @@
 import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
 import PageArticleSection from "@/components/page-article/page-article-section.vue";
 import PageArticle from "@/components/page-article/page-article.vue";
-import { StripeElementCard } from "@vue-stripe/vue-stripe";
+// import { StripeElementCard } from "@vue-stripe/vue-stripe";
 
 export default {
   head() {
@@ -220,13 +220,15 @@ export default {
       title: "Donate",
     };
   },
-  components: { PageArticle, PageArticleSection, StripeElementCard, HexMenu },
+  components: { PageArticle, PageArticleSection, /*StripeElementCard,*/ HexMenu },
   data() {
     return {
       stripeKey: null,
       name: "",
       email: "",
       amount: "5.00",
+      stripeKey: null,
+      showForm: false,
       showThanks: false,
       paymentError: false,
       paymentErrorType: "",
@@ -258,31 +260,24 @@ export default {
       rules: [],
     };
   },
-  async asyncData() {
-    let stripeKey = null;
-    let showForm = true;
-
-    if (window.location.host === "localhost:3000") {
-      stripeKey = "pk_test_bC4lCA3Dje38ZMelZUpXaU9700RpKxjEW7";
-    } else if (showForm) {
-      try {
-        const response = await fetch("/stripeKey");
-        if (response.status === 200) {
-          const data = await response.json();
-          stripeKey = (data || {}).key;
-        } else {
-          showForm = false;
-        }
-      } catch (err) {
-        console.log(err);
-        showForm = false;
-      }
-    }
-
-    return {
-      stripeKey: stripeKey,
-      showForm: showForm,
-    };
+  async mounted() {
+    // if (window.location.host === "localhost:3000") {
+    //   this.stripeKey = "pk_test_bC4lCA3Dje38ZMelZUpXaU9700RpKxjEW7";
+    //   this.showForm = true;
+    // } else {
+    //   try {
+    //     const response = await fetch("/stripeKey");
+    //     if (response.status === 200) {
+    //       const data = await response.json();
+    //       this.stripeKey = (data || {}).key;
+    //     } else {
+    //       this.showForm = false;
+    //     }
+    //   } catch (err) {
+    //     console.log(err);
+    //     this.showForm = false;
+    //   }
+    // }
   },
   methods: {
     copyTokenAddress(address) {
