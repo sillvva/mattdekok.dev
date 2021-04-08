@@ -212,6 +212,7 @@
 import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
 import PageArticleSection from "@/components/page-article/page-article-section.vue";
 import PageArticle from "@/components/page-article/page-article.vue";
+import config from "@/components/aux-config.js";
 
 export default {
   head() {
@@ -312,7 +313,7 @@ export default {
           },
         };
 
-        const response = await fetch("/payment", options);
+        const response = await fetch(`${config.apiUrl}/payment`, options);
         if (response.status === 200) {
           const result = await response.json();
           if (result.status === "failed") {
