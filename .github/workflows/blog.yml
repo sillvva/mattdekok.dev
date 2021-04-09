@@ -24,4 +24,4 @@ jobs:
           justlogin: true
       
       - name: Rebuild Heroku App
-        run: heroku builds:create -a mattdekok-dev
+        run: heroku builds:create --version "Update blog posts" -a mattdekok-dev
