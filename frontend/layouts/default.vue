@@ -150,7 +150,10 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.v-application {
+  height: 100vh;
+}
 .drawer-container {
   flex-direction: row;
   justify-content: center;
@@ -159,10 +162,11 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  height: 100vh;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--background-transparent);
   display: none;
+  color: var(--text);
   .drawer-wrapper {
     margin-top: -25px;
     display: block;
