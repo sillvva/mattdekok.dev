@@ -62,6 +62,18 @@
     <v-main class="blog-app">
       <nuxt style="position: relative" />
     </v-main>
+    <v-snackbar v-model="updateNotification">
+      An update is available! Please refresh.
+
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="refresh">
+          Refresh
+        </v-btn>
+        <v-btn text v-bind="attrs" @click="updateNotification = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -100,13 +112,24 @@ export default {
       searchOpen: false,
       blogBarHeight: 128,
       window: process.client ? window : {},
+      updateNotification: false,
     };
   },
-  mounted() {
+  async mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
     this.$store.dispatch("setBlogSearch", this.search);
+
+    const workbox = await window.$workbox;
+    if (workbox) {
+      workbox.addEventListener('installed', (event) => {
+        // If we don't do this we'll be displaying the notification after the initial installation, which isn't perferred.
+        if (event.isUpdate) {
+          this.updateNotification = true;
+        }
+      });
+    }
   },
   computed: {
     blogSearch() {
@@ -156,6 +179,10 @@ export default {
           this.closeSearch();
         }, 1000);
       }
+    },
+    refresh() {
+      this.updateNotification = false;
+      if (process.client) window.location.reload(true);
     },
   },
 };
