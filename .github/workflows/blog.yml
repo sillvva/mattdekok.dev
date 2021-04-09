@@ -1,11 +1,7 @@
-name: mattdekok.dev CI
+name: mattdekok.dev/blog
 
 # Controls when the action will run. 
 on:
-  pull_request:
-    branches: [ master ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -18,15 +14,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@master
         with:
           node-version: 12
-
-      - name: Build Functions
-        run: cd functions && npm ci && npm run build
 
       - name: Fetch Blog Posts
         env:
@@ -34,9 +27,9 @@ jobs:
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
         run: cd frontend && npm ci && npm run update-blog
 
-      - name: Deploy to Heroku STG
+      - name: Deploy to Heroku PROD
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "mattdekok-stg"
+          heroku_app_name: "mattdekok-dev"
           heroku_email: "matt.dekok@gmail.com"

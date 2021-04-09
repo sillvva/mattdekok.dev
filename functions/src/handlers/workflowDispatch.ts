@@ -15,7 +15,7 @@ export default async (object: functions.storage.ObjectMetadata, context: functio
       await octokit.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
         owner: "sillvva",
         repo: "mattdekok.dev",
-        workflow_id: "deploy.yml",
+        workflow_id: "blog.yml",
         ref: "master",
       });
     } catch (err) {
