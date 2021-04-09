@@ -144,7 +144,7 @@ export default {
     },
     refresh() {
       this.updateNotification = false;
-      if (process.client) window.location.reload(true);
+      if (process.client) window.location.replace(window.location.href);
     },
   },
 };
