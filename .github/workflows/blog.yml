@@ -21,15 +21,11 @@ jobs:
         with:
           node-version: 12
 
-      - name: Generate Front End
-        env:
-          FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
-          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-        run: cd frontend && npm ci && npm run update-blog && npm run generate
-
-      - name: Deploy to Heroku PROD
+      - name: Rebuild Heroku PROD
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "mattdekok-dev"
-          heroku_email: "matt.dekok@gmail.com"
+          heroku_email: ${{ secrets.MY_EMAIL }}
+          justlogin: true
+        run: heroku builds:create --version "Updated blog posts" -a mattdekok-dev
