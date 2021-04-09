@@ -22,6 +22,9 @@ jobs:
           node-version: 12
 
       - name: Fetch Blog Posts
+        env:
+          FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
         run: cd frontend && npm ci && npm run update-blog
 
       - name: Deploy to Heroku PROD
