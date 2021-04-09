@@ -21,11 +21,11 @@ jobs:
         with:
           node-version: 12
 
-      - name: Fetch Blog Posts
+      - name: Generate Front End
         env:
           FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-        run: cd frontend && npm ci && npm run update-blog
+        run: cd frontend && npm ci && npm run update-blog && npm run generate
 
       - name: Deploy to Heroku PROD
         uses: akhileshns/heroku-deploy@v3.12.12
