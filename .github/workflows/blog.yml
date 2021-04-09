@@ -1,9 +1,7 @@
 name: mattdekok.dev/blog
 
 # Controls when the action will run. 
-on:
-  workflow_dispatch:
-    branches: [ master ]
+on: workflow_dispatch
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
