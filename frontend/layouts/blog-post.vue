@@ -62,4 +62,12 @@ export default {
     position: absolute;
   }
 }
+.v-application.theme--custom {
+  &, .theme--light {
+    --background: #dddddd;
+  }
+  &.theme--dark, .theme--dark {
+    --background: #28292d;
+  }
+}
 </style>
