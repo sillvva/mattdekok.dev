@@ -1,10 +1,21 @@
 <template>
   <div class="blog-body">
-    <div :class="['article-listings', fadeOut && 'fade-out']">
+    <div
+      :class="['article-listings', fadeOut && 'fade-out']"
+      v-if="pageArticles().length"
+    >
       <blog-card
         v-for="(article, a) of pageArticles()"
         :key="`${article.slug}${a}`"
         :article="article"
+      />
+    </div>
+    <div :class="['article-listings']" v-else>
+      <blog-card
+        v-for="(article, a) of dummyItems"
+        :key="`sl${a}`"
+        :dummy="true"
+        :article="{}"
       />
     </div>
     <div class="text-center">
@@ -39,6 +50,7 @@ export default {
       pageSelected: 1,
       perPage: 12,
       fadeOut: false,
+      dummyItems: Array(4).fill(""),
     };
   },
   async asyncData(context) {

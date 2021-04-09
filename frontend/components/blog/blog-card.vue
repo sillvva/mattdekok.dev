@@ -1,12 +1,21 @@
 <template>
   <div class="blog-item">
-    <NuxtLink class="blog-link" :to="articleLink(article)">
+    <v-skeleton-loader
+      v-bind="attrs"
+      v-if="dummy"
+      type="image, article"
+    ></v-skeleton-loader>
+    <NuxtLink class="blog-link" :to="articleLink(article)" v-else>
       <v-card
         :class="['blog-card']"
         @click="doNothing"
         @mouseleave="closeTagPanel()"
+        style="height: 100%"
       >
-        <div class="blog-image-wrapper">
+        <div
+          class="blog-image-wrapper"
+          style="position: relative; display: block; min-height: 200px"
+        >
           <v-lazy
             :value="article.visible"
             :options="{
@@ -21,7 +30,7 @@
             bottom
             right
             absolute
-            v-if="!tagsVisible()"
+            v-if="!tagsVisible() && article.image"
             @click.prevent="openTagPanel()"
           >
             <v-icon>mdi-tag</v-icon>
@@ -63,7 +72,10 @@
           <a>{{ article.title }}</a>
         </v-card-title>
 
-        <v-card-text v-if="article.description" class="article-description d-none d-sm-block">
+        <v-card-text
+          v-if="article.description"
+          class="article-description d-none d-sm-block"
+        >
           {{ article.description }}
         </v-card-text>
       </v-card>
@@ -79,6 +91,11 @@ export default {
     article: {
       type: Object,
       required: true,
+    },
+    dummy: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   data() {
