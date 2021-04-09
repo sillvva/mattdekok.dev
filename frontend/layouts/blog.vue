@@ -185,6 +185,10 @@ export default {
 
 <style lang="scss">
 .v-app-bar.blog-app-bar {
+  height: 60px !important;
+  .v-toolbar__content {
+    height: 60px !important;
+  }
   .v-toolbar__title {
     font-weight: 600;
   }

@@ -150,8 +150,11 @@ export default {
     &.fade-out {
       opacity: 0;
     }
-    @media (max-width: 700px) {
-      padding: 5px 10px;
+    @media (max-width: 600px) {
+      padding: 0;
+      .blog-item {
+        padding-bottom: 3px;
+      }
     }
   }
   .pages {
