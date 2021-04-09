@@ -43,6 +43,18 @@
         rotated
       ></hex-menu>
     </div>
+    <v-snackbar v-model="updateNotification">
+      An update is available! Please refresh.
+
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="refresh">
+          Refresh
+        </v-btn>
+        <v-btn text v-bind="attrs" @click="updateNotification = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -83,6 +95,7 @@ export default {
       drawer: false,
       drawerOpen: null,
       drawerClosing: null,
+      updateNotification: false,
       items: [
         { empty: true },
         { link: "/", label: "Intro" },
@@ -96,10 +109,20 @@ export default {
       ],
     };
   },
-  mounted() {
+  async mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
+
+    const workbox = await window.$workbox;
+    if (workbox) {
+      workbox.addEventListener('installed', (event) => {
+        // If we don't do this we'll be displaying the notification after the initial installation, which isn't perferred.
+        if (event.isUpdate) {
+          this.updateNotification = true;
+        }
+      });
+    }
   },
   methods: {
     openDrawer() {
@@ -118,6 +141,10 @@ export default {
         "theme",
         this.$vuetify.theme.dark ? "dark" : "light"
       );
+    },
+    refresh() {
+      this.updateNotification = false;
+      if (process.client) window.location.reload(true);
     },
   },
 };

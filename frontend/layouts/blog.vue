@@ -14,7 +14,11 @@
       <v-btn icon @click="$router.push('/')" :aria-label="`Return to Website`">
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-img src="/images/me-icon.webp" id="header-img" />
+      <v-img
+        src="/images/me-icon.webp"
+        id="header-img"
+        v-if="!(window.innerWidth < 600 && searching())"
+      />
       <v-toolbar-title
         style="width: 120px"
         v-if="!(window.innerWidth < 600 && searching())"
@@ -58,6 +62,18 @@
     <v-main class="blog-app">
       <nuxt style="position: relative" />
     </v-main>
+    <v-snackbar v-model="updateNotification">
+      An update is available! Please refresh.
+
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="refresh">
+          Refresh
+        </v-btn>
+        <v-btn text v-bind="attrs" @click="updateNotification = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -96,13 +112,24 @@ export default {
       searchOpen: false,
       blogBarHeight: 128,
       window: process.client ? window : {},
+      updateNotification: false,
     };
   },
-  mounted() {
+  async mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
     this.$store.dispatch("setBlogSearch", this.search);
+
+    const workbox = await window.$workbox;
+    if (workbox) {
+      workbox.addEventListener('installed', (event) => {
+        // If we don't do this we'll be displaying the notification after the initial installation, which isn't perferred.
+        if (event.isUpdate) {
+          this.updateNotification = true;
+        }
+      });
+    }
   },
   computed: {
     blogSearch() {
@@ -153,13 +180,17 @@ export default {
         }, 1000);
       }
     },
+    refresh() {
+      this.updateNotification = false;
+      if (process.client) window.location.reload(true);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .blog-app {
-  padding-top: 64px !important;
+  padding-top: 60px !important;
   padding-bottom: 48px !important;
 }
 #header-img {
@@ -168,10 +199,12 @@ export default {
   max-height: 60px;
 }
 .v-application.theme--custom {
-  &, .theme--light {
+  &,
+  .theme--light {
     --background: #c0c0c0;
   }
-  &.theme--dark, .theme--dark {
+  &.theme--dark,
+  .theme--dark {
     --background: #303135;
   }
 }
@@ -179,6 +212,10 @@ export default {
 
 <style lang="scss">
 .v-app-bar.blog-app-bar {
+  height: 60px !important;
+  .v-toolbar__content {
+    height: 60px !important;
+  }
   .v-toolbar__title {
     font-weight: 600;
   }

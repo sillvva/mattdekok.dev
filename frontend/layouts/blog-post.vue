@@ -27,6 +27,18 @@
     <v-main>
       <nuxt style="position: relative" />
     </v-main>
+    <v-snackbar v-model="updateNotification">
+      An update is available! Please refresh.
+
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="refresh">
+          Refresh
+        </v-btn>
+        <v-btn text v-bind="attrs" @click="updateNotification = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -37,10 +49,25 @@ export default {
       titleTemplate: "%s - Matt's Blog",
     };
   },
-  mounted() {
+  data() {
+    return {
+      updateNotification: false,
+    };
+  },
+  async mounted() {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
+
+    const workbox = await window.$workbox;
+    if (workbox) {
+      workbox.addEventListener("installed", (event) => {
+        // If we don't do this we'll be displaying the notification after the initial installation, which isn't perferred.
+        if (event.isUpdate) {
+          this.updateNotification = true;
+        }
+      });
+    }
   },
   methods: {
     toggleTheme() {
@@ -49,6 +76,10 @@ export default {
         "theme",
         this.$vuetify.theme.dark ? "dark" : "light"
       );
+    },
+    refresh() {
+      this.updateNotification = false;
+      if (process.client) window.location.reload(true);
     },
   },
 };
@@ -63,10 +94,12 @@ export default {
   }
 }
 .v-application.theme--custom {
-  &, .theme--light {
+  &,
+  .theme--light {
     --background: #dddddd;
   }
-  &.theme--dark, .theme--dark {
+  &.theme--dark,
+  .theme--dark {
     --background: #28292d;
   }
 }

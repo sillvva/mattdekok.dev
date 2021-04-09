@@ -1,8 +1,21 @@
 <template>
   <div class="blog-item">
-    <NuxtLink class="blog-link" :to="articleLink(article)">
-      <v-card :class="['blog-card']" @click="doNothing">
-        <div style="position: relative">
+    <v-skeleton-loader
+      v-bind="attrs"
+      v-if="dummy"
+      type="image, article"
+    ></v-skeleton-loader>
+    <NuxtLink class="blog-link" :to="articleLink(article)" v-else>
+      <v-card
+        :class="['blog-card']"
+        @click="doNothing"
+        @mouseleave="closeTagPanel()"
+        style="height: 100%"
+      >
+        <div
+          class="blog-image-wrapper"
+          style="position: relative; display: block; min-height: 200px"
+        >
           <v-lazy
             :value="article.visible"
             :options="{
@@ -12,16 +25,18 @@
             <v-img :src="article.image"></v-img>
           </v-lazy>
 
-          <div
-            v-if="(article.tags || []).length > 0"
-            :class="['article-tags']"
+          <v-btn
+            fab
+            bottom
+            right
+            absolute
+            v-if="!tagsVisible() && article.image"
             @click.prevent="openTagPanel()"
-            @mouseleave="closeTagPanel()"
           >
-            <v-card-text class="text-center tag-handle" v-if="!tagsVisible()">
-              <v-icon>mdi-dots-horizontal</v-icon>
-            </v-card-text>
+            <v-icon>mdi-tag</v-icon>
+          </v-btn>
 
+          <div v-if="(article.tags || []).length > 0" :class="['article-tags']">
             <v-expand-transition>
               <div
                 v-if="tagsVisible()"
@@ -57,7 +72,10 @@
           <a>{{ article.title }}</a>
         </v-card-title>
 
-        <v-card-text v-if="article.description" style="height: 48px">
+        <v-card-text
+          v-if="article.description"
+          class="article-description d-none d-sm-block"
+        >
           {{ article.description }}
         </v-card-text>
       </v-card>
@@ -73,6 +91,11 @@ export default {
     article: {
       type: Object,
       required: true,
+    },
+    dummy: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   data() {
@@ -140,7 +163,7 @@ export default {
         this.setBlogCardTags("");
       }, 100);
     },
-    doNothing() {}
+    doNothing() {},
   },
 };
 </script>
@@ -153,13 +176,16 @@ export default {
     .blog-card {
       width: 100%;
       height: 100%;
-      padding-bottom: 20px;
-      .v-image {
-        background: var(--dropShadow);
-        height: 250px;
+      .blog-image-wrapper {
         position: relative;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
+        height: 250px;
+        .v-image {
+          background: var(--dropShadow);
+          height: 250px;
+          position: relative;
+          border-top-left-radius: 4px;
+          border-top-right-radius: 4px;
+        }
       }
       .article-title {
         a {
@@ -173,7 +199,6 @@ export default {
         bottom: 0;
         left: 0;
         right: 0;
-        min-height: 58px;
         z-index: 2;
         .tag-handle {
           height: 58px;
@@ -191,9 +216,14 @@ export default {
     width: 100%;
   }
   @media (max-width: 450px) {
-    .blog-card {
-      .v-image {
-        height: 200px;
+    .blog-link {
+      .blog-card {
+        .blog-image-wrapper {
+          height: 200px;
+          .v-image {
+            height: 200px;
+          }
+        }
       }
     }
   }
