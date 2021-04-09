@@ -14,7 +14,11 @@
       <v-btn icon @click="$router.push('/')" :aria-label="`Return to Website`">
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-img src="/images/me-icon.webp" id="header-img" />
+      <v-img
+        src="/images/me-icon.webp"
+        id="header-img"
+        v-if="!(window.innerWidth < 600 && searching())"
+      />
       <v-toolbar-title
         style="width: 120px"
         v-if="!(window.innerWidth < 600 && searching())"
@@ -168,10 +172,12 @@ export default {
   max-height: 60px;
 }
 .v-application.theme--custom {
-  &, .theme--light {
+  &,
+  .theme--light {
     --background: #c0c0c0;
   }
-  &.theme--dark, .theme--dark {
+  &.theme--dark,
+  .theme--dark {
     --background: #303135;
   }
 }
