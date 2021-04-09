@@ -1,4 +1,4 @@
-name: mattdekok.dev blog
+name: mattdekok.dev/blog
 
 # Controls when the action will run. 
 on: workflow_dispatch
@@ -12,12 +12,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Rebuild Heroku PROD
+      - name: Checkout Repo
         uses: actions/checkout@master
+
+      - name: Rebuild Heroku PROD
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "mattdekok-dev"
           heroku_email: ${{ secrets.MY_EMAIL }}
           justlogin: true
-        run: "heroku builds:create -a mattdekok-dev"
+        run: heroku builds:create --version "Updated blog posts" -a mattdekok-dev
