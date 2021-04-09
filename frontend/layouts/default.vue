@@ -166,7 +166,7 @@ export default {
   .drawer-wrapper {
     margin-top: -25px;
     display: block;
-    animation: drawer-open 500ms ease-in-out forwards;
+    // animation: drawer-open 500ms ease-in-out forwards;
   }
   &.open {
     display: flex;
