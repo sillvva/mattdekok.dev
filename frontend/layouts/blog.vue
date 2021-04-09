@@ -163,7 +163,7 @@ export default {
 
 <style lang="scss" scoped>
 .blog-app {
-  padding-top: 64px !important;
+  padding-top: 60px !important;
   padding-bottom: 48px !important;
 }
 #header-img {
