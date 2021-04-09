@@ -21,12 +21,6 @@ jobs:
         with:
           node-version: 12
 
-      - name: Generate Front End
-        env:
-          FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
-          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-        run: cd frontend && npm ci && npm run update-blog
-
       - name: Rebuild Heroku PROD
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
