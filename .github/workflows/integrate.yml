@@ -2,11 +2,9 @@ name: mattdekok.dev CI
 
 # Controls when the action will run. 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [ master ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -33,10 +31,3 @@ jobs:
           FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
         run: cd frontend && npm ci && npm run update-blog
-
-      - name: Deploy to Heroku STG
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "mattdekok-stg"
-          heroku_email: "matt.dekok@gmail.com"
