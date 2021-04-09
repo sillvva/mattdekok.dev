@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "cd frontend && npm run update-blog-test && npm run build && npm start",
-    "dev": "cd frontend && npm run update-blog-test && npm run dev",
+    "test": "cd frontend && npm run start:dev",
+    "dev": "cd frontend && npm run dev",
 
     "shell": "cd functions & npm run shell",
     "serve": "cd functions && npm run serve",
 
-    "build": "cd frontend && npm install && npm run update-blog && npm run build",
+    "build": "cd frontend && npm install && npm run build",
     "start": "cd frontend && npm start"
   }
 }

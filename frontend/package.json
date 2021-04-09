@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
+    "dev": "npm run update-blog-test && nuxt",
+    "build": "npm run update-blog && nuxt build",
+    "build:dev": "npm run update-blog-test && nuxt build",
     "start": "nuxt start",
+    "start:dev": "npm run build:dev && nuxt start",
     "generate": "nuxt generate",
     "update-blog": "node updateBlog.js",
     "update-blog-test": "node updateBlogTest"
