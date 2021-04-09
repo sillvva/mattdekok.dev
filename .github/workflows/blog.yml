@@ -25,7 +25,7 @@ jobs:
         env:
           FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-        run: cd frontend && npm ci && npm run update-blog && npm run generate
+        run: cd frontend && npm ci && npm run update-blog
 
       - name: Deploy to Heroku PROD
         uses: akhileshns/heroku-deploy@v3.12.12
@@ -33,3 +33,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "mattdekok-dev"
           heroku_email: "matt.dekok@gmail.com"
+          branch: "master"
