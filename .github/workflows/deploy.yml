@@ -34,7 +34,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Fetch Blog Posts
-        run: cd frontend && npm run update-blog
+        run: cd frontend && npm ci && npm run update-blog
 
       - name: Deploy to Heroku PROD
         uses: akhileshns/heroku-deploy@v3.12.12
