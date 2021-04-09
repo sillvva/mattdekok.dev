@@ -50,7 +50,7 @@ export default {
       pageSelected: 1,
       perPage: 12,
       fadeOut: false,
-      dummyItems: Array(4).fill(""),
+      dummyItems: Array(12).fill(""),
     };
   },
   async asyncData(context) {
