@@ -7,12 +7,30 @@
       <div class="article-header-cover"></div>
       <div class="article-header-info">
         <h1>{{ article.title }}</h1>
-        <p>{{ article.description }}</p>
+        <p class="description">{{ article.description }}</p>
         <p style="font-size: small">
           Created: {{ formatDate(article.date) }}<br />
           <span v-if="article.updated">
             Updated: {{ formatDate(article.updated, true) }}
           </span>
+        </p>
+        <p class="share">
+          <a :href="`https://twitter.com/intent/tweet?text=${escape(article.title)}%0A%0A${escape(article.description)}%0A${escape(location())}`"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <v-icon>mdi-twitter</v-icon>
+          </a>
+          <a :href="`https://www.facebook.com/sharer/sharer.php?u=${escape(location())}`"
+            target="_blank"
+            rel="noreferrer noopener">
+            <v-icon>mdi-facebook</v-icon>
+          </a>
+          <a :href="`https://www.linkedin.com/shareArticle?mini=true&url=${escape(location())}&title=${escape(article.title)}&summary=${escape(article.description)}`"
+            target="_blank"
+            rel="noreferrer noopener">
+            <v-icon>mdi-linkedin</v-icon>
+          </a>
         </p>
       </div>
     </section>
@@ -154,6 +172,12 @@ export default {
           })
         : new Date(date).toLocaleDateString("en", options);
     },
+    escape(text) {
+      return escape(text);
+    },
+    location() {
+      return process.client ? window.location : {};
+    }
   },
 };
 </script>
@@ -260,9 +284,26 @@ article {
       bottom: 0;
       width: auto;
       height: 350px;
+      padding-bottom: 10px;
       box-shadow: 0 5px 5px var(--dropShadow);
       @media (max-width: 500px) {
         height: 300px;
+        .article-header-info {
+          h1 {
+            line-height: 24px;
+            margin-bottom: 10px;
+            font-size: 20px;
+          }
+          p {
+            margin: 0;
+          }
+          .description {
+            display: none;
+          }
+          .share {
+            margin-top: 10px;
+          }
+        }
       }
     }
     .article-body {

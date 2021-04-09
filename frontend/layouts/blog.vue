@@ -167,6 +167,14 @@ export default {
   max-width: 80px;
   max-height: 60px;
 }
+.v-application.theme--custom {
+  &, .theme--light {
+    --background: #c0c0c0;
+  }
+  &.theme--dark, .theme--dark {
+    --background: #303135;
+  }
+}
 </style>
 
 <style lang="scss">

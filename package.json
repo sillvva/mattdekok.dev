@@ -9,7 +9,7 @@
     "shell": "cd functions & npm run shell",
     "serve": "cd functions && npm run serve",
 
-    "build": "cd frontend && npm install --save && npm run update-blog && npm run build",
+    "build": "cd frontend && npm install && npm run update-blog && npm run build",
     "start": "cd frontend && npm start"
   }
 }
