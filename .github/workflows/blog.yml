@@ -15,11 +15,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
 
-      - name: Rebuild Heroku PROD
+      - name: Login to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "mattdekok-dev"
           heroku_email: ${{ secrets.MY_EMAIL }}
           justlogin: true
-        run: heroku builds:create --version "Updated blog posts" -a mattdekok-dev
+      
+      - name: Rebuild Heroku App
+        run: heroku builds:create --version "Update blog posts" -a mattdekok-dev
