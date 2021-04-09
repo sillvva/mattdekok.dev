@@ -22,6 +22,9 @@ jobs:
           heroku_app_name: "mattdekok-dev"
           heroku_email: ${{ secrets.MY_EMAIL }}
           justlogin: true
+
+      - name: Install Heroku Builds Plugin
+        run: heroku plugins:install heroku-builds
       
       - name: Rebuild Heroku App
         run: heroku builds:create --version "Update blog posts" -a mattdekok-dev
