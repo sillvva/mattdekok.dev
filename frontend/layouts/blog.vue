@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { removeQueryParam, addQueryParam } from "@/components/aux-functions.js";
+import { removeQueryParam, setQueryParam } from "@/components/aux-functions.js";
 
 const meta = {
   title: "Matt's Blog",
@@ -189,7 +189,7 @@ export default {
       if (process.client) window.location.replace(window.location.href);
     },
     setSearch() {
-      let newPath = addQueryParam(this.$route.fullPath, "s", this.search);
+      let newPath = setQueryParam(this.$route.fullPath, "s", this.search);
       if (!this.search) newPath = removeQueryParam(newPath, "s");
       if (this.$route.fullPath != newPath) this.$router.replace(newPath);
     },

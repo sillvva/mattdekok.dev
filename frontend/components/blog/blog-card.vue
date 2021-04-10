@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { formatDate, addQueryParam, removeQueryParam } from "@/components/aux-functions";
+import { formatDate, setQueryParam, removeQueryParam } from "@/components/aux-functions";
 
 export default {
   props: {
@@ -136,7 +136,7 @@ export default {
       return `/blog/${article.slug}`;
     },
     setBlogSearch(val) {
-      let newPath = addQueryParam(this.$route.fullPath, 's', val);
+      let newPath = setQueryParam(this.$route.fullPath, 's', val);
       if (!val) newPath = removeQueryParam(newPath, 's');
       if (this.$route.fullPath != newPath) this.$router.push(newPath);
     },

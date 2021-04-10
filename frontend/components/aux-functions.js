@@ -25,7 +25,7 @@ export const removeQueryParam = (path, param) => {
   else return path.replace(search, `?${params.toString()}`);
 };
 
-export const addQueryParam = (path, param, value) => {
+export const setQueryParam = (path, param, value) => {
   const anchor = document.createElement("A");
   anchor.setAttribute("href", path);
   let search = anchor.search;
@@ -48,6 +48,6 @@ export const throttle = (callback, ms, id, ...args) => {
 export default {
   formatDate,
   removeQueryParam,
-  addQueryParam,
+  setQueryParam,
   throttle
 };
