@@ -51,6 +51,7 @@ export default {
       perPage: 12,
       fadeOut: false,
       dummyItems: Array(12).fill(""),
+      search: this.$route.query.s || ""
     };
   },
   async asyncData(context) {
@@ -78,13 +79,10 @@ export default {
       articles,
     };
   },
-  computed: {
-    blogSearch() {
-      return this.$store.getters.blogSearch;
+  watch: {
+    "$route.query.s"(s) {
+      this.search = s || "";
     },
-    // blogPosts() {
-    //   return this.$store.getters.blogPosts;
-    // }
   },
   methods: {
     allArticles() {
@@ -95,7 +93,7 @@ export default {
           };
         })
         .filter((a) => {
-          return a.title && (!this.blogSearch.trim() || this.doesMatch(a));
+          return a.title && (!this.search.trim() || this.doesMatch(a));
         });
     },
     pageArticles() {
@@ -105,7 +103,7 @@ export default {
       );
     },
     doesMatch(article) {
-      const searchRegex = this.blogSearch
+      const searchRegex = this.search
         .split(" ")
         .map((s) => new RegExp(s.trim(), "i"));
       return (

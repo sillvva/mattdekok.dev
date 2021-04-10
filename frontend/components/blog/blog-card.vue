@@ -1,8 +1,7 @@
 <template>
   <div class="blog-item">
     <v-skeleton-loader
-      v-bind="attrs"
-      v-if="dummy"
+      v-if="loadDummy"
       type="image, article"
     ></v-skeleton-loader>
     <NuxtLink class="blog-link" :to="articleLink(article)" v-else>
@@ -84,7 +83,7 @@
 </template>
 
 <script>
-import { formatDate } from "@/components/aux-functions";
+import { formatDate, addQueryParam, removeQueryParam } from "@/components/aux-functions";
 
 export default {
   props: {
@@ -96,11 +95,13 @@ export default {
       type: Boolean,
       required: false,
       default: false,
-    },
+    }
   },
   data() {
     return {
       showTags: false,
+      search: "",
+      loadDummy: true
     };
   },
   watch: {
@@ -111,14 +112,21 @@ export default {
         this.showTags = false;
       }
     },
+    "$route.query.s"(s) {
+      this.search = s || "";
+    },
+    dummy(val) {
+      this.loadDummy = val;
+    }
   },
   computed: {
-    blogSearch() {
-      return this.$store.getters.blogSearch;
-    },
     blogCardTags() {
       return this.$store.getters.blogCardTags;
     },
+  },
+  mounted() {
+    this.search = this.$route.query.s || "";
+    this.loadDummy = false;
   },
   methods: {
     formatDate(date, time) {
@@ -128,13 +136,15 @@ export default {
       return `/blog/${article.slug}`;
     },
     setBlogSearch(val) {
-      this.$store.dispatch("setBlogSearch", val);
+      let newPath = addQueryParam(this.$route.fullPath, 's', val);
+      if (!val) newPath = removeQueryParam(newPath, 's');
+      if (this.$route.fullPath != newPath) this.$router.push(newPath);
     },
     setBlogCardTags(val) {
       this.$store.dispatch("setBlogCardTags", val);
     },
     appendBlogSearch(val) {
-      const words = this.blogSearch.split(" ");
+      const words = this.search.split(" ");
       const search = [
         ...words.filter((w) => w.toLowerCase() !== val.toLowerCase()),
         words.find((w) => w.toLowerCase() === val.toLowerCase()) ? null : val,
@@ -145,7 +155,7 @@ export default {
       }
     },
     tagIncluded(tag) {
-      return this.blogSearch
+      return this.search
         .toLowerCase()
         .split(" ")
         .includes(tag.toLowerCase());

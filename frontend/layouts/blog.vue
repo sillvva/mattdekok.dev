@@ -38,11 +38,12 @@
           filled
           ref="search"
           @blur="searchBlur()"
+          @keyup="setSearch()"
           class="search"
         />
         <v-btn
           icon
-          @click="openSearch()"
+          @click="openSearch(true)"
           :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
           class="hide-search"
         >
@@ -84,6 +85,8 @@
 </template>
 
 <script>
+import { removeQueryParam, addQueryParam } from "@/components/aux-functions.js";
+
 const meta = {
   title: "Matt's Blog",
   description:
@@ -114,8 +117,8 @@ export default {
   },
   data() {
     return {
-      search: "",
-      searchOpen: false,
+      search: this.$route.query.s || "",
+      searchOpen: !!this.$route.query.s,
       blogBarHeight: 128,
       window: process.client ? window : {},
       updateNotification: false,
@@ -125,7 +128,6 @@ export default {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
-    this.$store.dispatch("setBlogSearch", this.search);
 
     const workbox = await window.$workbox;
     if (workbox) {
@@ -137,24 +139,13 @@ export default {
       });
     }
   },
-  computed: {
-    blogSearch() {
-      return this.$store.getters.blogSearch;
-    },
-  },
   watch: {
-    search(val) {
-      this.$store.dispatch("setBlogSearch", val);
-      if (this.$refs.search && !this.$refs.search.isFocused) {
-        if (!val) {
-          this.searchOpen = false;
-        }
-      }
-    },
-    blogSearch(val) {
-      this.search = val.trim();
+    "$route.query.s"(s) {
+      this.search = (s || "").trim();
       if (this.search.length > 0) {
-        this.searchOpen = true;
+        this.openSearch();
+      } else {
+        this.closeSearch();
       }
     },
   },
@@ -169,17 +160,22 @@ export default {
     searching() {
       return this.searchOpen;
     },
-    openSearch() {
+    openSearch(focus) {
       setTimeout(() => {
         this.searchOpen = true;
-        setTimeout(() => {
-          this.$refs.search.focus();
-        }, 100);
+        if (focus) {
+          setTimeout(() => {
+            this.$refs.search.focus();
+          }, 100);
+        }
       }, 250);
     },
     closeSearch() {
-      this.searchOpen = false;
-      this.search = "";
+      if (this.$refs.search && !this.$refs.search.isFocused) {
+        this.searchOpen = false;
+        const path = removeQueryParam(this.$route.fullPath, "s");
+        if (this.$route.fullPath != path) this.$router.push(path);
+      }
     },
     searchBlur() {
       if (this.search.trim().length === 0) {
@@ -191,6 +187,11 @@ export default {
     refresh() {
       this.updateNotification = false;
       if (process.client) window.location.replace(window.location.href);
+    },
+    setSearch() {
+      let newPath = addQueryParam(this.$route.fullPath, "s", this.search);
+      if (!this.search) newPath = removeQueryParam(newPath, "s");
+      if (this.$route.fullPath != newPath) this.$router.replace(newPath);
     },
   },
 };
@@ -252,7 +253,7 @@ export default {
         margin: 0;
         flex: 1;
         width: 100%;
-        min-width: calc(100% - 4s0px);
+        min-width: calc(100% - 40px);
       }
     }
   }
