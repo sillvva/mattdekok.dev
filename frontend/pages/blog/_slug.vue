@@ -17,19 +17,18 @@
         <p class="share">
           <a :href="`https://twitter.com/intent/tweet?text=${escape(article.title)}%0A%0A${escape(article.description)}%0A${escape(location())}`"
             target="_blank"
-            rel="noreferrer noopener"
-          >
-            <v-icon>mdi-twitter</v-icon>
+            rel="noreferrer noopener">
+            <v-icon dark>mdi-twitter</v-icon>
           </a>
           <a :href="`https://www.facebook.com/sharer/sharer.php?u=${escape(location())}`"
             target="_blank"
             rel="noreferrer noopener">
-            <v-icon>mdi-facebook</v-icon>
+            <v-icon dark>mdi-facebook</v-icon>
           </a>
           <a :href="`https://www.linkedin.com/shareArticle?mini=true&url=${escape(location())}&title=${escape(article.title)}&summary=${escape(article.description)}`"
             target="_blank"
             rel="noreferrer noopener">
-            <v-icon>mdi-linkedin</v-icon>
+            <v-icon dark>mdi-linkedin</v-icon>
           </a>
         </p>
       </div>

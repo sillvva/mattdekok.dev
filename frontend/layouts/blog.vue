@@ -60,7 +60,7 @@
         <v-btn
           icon
           @click="toggleTheme()"
-          v-if="!searching()"
+          class="hide-small-search"
           :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
         >
           <v-icon>mdi-brightness-6</v-icon>

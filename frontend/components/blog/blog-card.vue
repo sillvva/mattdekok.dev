@@ -170,8 +170,8 @@ export default {
 
 <style lang="scss" scoped>
 .blog-item {
-  width: calc(100% / 2);
-  padding: 10px;
+  // width: calc(100% / 2);
+  // padding: 10px;
   .blog-link {
     .blog-card {
       width: 100%;
@@ -206,21 +206,21 @@ export default {
       }
     }
   }
-  @media (min-width: 1024px) {
-    width: calc(100% / 3);
-  }
-  @media (min-width: 1400px) {
-    width: calc(100% / 4);
-  }
-  @media (min-width: 1900px) {
-    width: calc(100% / 5);
-  }
-  @media (min-width: 2400px) {
-    width: calc(100% / 6);
-  }
-  @media (max-width: 700px) {
-    width: 100%;
-  }
+  // @media (min-width: 1024px) {
+  //   width: calc(100% / 3);
+  // }
+  // @media (min-width: 1400px) {
+  //   width: calc(100% / 4);
+  // }
+  // @media (min-width: 1900px) {
+  //   width: calc(100% / 5);
+  // }
+  // @media (min-width: 2400px) {
+  //   width: calc(100% / 6);
+  // }
+  // @media (max-width: 700px) {
+  //   width: 100%;
+  // }
   @media (max-width: 450px) {
     .blog-link {
       .blog-card {
