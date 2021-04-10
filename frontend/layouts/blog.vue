@@ -8,67 +8,73 @@
           ? '/images/blog/dark-hex-wp.webp'
           : '/images/blog/light-hex-wp.webp'
       "
-      class="blog-app-bar"
+      :class="['blog-app-bar', searching() && 'search-open']"
       ref="blogAppBar"
     >
-      <v-btn icon @click="$router.push('/')" :aria-label="`Return to Website`">
+      <v-btn
+        icon
+        @click="$router.push('/')"
+        :aria-label="`Return to Website`"
+        class="hide-small-search"
+      >
         <v-icon>mdi-home</v-icon>
       </v-btn>
       <v-img
         src="/images/me-icon.webp"
         id="header-img"
-        v-if="!(window.innerWidth < 600 && searching())"
+        class="hide-small-search"
       />
-      <v-toolbar-title
-        style="width: 120px"
-        v-if="!(window.innerWidth < 600 && searching())"
-      >
+      <v-toolbar-title style="width: 120px" class="hide-small-search">
         Matt's Blog
       </v-toolbar-title>
       <v-spacer :class="[searching() && 'd-none', 'd-sm-block']"></v-spacer>
-      <v-text-field
-        v-model="search"
-        v-if="searching()"
-        placeholder="Search"
-        hide-details
-        ref="search"
-        @blur="searchBlur()"
-        style="margin-top: 5px; max-width: 500px"
-      />
-      <v-btn
-        icon
-        @click="openSearch()"
-        :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
-        v-if="!searching()"
-      >
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click="closeSearch()"
-        :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
-        v-if="searching()"
-      >
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click="toggleTheme()"
-        :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
-      >
-        <v-icon>mdi-brightness-6</v-icon>
-      </v-btn>
+      <v-toolbar-items>
+        <v-divider vertical class="hide-search" />
+        <v-text-field
+          v-model="search"
+          v-if="searching()"
+          placeholder="Search"
+          hide-details
+          filled
+          ref="search"
+          @blur="searchBlur()"
+          class="search"
+        />
+        <v-btn
+          icon
+          @click="openSearch()"
+          :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
+          class="hide-search"
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          @click="closeSearch()"
+          :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
+          class="hide-no-search"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        <v-divider vertical class="hide-search" />
+        <v-btn
+          icon
+          @click="toggleTheme()"
+          v-if="!searching()"
+          :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
+        >
+          <v-icon>mdi-brightness-6</v-icon>
+        </v-btn>
+      </v-toolbar-items>
     </v-app-bar>
-    <v-main class="blog-app">
+    <v-main class="blog-app pt-15 pb-2 pb-sm-10">
       <nuxt style="position: relative" />
     </v-main>
     <v-snackbar v-model="updateNotification">
       An update is available! Please refresh.
 
       <template v-slot:action="{ attrs }">
-        <v-btn text v-bind="attrs" @click="refresh">
-          Refresh
-        </v-btn>
+        <v-btn text v-bind="attrs" @click="refresh"> Refresh </v-btn>
         <v-btn text v-bind="attrs" @click="updateNotification = false">
           Close
         </v-btn>
@@ -123,7 +129,7 @@ export default {
 
     const workbox = await window.$workbox;
     if (workbox) {
-      workbox.addEventListener('installed', (event) => {
+      workbox.addEventListener("installed", (event) => {
         // If we don't do this we'll be displaying the notification after the initial installation, which isn't perferred.
         if (event.isUpdate) {
           this.updateNotification = true;
@@ -189,10 +195,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.blog-app {
-  padding-top: 60px !important;
-  padding-bottom: 48px !important;
-}
 #header-img {
   flex: none;
   max-width: 80px;
@@ -215,6 +217,7 @@ export default {
   height: 60px !important;
   .v-toolbar__content {
     height: 60px !important;
+    padding-right: 0;
   }
   .v-toolbar__title {
     font-weight: 600;
@@ -231,6 +234,46 @@ export default {
   }
   .v-image__image.v-image__image--cover {
     background-position: top center !important;
+  }
+  .search {
+    min-width: 500px;
+    .v-input__slot {
+      height: 59px;
+      border-radius: 0;
+      input {
+        background-color: transparent !important;
+      }
+    }
+    @media (max-width: 960px) {
+      min-width: 300px;
+      @media (max-width: 600px) {
+        margin: 0;
+        flex: 1;
+        width: 100%;
+        min-width: calc(100% - 4s0px);
+      }
+    }
+  }
+  &.search-open {
+    .hide-search {
+      display: none;
+    }
+    @media (max-width: 600px) {
+      .v-toolbar__content {
+        padding-left: 0;
+      }
+      .hide-small-search {
+        display: none;
+      }
+      .v-toolbar__items {
+        width: 100% !important;
+      }
+    }
+  }
+  &:not(.search-open) {
+    .hide-no-search {
+      display: none;
+    }
   }
 }
 </style>
