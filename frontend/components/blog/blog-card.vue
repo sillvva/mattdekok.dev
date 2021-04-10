@@ -212,6 +212,12 @@ export default {
   @media (min-width: 1400px) {
     width: calc(100% / 4);
   }
+  @media (min-width: 1900px) {
+    width: calc(100% / 5);
+  }
+  @media (min-width: 2400px) {
+    width: calc(100% / 6);
+  }
   @media (max-width: 700px) {
     width: 100%;
   }
