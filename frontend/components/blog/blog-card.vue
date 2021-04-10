@@ -190,7 +190,7 @@ export default {
       .article-title {
         a {
           word-break: break-word;
-          letter-spacing: 2px;
+          letter-spacing: 1px;
         }
       }
       .article-tags {
