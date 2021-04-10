@@ -154,16 +154,19 @@ export default {
     text-align: center;
   }
   .article-listings {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     width: 100%;
-    padding: 10px;
+    padding: 20px;
     transition: opacity 0.4s;
     &.fade-out {
       opacity: 0;
     }
     @media (max-width: 600px) {
-      padding: 0;
+      padding: 10px;
+      grid-gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       .blog-item {
         padding-bottom: 3px;
       }
