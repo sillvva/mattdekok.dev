@@ -1,8 +1,7 @@
 <template>
   <div class="blog-item">
     <v-skeleton-loader
-      v-bind="attrs"
-      v-if="dummy"
+      v-if="loadDummy"
       type="image, article"
     ></v-skeleton-loader>
     <NuxtLink class="blog-link" :to="articleLink(article)" v-else>
@@ -96,12 +95,13 @@ export default {
       type: Boolean,
       required: false,
       default: false,
-    },
+    }
   },
   data() {
     return {
       showTags: false,
-      search: ""
+      search: "",
+      loadDummy: true
     };
   },
   watch: {
@@ -115,6 +115,9 @@ export default {
     "$route.query.s"(s) {
       this.search = s || "";
     },
+    dummy(val) {
+      this.loadDummy = val;
+    }
   },
   computed: {
     blogCardTags() {
@@ -122,7 +125,8 @@ export default {
     },
   },
   mounted() {
-    this.search = this.$route.query.s || ""
+    this.search = this.$route.query.s || "";
+    this.loadDummy = false;
   },
   methods: {
     formatDate(date, time) {
