@@ -152,7 +152,8 @@ export default {
 
 <style lang="scss" scoped>
 .v-application {
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
 }
 .drawer-container {
   flex-direction: row;
