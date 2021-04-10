@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { formatDate } from "@/components/aux-functions";
+import { formatDate, addQueryParam, removeQueryParam } from "@/components/aux-functions";
 
 export default {
   props: {
@@ -101,6 +101,7 @@ export default {
   data() {
     return {
       showTags: false,
+      search: ""
     };
   },
   watch: {
@@ -111,14 +112,17 @@ export default {
         this.showTags = false;
       }
     },
+    "$route.query.s"(s) {
+      this.search = s || "";
+    },
   },
   computed: {
-    blogSearch() {
-      return this.$store.getters.blogSearch;
-    },
     blogCardTags() {
       return this.$store.getters.blogCardTags;
     },
+  },
+  mounted() {
+    this.search = this.$route.query.s || ""
   },
   methods: {
     formatDate(date, time) {
@@ -128,13 +132,15 @@ export default {
       return `/blog/${article.slug}`;
     },
     setBlogSearch(val) {
-      this.$store.dispatch("setBlogSearch", val);
+      let newPath = addQueryParam(this.$route.fullPath, 's', val);
+      if (!val) newPath = removeQueryParam(newPath, 's');
+      this.$router.push(newPath);
     },
     setBlogCardTags(val) {
       this.$store.dispatch("setBlogCardTags", val);
     },
     appendBlogSearch(val) {
-      const words = this.blogSearch.split(" ");
+      const words = this.search.split(" ");
       const search = [
         ...words.filter((w) => w.toLowerCase() !== val.toLowerCase()),
         words.find((w) => w.toLowerCase() === val.toLowerCase()) ? null : val,
@@ -145,7 +151,7 @@ export default {
       }
     },
     tagIncluded(tag) {
-      return this.blogSearch
+      return this.search
         .toLowerCase()
         .split(" ")
         .includes(tag.toLowerCase());

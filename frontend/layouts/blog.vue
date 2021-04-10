@@ -38,11 +38,12 @@
           filled
           ref="search"
           @blur="searchBlur()"
+          @keyup="setSearch()"
           class="search"
         />
         <v-btn
           icon
-          @click="openSearch()"
+          @click="openSearch(true)"
           :aria-label="`${$vuetify.theme.dark ? 'Light' : 'Dark'} Mode`"
           class="hide-search"
         >
@@ -84,6 +85,8 @@
 </template>
 
 <script>
+import { removeQueryParam, addQueryParam } from "@/components/aux-functions.js";
+
 const meta = {
   title: "Matt's Blog",
   description:
@@ -114,7 +117,7 @@ export default {
   },
   data() {
     return {
-      search: "",
+      search: this.$route.query.s || "",
       searchOpen: false,
       blogBarHeight: 128,
       window: process.client ? window : {},
@@ -137,26 +140,15 @@ export default {
       });
     }
   },
-  computed: {
-    blogSearch() {
-      return this.$store.getters.blogSearch;
-    },
-  },
   watch: {
-    search(val) {
-      this.$store.dispatch("setBlogSearch", val);
-      if (this.$refs.search && !this.$refs.search.isFocused) {
-        if (!val) {
-          this.searchOpen = false;
-        }
-      }
-    },
-    blogSearch(val) {
-      this.search = val.trim();
+    "$route.query.s"(s) {
+      this.search = (s || "").trim();
       if (this.search.length > 0) {
-        this.searchOpen = true;
+        this.openSearch();
+      } else {
+        this.closeSearch();
       }
-    },
+    }
   },
   methods: {
     toggleTheme() {
@@ -169,17 +161,22 @@ export default {
     searching() {
       return this.searchOpen;
     },
-    openSearch() {
+    openSearch(focus) {
       setTimeout(() => {
         this.searchOpen = true;
-        setTimeout(() => {
-          this.$refs.search.focus();
-        }, 100);
+        if (focus) {
+          setTimeout(() => {
+            this.$refs.search.focus();
+          }, 100);
+        }
       }, 250);
     },
     closeSearch() {
-      this.searchOpen = false;
-      this.search = "";
+      if (this.$refs.search && !this.$refs.search.isFocused) {
+        this.searchOpen = false;
+        const path = removeQueryParam(this.$route.fullPath, "s");
+        this.$router.replace(path);
+      }
     },
     searchBlur() {
       if (this.search.trim().length === 0) {
@@ -192,6 +189,12 @@ export default {
       this.updateNotification = false;
       if (process.client) window.location.replace(window.location.href);
     },
+    setSearch() {
+      const val = this.search;
+      let newPath = addQueryParam(this.$route.fullPath, 's', val);
+      if (!val) newPath = removeQueryParam(newPath, 's');
+      this.$router.push(newPath);
+    }
   },
 };
 </script>
