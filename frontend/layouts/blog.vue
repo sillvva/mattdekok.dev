@@ -252,7 +252,7 @@ export default {
         margin: 0;
         flex: 1;
         width: 100%;
-        min-width: calc(100% - 4s0px);
+        min-width: calc(100% - 40px);
       }
     }
   }
