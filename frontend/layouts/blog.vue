@@ -118,7 +118,7 @@ export default {
   data() {
     return {
       search: this.$route.query.s || "",
-      searchOpen: false,
+      searchOpen: !!this.$route.query.s,
       blogBarHeight: 128,
       window: process.client ? window : {},
       updateNotification: false,
@@ -128,7 +128,6 @@ export default {
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
-    this.$store.dispatch("setBlogSearch", this.search);
 
     const workbox = await window.$workbox;
     if (workbox) {
@@ -148,7 +147,7 @@ export default {
       } else {
         this.closeSearch();
       }
-    }
+    },
   },
   methods: {
     toggleTheme() {
@@ -175,7 +174,7 @@ export default {
       if (this.$refs.search && !this.$refs.search.isFocused) {
         this.searchOpen = false;
         const path = removeQueryParam(this.$route.fullPath, "s");
-        this.$router.replace(path);
+        if (this.$route.fullPath != path) this.$router.push(path);
       }
     },
     searchBlur() {
@@ -190,11 +189,10 @@ export default {
       if (process.client) window.location.replace(window.location.href);
     },
     setSearch() {
-      const val = this.search;
-      let newPath = addQueryParam(this.$route.fullPath, 's', val);
-      if (!val) newPath = removeQueryParam(newPath, 's');
-      this.$router.push(newPath);
-    }
+      let newPath = addQueryParam(this.$route.fullPath, "s", this.search);
+      if (!this.search) newPath = removeQueryParam(newPath, "s");
+      if (this.$route.fullPath != newPath) this.$router.replace(newPath);
+    },
   },
 };
 </script>

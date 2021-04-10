@@ -134,7 +134,7 @@ export default {
     setBlogSearch(val) {
       let newPath = addQueryParam(this.$route.fullPath, 's', val);
       if (!val) newPath = removeQueryParam(newPath, 's');
-      this.$router.push(newPath);
+      if (this.$route.fullPath != newPath) this.$router.push(newPath);
     },
     setBlogCardTags(val) {
       this.$store.dispatch("setBlogCardTags", val);
