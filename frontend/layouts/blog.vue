@@ -172,8 +172,10 @@ export default {
     openSearch() {
       setTimeout(() => {
         this.searchOpen = true;
-        this.$refs.search.focus();
-      }, 100);
+        setTimeout(() => {
+          this.$refs.search.focus();
+        }, 100);
+      }, 250);
     },
     closeSearch() {
       this.searchOpen = false;
