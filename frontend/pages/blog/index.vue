@@ -182,8 +182,9 @@ export default {
     .v-slide-group__wrapper {
       .v-slide-group__content {
         align-items: center;
+        padding: 4px 2px;
         button {
-          margin: 6.5px 6px !important;
+          margin: 4px !important;
         }
       }
     }
