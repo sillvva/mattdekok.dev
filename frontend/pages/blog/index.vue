@@ -66,7 +66,6 @@ export default {
           "slug",
           "description",
           "tags",
-          "createdAt",
           "image",
           "date",
         ])
