@@ -33,18 +33,8 @@ export const setQueryParam = (path, param, value) => {
   return `${anchor.pathname}${search}${hash}`;
 };
 
-var timers = {};
-export const throttle = (callback, ms, id, ...args) => {
-  if (!id) id = "Don't call this twice without an id";
-  if (timers[id]) {
-    clearTimeout(timers[id]);
-  }
-  timers[id] = setTimeout(callback, ms, ...args);
-};
-
 export default {
   formatDate,
   removeQueryParam,
-  setQueryParam,
-  throttle
+  setQueryParam
 };
