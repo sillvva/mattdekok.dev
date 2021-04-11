@@ -162,7 +162,7 @@ export default {
     },
     tagsVisible() {
       return (
-        this.showTags || this.article.tags.find((t) => this.tagIncluded(t))
+        this.showTags || (this.article.tags || []).find((t) => this.tagIncluded(t))
       );
     },
     openTagPanel() {

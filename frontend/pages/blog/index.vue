@@ -34,7 +34,9 @@
 
 <script>
 import blogCard from "@/components/blog/blog-card.vue";
-import { formatDate } from "@/components/aux-functions.js";
+import { formatDate, removeQueryParam, setQueryParam } from "@/components/aux-functions.js";
+
+const perPage = 12;
 
 export default {
   components: { blogCard },
@@ -46,16 +48,15 @@ export default {
   },
   data() {
     return {
-      page: 1,
-      pageSelected: 1,
-      perPage: 12,
+      perPage: perPage,
       fadeOut: false,
-      dummyItems: Array(12).fill(""),
-      search: this.$route.query.s || ""
+      dummyItems: Array(perPage).fill(""),
+      search: this.$route.query.s || "",
     };
   },
   async asyncData(context) {
-    const { $content } = context;
+    const { $content, route } = context;
+    const page = route.query.p ? parseInt(route.query.p) : 1;
     let articles = [];
 
     try {
@@ -77,12 +78,29 @@ export default {
 
     return {
       articles,
+      page: page,
+      pageSelected: page
     };
   },
   watch: {
     "$route.query.s"(s) {
+      if (s) {
+        this.page = 1;
+        this.pageChanged(1);
+      }
       this.search = s || "";
     },
+    "$route.query.p"(p) {
+      this.page = p || 1;
+      this.pageSelected = this.page;
+      if (!process.client) return;
+      setTimeout(() => {
+        this.fadeOut = false;
+      }, 100);
+    }
+  },
+  mounted() {
+
   },
   methods: {
     allArticles() {
@@ -97,10 +115,18 @@ export default {
         });
     },
     pageArticles() {
-      return this.allArticles().slice(
+      let articles = this.allArticles().slice(
         this.pageIndex(),
         this.pageIndex() + this.perPage
       );
+
+      if (articles.length === 0 && this.page > 1) {
+        if (process.client) this.pageChanged(1);
+        else this.page = 1;
+        return [];
+      }
+
+      return articles;
     },
     doesMatch(article) {
       const searchRegex = this.search
@@ -129,11 +155,10 @@ export default {
       this.fadeOut = true;
       setTimeout(() => {
         window.scrollTo(0, 0);
-        this.page = $page;
-        setTimeout(() => {
-          this.fadeOut = false;
-        }, 100);
-      }, 400);
+        let path = setQueryParam(this.$route.fullPath, 'p', $page);
+        if ($page == 1) path = removeQueryParam(this.$route.fullPath, 'p');
+        this.$router.push(path);
+      }, 200);
     },
   },
 };
@@ -157,7 +182,7 @@ export default {
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     width: 100%;
     padding: 20px;
-    transition: opacity 0.4s;
+    transition: opacity 0.2s;
     &.fade-out {
       opacity: 0;
     }
