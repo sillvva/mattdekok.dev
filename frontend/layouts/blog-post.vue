@@ -7,7 +7,7 @@
       left
       fixed
       style="background-color: var(--background)"
-      @click="$router.push('/blog')"
+      @click="$router.push(pagePath)"
       :aria-label="`Return to Blog`"
     >
       <v-icon>mdi-arrow-left</v-icon>
@@ -31,9 +31,7 @@
       An update is available! Please refresh.
 
       <template v-slot:action="{ attrs }">
-        <v-btn text v-bind="attrs" @click="refresh">
-          Refresh
-        </v-btn>
+        <v-btn text v-bind="attrs" @click="refresh"> Refresh </v-btn>
         <v-btn text v-bind="attrs" @click="updateNotification = false">
           Close
         </v-btn>
@@ -43,6 +41,8 @@
 </template>
 
 <script>
+import { setQueryParam } from "@/components/aux-functions";
+
 export default {
   head() {
     return {
@@ -52,9 +52,19 @@ export default {
   data() {
     return {
       updateNotification: false,
+      pagePath: "/blog",
     };
   },
   async mounted() {
+    const articles = await this.$content("articles")
+      .only(["slug"])
+      .sortBy("date", "desc")
+      .fetch();
+
+    const index = articles.findIndex((a) => a.slug === this.$route.params.slug);
+    const page = Math.ceil((index + 1) / 12);
+    if (page > 1) this.pagePath = setQueryParam("/blog", "p", page);
+
     this.$vuetify.theme.dark =
       !localStorage.getItem("theme") ||
       localStorage.getItem("theme") === "dark";
