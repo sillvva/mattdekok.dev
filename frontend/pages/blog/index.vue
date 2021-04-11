@@ -25,7 +25,7 @@
         :total-visible="7"
         class="pages"
         color="var(--link)"
-        @input="pageChanged"
+        @input="pageChanged($event, true)"
         v-if="numPages() > 1"
       ></v-pagination>
     </div>
@@ -34,7 +34,11 @@
 
 <script>
 import blogCard from "@/components/blog/blog-card.vue";
-import { formatDate, removeQueryParam, setQueryParam } from "@/components/aux-functions.js";
+import {
+  formatDate,
+  removeQueryParam,
+  setQueryParam,
+} from "@/components/aux-functions.js";
 
 const perPage = 12;
 
@@ -61,14 +65,7 @@ export default {
 
     try {
       articles = await $content({ deep: true })
-        .only([
-          "title",
-          "slug",
-          "description",
-          "tags",
-          "image",
-          "date",
-        ])
+        .only(["title", "slug", "description", "tags", "image", "date"])
         .sortBy("date", "desc")
         .fetch();
     } catch (err) {
@@ -78,12 +75,12 @@ export default {
     return {
       articles,
       page: page,
-      pageSelected: page
+      pageSelected: page,
     };
   },
   watch: {
     "$route.query.s"(s) {
-      if (s) {
+      if (s && this.page > 0) {
         this.page = 1;
         this.pageChanged(1);
       }
@@ -91,15 +88,12 @@ export default {
     },
     "$route.query.p"(p) {
       this.page = p || 1;
-      this.pageSelected = this.page;
+      this.pageSelected = parseInt(this.page);
       if (!process.client) return;
       setTimeout(() => {
         this.fadeOut = false;
       }, 100);
-    }
-  },
-  mounted() {
-
+    },
   },
   methods: {
     allArticles() {
@@ -150,12 +144,12 @@ export default {
     pageIndex() {
       return (this.page - 1) * this.perPage;
     },
-    pageChanged($page) {
-      this.fadeOut = true;
+    pageChanged($page, animated) {
+      if (animated) this.fadeOut = true;
       setTimeout(() => {
         window.scrollTo(0, 0);
-        let path = setQueryParam(this.$route.fullPath, 'p', $page);
-        if ($page == 1) path = removeQueryParam(this.$route.fullPath, 'p');
+        let path = setQueryParam(this.$route.fullPath, "p", $page);
+        if ($page == 1) path = removeQueryParam(this.$route.fullPath, "p");
         this.$router.push(path);
       }, 200);
     },
