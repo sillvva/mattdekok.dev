@@ -98,13 +98,19 @@ export default {
   methods: {
     allArticles() {
       return (this.articles || [])
-        .map((a, i) => {
+        .map((a) => {
           return {
             ...a,
+            match: this.search.trim().length > 2 ? this.doesMatch(a) : 1,
           };
         })
         .filter((a) => {
-          return a.title && (!this.search.trim() || this.doesMatch(a));
+          return a.title && a.match;
+        })
+        .sort((a, b) => {
+          if (a.match > b.match) return -1;
+          if (a.match == b.match && a.date >= b.date) return -1;
+          return 1;
         });
     },
     pageArticles() {
@@ -125,18 +131,18 @@ export default {
       const searchRegex = this.search
         .split(" ")
         .map((s) => new RegExp(s.trim(), "i"));
-      return (
-        searchRegex
-          .map((r) => {
-            return (
-              r.test(article.title) ||
-              r.test(article.description) ||
-              r.test(formatDate(article.created)) ||
-              article.tags.filter((t) => r.test(t)).length > 0
-            );
-          })
-          .filter((b) => !b).length === 0
-      );
+      return searchRegex
+        .map((r) => {
+          return (
+            article.title.split(" ").filter((t) => r.test(t)).length +
+            article.description.split(" ").filter((t) => r.test(t)).length +
+            formatDate(article.date)
+              .split(" ")
+              .filter((t) => r.test(t)).length +
+            article.tags.filter((t) => r.test(t)).length
+          );
+        })
+        .reduce((p, c) => p + c, 0);
     },
     numPages() {
       return Math.ceil(this.allArticles().length / this.perPage);
