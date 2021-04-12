@@ -65,6 +65,9 @@
 
         <v-card-text class="pb-0">
           {{ formatDate(article.date) }}
+          <span v-if="search.trim().length > 2">
+            - <span class="blue--text text--lighten-1">Matches: {{ article.match }}</span>
+          </span>
         </v-card-text>
 
         <v-card-title class="article-title pt-0">
@@ -83,7 +86,11 @@
 </template>
 
 <script>
-import { formatDate, addQueryParam, removeQueryParam } from "@/components/aux-functions";
+import {
+  formatDate,
+  setQueryParam,
+  removeQueryParam,
+} from "@/components/aux-functions";
 
 export default {
   props: {
@@ -95,13 +102,13 @@ export default {
       type: Boolean,
       required: false,
       default: false,
-    }
+    },
   },
   data() {
     return {
       showTags: false,
       search: "",
-      loadDummy: true
+      loadDummy: true,
     };
   },
   watch: {
@@ -117,7 +124,7 @@ export default {
     },
     dummy(val) {
       this.loadDummy = val;
-    }
+    },
   },
   computed: {
     blogCardTags() {
@@ -136,8 +143,8 @@ export default {
       return `/blog/${article.slug}`;
     },
     setBlogSearch(val) {
-      let newPath = addQueryParam(this.$route.fullPath, 's', val);
-      if (!val) newPath = removeQueryParam(newPath, 's');
+      let newPath = setQueryParam(this.$route.fullPath, "s", val);
+      if (!val) newPath = removeQueryParam(newPath, "s");
       if (this.$route.fullPath != newPath) this.$router.push(newPath);
     },
     setBlogCardTags(val) {
@@ -155,14 +162,12 @@ export default {
       }
     },
     tagIncluded(tag) {
-      return this.search
-        .toLowerCase()
-        .split(" ")
-        .includes(tag.toLowerCase());
+      return this.search.toLowerCase().split(" ").includes(tag.toLowerCase());
     },
     tagsVisible() {
       return (
-        this.showTags || this.article.tags.find((t) => this.tagIncluded(t))
+        this.showTags ||
+        (this.article.tags || []).find((t) => this.tagIncluded(t))
       );
     },
     openTagPanel() {

@@ -141,13 +141,7 @@ export default {
       return;
     }
 
-    const [prev, next] = await $content("articles")
-      .only(["title", "slug"])
-      .sortBy("createdAt", "asc")
-      .surround(params.slug)
-      .fetch();
-
-    return { article, prev, next };
+    return { article };
   },
   computed: {
     isCodepen() {

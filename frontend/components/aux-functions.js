@@ -1,18 +1,15 @@
 export const formatDate = (date, time) => {
-  const options = {
+  return new Date(date)[`toLocale${time ? "" : "Date"}String`]("en", {
     weekday: "long",
     year: "numeric",
     month: "long",
-    day: "numeric"
-  };
-  return time
-    ? new Date(date).toLocaleString("en", {
-        ...options,
-        hour: "numeric",
-        minute: "numeric",
-        timeZoneName: "short"
-      })
-    : new Date(date).toLocaleDateString("en", options);
+    day: "numeric",
+    ...(time && {
+      hour: "numeric",
+      minute: "numeric",
+      timeZoneName: "short"
+    })
+  });
 };
 
 export const removeQueryParam = (path, param) => {
@@ -25,7 +22,7 @@ export const removeQueryParam = (path, param) => {
   else return path.replace(search, `?${params.toString()}`);
 };
 
-export const addQueryParam = (path, param, value) => {
+export const setQueryParam = (path, param, value) => {
   const anchor = document.createElement("A");
   anchor.setAttribute("href", path);
   let search = anchor.search;
@@ -36,18 +33,8 @@ export const addQueryParam = (path, param, value) => {
   return `${anchor.pathname}${search}${hash}`;
 };
 
-var timers = {};
-export const throttle = (callback, ms, id, ...args) => {
-  if (!id) id = "Don't call this twice without an id";
-  if (timers[id]) {
-    clearTimeout(timers[id]);
-  }
-  timers[id] = setTimeout(callback, ms, ...args);
-};
-
 export default {
   formatDate,
   removeQueryParam,
-  addQueryParam,
-  throttle
+  setQueryParam
 };
