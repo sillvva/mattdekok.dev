@@ -141,7 +141,7 @@ export default {
   },
   watch: {
     "$route.query.s"(s) {
-      this.search = (s || "").trim();
+      this.search = s || "";
       if (this.search.length > 0) {
         this.openSearch();
       } else {

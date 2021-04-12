@@ -28,7 +28,7 @@ export const setQueryParam = (path, param, value) => {
   let search = anchor.search;
   const hash = anchor.hash;
   const params = new URLSearchParams(search);
-  params.set(param, value.toString().trim());
+  params.set(param, value.toString());
   search = search.replace(search, `?${params.toString()}`);
   return `${anchor.pathname}${search}${hash}`;
 };
