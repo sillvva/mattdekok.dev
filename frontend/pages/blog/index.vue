@@ -130,6 +130,7 @@ export default {
     doesMatch(article) {
       const searchRegex = this.search
         .split(" ")
+        .filter(s => !!s)
         .map((s) => new RegExp(s.trim(), "i"));
       return searchRegex
         .map((r) => {
