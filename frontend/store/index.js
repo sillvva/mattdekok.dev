@@ -1,31 +1,37 @@
 export const state = () => ({
-  blogCardTags: "",
-  blogPosts: [],
-  postsTimestamp: 0,
+  blog: {
+    cardTags: "",
+    posts: [],
+    lastFetch: 0
+  },
 });
 
 // Getters
 export const getters = {
   blogCardTags(state) {
-    return state.blogCardTags;
+    return state.blog.cardTags;
   },
   blogPosts(state) {
-    return state.blogPosts;
+    return state.blog.posts;
   },
-  postsTimestamp(state) {
-    return state.postsTimestamp;
+  blogLastFetch(state) {
+    return state.blog.lastFetch;
   }
 };
 
 export const mutations = {
   setBlogCardTags(state, data) {
-    state.blogCardTags = data;
+    state.blog = {
+      ...state.blog,
+      cardTags: data
+    };
   },
   setBlogPosts(state, posts) {
-    state.blogPosts = posts;
-  },
-  setPostsTimestamp(state, timestamp) {
-    state.postsTimestamp = timestamp;
+    state.blog = {
+      ...state.blog,
+      lastFetch: new Date().getTime(),
+      posts: posts
+    };
   }
 };
 
@@ -35,6 +41,5 @@ export const actions = {
   },
   setBlogPosts({ commit }, posts) {
     commit("setBlogPosts", posts);
-    commit("setPostsTimestamp", new Date().getTime());
   }
 };

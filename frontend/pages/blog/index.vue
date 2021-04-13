@@ -63,10 +63,10 @@ export default {
   },
   async asyncData(context) {
     const { $content, store } = context;
-    const { blogPosts, postsTimestamp } = store.getters;
+    const { blogPosts, blogLastFetch } = store.getters;
     const time = new Date().getTime();
 
-    if (!blogPosts.length || time - postsTimestamp > 15 * 60 * 1000) {
+    if (!blogPosts.length || time - blogLastFetch > 15 * 60 * 1000) {
       try {
         const articles = await $content({ deep: true })
           .only(["title", "slug", "description", "tags", "image", "date"])
