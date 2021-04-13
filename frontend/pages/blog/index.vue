@@ -2,10 +2,10 @@
   <div class="blog-body">
     <div
       :class="['article-listings', fadeOut && 'fade-out']"
-      v-if="pageArticles().length"
+      v-if="articles.length"
     >
       <blog-card
-        v-for="(article, a) of pageArticles()"
+        v-for="(article, a) of articles"
         :key="`${article.slug}${a}`"
         :article="article"
       />
@@ -21,12 +21,12 @@
     <div class="text-center">
       <v-pagination
         v-model="pageSelected"
-        :length="numPages()"
+        :length="numPages"
         :total-visible="7"
         class="pages"
         color="var(--link)"
         @input="pageChanged($event, true)"
-        v-if="numPages() > 1"
+        v-if="numPages > 1"
       ></v-pagination>
     </div>
   </div>
@@ -52,31 +52,36 @@ export default {
   },
   data() {
     return {
-      perPage: perPage,
       fadeOut: false,
       dummyItems: Array(perPage).fill(""),
       search: this.$route.query.s || "",
+      page: this.$route.query.p ? parseInt(this.$route.query.p) : 1,
+      pageSelected: this.$route.query.p ? parseInt(this.$route.query.p) : 1,
+      articles: [],
+      numPages: 1,
     };
   },
   async asyncData(context) {
-    const { $content, route } = context;
-    const page = route.query.p ? parseInt(route.query.p) : 1;
-    let articles = [];
+    const { $content, store } = context;
+    const { blogPosts, postsTimestamp } = store.getters;
+    const time = new Date().getTime();
 
-    try {
-      articles = await $content({ deep: true })
-        .only(["title", "slug", "description", "tags", "image", "date"])
-        .sortBy("date", "desc")
-        .fetch();
-    } catch (err) {
-      console.log(err);
+    if (!blogPosts.length || time - postsTimestamp > 15 * 60 * 1000) {
+      try {
+        const articles = await $content({ deep: true })
+          .only(["title", "slug", "description", "tags", "image", "date"])
+          .sortBy("date", "desc")
+          .fetch();
+        store.dispatch("setBlogPosts", articles);
+      } catch (err) {
+        console.log(err);
+      }
     }
-
-    return {
-      articles,
-      page: page,
-      pageSelected: page,
-    };
+  },
+  computed: {
+    blogPosts() {
+      return this.$store.getters.blogPosts;
+    },
   },
   watch: {
     "$route.query.s"(s) {
@@ -85,19 +90,28 @@ export default {
         this.pageChanged(1);
       }
       this.search = s || "";
+      this.setArticles(this.blogPosts);
     },
     "$route.query.p"(p) {
       this.page = p || 1;
       this.pageSelected = parseInt(this.page);
+      this.setArticles(this.blogPosts);
       if (!process.client) return;
       setTimeout(() => {
         this.fadeOut = false;
       }, 100);
     },
+    blogPosts(p) {
+      this.setArticles(p);
+    },
+  },
+  created() {
+    this.setArticles(this.blogPosts);
   },
   methods: {
-    allArticles() {
-      return (this.articles || [])
+    setArticles(p) {
+      this.numPages = Math.ceil(p.length / perPage);
+      this.articles = p
         .map((a) => {
           return {
             ...a,
@@ -111,26 +125,19 @@ export default {
           if (a.match > b.match) return -1;
           if (a.match == b.match && a.date >= b.date) return -1;
           return 1;
-        });
-    },
-    pageArticles() {
-      let articles = this.allArticles().slice(
-        this.pageIndex(),
-        this.pageIndex() + this.perPage
-      );
+        })
+        .slice(this.pageIndex(), this.pageIndex() + perPage);
 
-      if (articles.length === 0 && this.page > 1) {
+      if (this.articles.length === 0 && this.page > 1) {
         if (process.client) this.pageChanged(1);
         else this.page = 1;
         return [];
       }
-
-      return articles;
     },
     doesMatch(article) {
       const searchRegex = this.search
         .split(" ")
-        .filter(s => !!s)
+        .filter((s) => !!s)
         .map((s) => new RegExp(s.trim(), "i"));
       return searchRegex
         .map((r) => {
@@ -145,11 +152,8 @@ export default {
         })
         .reduce((p, c) => p + c, 0);
     },
-    numPages() {
-      return Math.ceil(this.allArticles().length / this.perPage);
-    },
     pageIndex() {
-      return (this.page - 1) * this.perPage;
+      return (this.page - 1) * perPage;
     },
     pageChanged($page, animated) {
       if (animated) this.fadeOut = true;
