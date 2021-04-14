@@ -170,37 +170,27 @@ export default {
 
 <style lang="scss" scoped>
 .blog-body {
-  .page-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--background);
-    line-height: 84px;
-    z-index: 2;
-    text-align: center;
-  }
   .article-listings {
     display: grid;
-    grid-gap: 20px;
+    grid-gap: 1em;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    padding: 1em;
     width: 100%;
-    padding: 20px;
     transition: opacity 0.2s;
     &.fade-out {
       opacity: 0;
     }
     @media (max-width: 600px) {
-      padding: 10px;
-      grid-gap: 10px;
+      padding: 0.5em;
+      grid-gap: 0.5em;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       .blog-item {
-        padding-bottom: 3px;
+        padding-bottom: 0.25em;
       }
     }
   }
   .pages {
-    margin-top: 20px;
+    margin-top: 1em;
   }
 }
 </style>
@@ -211,9 +201,9 @@ export default {
     .v-slide-group__wrapper {
       .v-slide-group__content {
         align-items: center;
-        padding: 4px 2px;
+        padding: 0.125em;
         button {
-          margin: 4px !important;
+          margin: 0.25em !important;
         }
       }
     }

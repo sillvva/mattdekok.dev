@@ -8,7 +8,7 @@
       <div class="article-header-info">
         <h1>{{ article.title }}</h1>
         <p class="description">{{ article.description }}</p>
-        <p style="font-size: small">
+        <p class="dates">
           Created: {{ formatDate(article.date) }}<br />
           <span v-if="article.updated">
             Updated: {{ formatDate(article.updated, true) }}
@@ -170,7 +170,7 @@ export default {
     },
     location() {
       return `https://www.mattdekok.dev${this.$route.path}`;
-    }
+    },
   },
 };
 </script>
@@ -196,13 +196,13 @@ article {
     display: flex;
     align-items: flex-end;
     color: var(--blogHeaderText);
-    padding: 20px;
-    padding-bottom: 40px;
+    padding: 1em;
+    padding-bottom: 2em;
     @media (max-width: 600px) {
-      padding-bottom: 20px;
+      padding-bottom: 1em;
     }
     .article-header-cover {
-      padding: 15px;
+      padding: 1em;
       position: absolute;
       top: 0;
       left: 0;
@@ -222,20 +222,24 @@ article {
     .article-header-info {
       h1 {
         font-size: 1.8em;
+        text-shadow: 2px 2px 2px black;
+      }
+      .dates {
+        font-size: 0.8em;
       }
     }
   }
   .article-body {
     grid-area: body;
     overflow: auto;
-    padding: 30px;
+    padding: 2em;
     &.codepen-full {
       height: 100vh;
       overflow: hidden;
       padding: 0 !important;
       .article-content {
         height: 100%;
-        padding: 12px 16px;
+        padding: 0.75em 1em;
         padding-bottom: 0;
       }
     }
@@ -245,7 +249,7 @@ article {
       left: 80px;
       z-index: 10;
       .article-toc {
-        margin-bottom: 10px;
+        margin-bottom: 1em;
         max-width: 300px;
         .v-list {
           a.v-list-item {
@@ -277,15 +281,15 @@ article {
       bottom: 0;
       width: auto;
       height: 350px;
-      padding-bottom: 10px;
+      padding-bottom: 0.5em;
       box-shadow: 0 5px 5px var(--dropShadow);
-      @media (max-width: 500px) {
+      @media (max-width: 700px) {
         height: 300px;
         .article-header-info {
           h1 {
-            line-height: 24px;
-            margin-bottom: 10px;
-            font-size: 20px;
+            line-height: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.25em;
           }
           p {
             margin: 0;
@@ -294,14 +298,14 @@ article {
             display: none;
           }
           .share {
-            margin-top: 10px;
+            margin-top: 0.5em;
           }
         }
       }
     }
     .article-body {
       margin-left: 0;
-      padding: 20px 10px;
+      padding: 1em 0.5em;
       .article-toc-wrapper {
         position: static;
         .article-toc {
