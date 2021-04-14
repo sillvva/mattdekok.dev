@@ -55,13 +55,13 @@ export default {
       pagePath: "/blog",
     };
   },
+  computed: {
+    blogPosts() {
+      return this.$store.getters.blogPosts;
+    },
+  },
   async mounted() {
-    const articles = await this.$content("articles")
-      .only(["slug"])
-      .sortBy("date", "desc")
-      .fetch();
-
-    const index = articles.findIndex((a) => a.slug === this.$route.params.slug);
+    const index = this.blogPosts.findIndex((a) => a.slug === this.$route.params.slug);
     const page = Math.ceil((index + 1) / 12);
     if (page > 1) this.pagePath = setQueryParam("/blog", "p", page);
 
