@@ -13,15 +13,10 @@
       >
         <div
           class="blog-image-wrapper"
-          style="position: relative; display: block; min-height: 200px"
+          style="position: relative; display: block"
         >
-          <v-lazy
-            :value="article.visible"
-            :options="{
-              threshold: 1,
-            }"
-          >
-            <v-img :src="article.image"></v-img>
+          <v-lazy :value="article.visible" :options="{ threshold: 1 }">
+            <v-img :src="article.image" :aspect-ratio="15 / 10"></v-img>
           </v-lazy>
 
           <v-btn
@@ -66,7 +61,10 @@
         <v-card-text class="pb-0">
           {{ formatDate(article.date) }}
           <span v-if="search.trim().length > 2">
-            - <span class="blue--text text--lighten-1">Matches: {{ article.match }}</span>
+            -
+            <span class="blue--text text--lighten-1"
+              >Matches: {{ article.match }}</span
+            >
           </span>
         </v-card-text>
 
@@ -192,10 +190,8 @@ export default {
       height: 100%;
       .blog-image-wrapper {
         position: relative;
-        height: 250px;
         .v-image {
           background: var(--dropShadow);
-          height: 250px;
           position: relative;
           border-top-left-radius: 4px;
           border-top-right-radius: 4px;
@@ -216,18 +212,6 @@ export default {
         z-index: 2;
         .tag-handle {
           height: 58px;
-        }
-      }
-    }
-  }
-  @media (max-width: 450px) {
-    .blog-link {
-      .blog-card {
-        .blog-image-wrapper {
-          height: 200px;
-          .v-image {
-            height: 200px;
-          }
         }
       }
     }

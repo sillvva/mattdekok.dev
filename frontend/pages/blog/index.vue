@@ -173,17 +173,17 @@ export default {
   .article-listings {
     display: grid;
     grid-gap: 1em;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(325px, 1fr));
     padding: 1em;
     width: 100%;
     transition: opacity 0.2s;
     &.fade-out {
       opacity: 0;
     }
-    @media (max-width: 600px) {
+    @media (max-width: 800px) {
       padding: 0.5em;
       grid-gap: 0.5em;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       .blog-item {
         padding-bottom: 0.25em;
       }
