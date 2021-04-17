@@ -8,26 +8,40 @@
       <div class="article-header-info">
         <h1>{{ article.title }}</h1>
         <p class="description">{{ article.description }}</p>
-        <p style="font-size: small">
+        <p class="dates">
           Created: {{ formatDate(article.date) }}<br />
           <span v-if="article.updated">
             Updated: {{ formatDate(article.updated, true) }}
           </span>
         </p>
         <p class="share">
-          <a :href="`https://twitter.com/intent/tweet?text=${escape(article.title)}%0A%0A${escape(article.description)}%0A${escape(location())}`"
+          <a
+            :href="`https://twitter.com/intent/tweet?text=${escape(
+              article.title
+            )}%0A%0A${escape(article.description)}%0A${escape(location())}`"
             target="_blank"
-            rel="noreferrer noopener">
+            rel="noreferrer noopener"
+          >
             <v-icon dark>mdi-twitter</v-icon>
           </a>
-          <a :href="`https://www.facebook.com/sharer/sharer.php?u=${escape(location())}`"
+          <a
+            :href="`https://www.facebook.com/sharer/sharer.php?u=${escape(
+              location()
+            )}`"
             target="_blank"
-            rel="noreferrer noopener">
+            rel="noreferrer noopener"
+          >
             <v-icon dark>mdi-facebook</v-icon>
           </a>
-          <a :href="`https://www.linkedin.com/shareArticle?mini=true&url=${escape(location())}&title=${escape(article.title)}&summary=${escape(article.description)}`"
+          <a
+            :href="`https://www.linkedin.com/shareArticle?mini=true&url=${escape(
+              location()
+            )}&title=${escape(article.title)}&summary=${escape(
+              article.description
+            )}`"
             target="_blank"
-            rel="noreferrer noopener">
+            rel="noreferrer noopener"
+          >
             <v-icon dark>mdi-linkedin</v-icon>
           </a>
         </p>
@@ -35,8 +49,7 @@
     </section>
     <section :class="['article-body', isCodepen && 'codepen-full']">
       <v-row justify="center" style="max-width: 1000px; margin: 0">
-        <v-col
-          cols="12"
+        <div
           class="article-toc-wrapper"
           v-if="article.toc && article.toc.length > 0"
         >
@@ -58,7 +71,7 @@
               </v-list-group>
             </v-list>
           </v-card>
-        </v-col>
+        </div>
         <v-col cols="12" class="article-content">
           <v-row
             justify="center"
@@ -170,7 +183,7 @@ export default {
     },
     location() {
       return `https://www.mattdekok.dev${this.$route.path}`;
-    }
+    },
   },
 };
 </script>
@@ -186,23 +199,22 @@ article {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
+    box-shadow: 5px 0 5px var(--dropShadow);
     position: fixed;
     top: -5px;
-    left: 0;
     bottom: -5px;
+    left: 0;
     width: 400px;
-    z-index: 2;
-    box-shadow: 5px 0 5px var(--dropShadow);
     display: flex;
     align-items: flex-end;
     color: var(--blogHeaderText);
-    padding: 20px;
-    padding-bottom: 40px;
+    padding: 1em;
+    padding-bottom: 2em;
     @media (max-width: 600px) {
-      padding-bottom: 20px;
+      padding-bottom: 1em;
     }
     .article-header-cover {
-      padding: 15px;
+      padding: 1em;
       position: absolute;
       top: 0;
       left: 0;
@@ -222,20 +234,24 @@ article {
     .article-header-info {
       h1 {
         font-size: 1.8em;
+        text-shadow: 2px 2px 2px black;
+      }
+      .dates {
+        font-size: 0.8em;
       }
     }
   }
   .article-body {
     grid-area: body;
     overflow: auto;
-    padding: 30px;
+    padding: 2em;
     &.codepen-full {
       height: 100vh;
       overflow: hidden;
       padding: 0 !important;
       .article-content {
         height: 100%;
-        padding: 12px 16px;
+        padding: 0.75em 1em;
         padding-bottom: 0;
       }
     }
@@ -244,9 +260,10 @@ article {
       top: 0;
       left: 80px;
       z-index: 10;
+      width: 295px;
+      margin: 12px;
       .article-toc {
-        margin-bottom: 10px;
-        max-width: 300px;
+        width: 295px;
         .v-list {
           a.v-list-item {
             min-height: 30px;
@@ -257,8 +274,7 @@ article {
         }
       }
     }
-    .article-content,
-    .article-toc-wrapper {
+    .article-content {
       width: 100%;
       max-width: 800px;
       margin: 0;
@@ -276,16 +292,17 @@ article {
       top: 0;
       bottom: 0;
       width: auto;
-      height: 350px;
-      padding-bottom: 10px;
+      padding-bottom: 0.5em;
       box-shadow: 0 5px 5px var(--dropShadow);
-      @media (max-width: 500px) {
-        height: 300px;
+      aspect-ratio: 15 / 10;
+      height: auto;
+      @media (max-width: 700px) {
         .article-header-info {
           h1 {
-            line-height: 24px;
-            margin-bottom: 10px;
-            font-size: 20px;
+            line-height: 1.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.25em;
+            letter-spacing: 2px;
           }
           p {
             margin: 0;
@@ -294,22 +311,54 @@ article {
             display: none;
           }
           .share {
-            margin-top: 10px;
+            margin-top: 0.5em;
           }
         }
       }
     }
     .article-body {
       margin-left: 0;
-      padding: 20px 10px;
+      padding: 1em 0.5em;
       .article-toc-wrapper {
         position: static;
+        width: 100%;
+        max-width: 800px;
+        padding: 12px;
+        margin: 0;
         .article-toc {
           max-width: 400px;
         }
       }
       .article-content {
         width: 100%;
+      }
+    }
+  }
+  @media (min-width: 1200px) {
+    grid-template-columns: 450px 1fr;
+    .article-header {
+      width: 450px;
+    }
+    .article-body {
+      .article-toc-wrapper {
+        width: 345px;
+        .article-toc {
+          width: 345px;
+        }
+      }
+    }
+  }
+  @media (min-width: 1400px) {
+    grid-template-columns: 500px 1fr;
+    .article-header {
+      width: 500px;
+    }
+    .article-body {
+      .article-toc-wrapper {
+        width: 395px;
+        .article-toc {
+          width: 395px;
+        }
       }
     }
   }
@@ -322,6 +371,9 @@ article {
     code {
       padding: 0;
       font-size: 100%;
+      @media (max-width: 600px) {
+        font-size: 90%;
+      }
     }
   }
   &.codepen-full {
