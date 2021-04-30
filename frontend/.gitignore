@@ -8,7 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 
 *.env
-content/articles/**.*
+content/articles/*.md
 
 # Runtime data
 pids
