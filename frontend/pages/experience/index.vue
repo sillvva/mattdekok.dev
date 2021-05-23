@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="page">
     <v-row justify="center">
       <hex-menu
         :items="items"

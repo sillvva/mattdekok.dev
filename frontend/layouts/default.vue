@@ -150,6 +150,12 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.page {
+  margin-bottom: 248px;
+}
+</style>
+
 <style lang="scss" scoped>
 .v-application {
   min-height: 100vh;

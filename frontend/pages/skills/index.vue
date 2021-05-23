@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="page">
     <v-row justify="center">
       <hex-menu
         :items="items"
@@ -24,8 +24,7 @@
             <rated-item name="CI/CD" :rating="2.5" :cols="cols" />
             <rated-item name="CSS3" :rating="4.5" :cols="cols" />
             <rated-item name="Express" :rating="3.5" :cols="cols" />
-            <rated-item name="Github Actions" :rating="2" :cols="cols" />
-            <rated-item name="Google Cloud" :rating="2" :cols="cols" />
+            <rated-item name="Github Actions" :rating="2.5" :cols="cols" />
             <rated-item name="Heroku" :rating="3.5" :cols="cols" />
             <rated-item name="HTML5" :rating="4.5" :cols="cols" />
             <rated-item name="JavaScript" :rating="5" :cols="cols" />
@@ -40,15 +39,13 @@
             <rated-item name="Vue / Nuxt" :rating="3.5" :cols="cols" />
             <rated-item name="XML" :rating="2.5" :cols="cols" />
           </rating-section>
-          <rating-section name="Web Development" :columns="cols">
-            <rated-item name="Access" :rating="1" :cols="cols" />
+          <rating-section name="Microsoft Software" :columns="cols">
             <rated-item name="Excel" :rating="4.5" :cols="cols" />
-            <rated-item name="Powerpoint" :rating="3" :cols="cols" />
+            <rated-item name="Powerpoint" :rating="2.5" :cols="cols" />
             <rated-item name="VBA" :rating="3" :cols="cols" />
-            <rated-item name="Visual Studio" :rating="1" :cols="cols" />
-            <rated-item name="VS Code" :rating="3.5" :cols="cols" />
+            <rated-item name="VS Code" :rating="4" :cols="cols" />
             <rated-item name="Windows 7" :rating="3" :cols="cols" />
-            <rated-item name="Windows 10" :rating="3.5" :cols="cols" />
+            <rated-item name="Windows 10" :rating="4" :cols="cols" />
             <rated-item name="Word" :rating="3.5" :cols="cols" />
           </rating-section>
           <rating-section name="Graphic Design" :columns="cols">
