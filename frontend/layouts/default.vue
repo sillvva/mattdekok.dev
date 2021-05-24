@@ -152,7 +152,7 @@ export default {
 
 <style lang="scss">
 .page {
-  margin-bottom: 248px;
+  margin-bottom: 128px;
 }
 </style>
 
