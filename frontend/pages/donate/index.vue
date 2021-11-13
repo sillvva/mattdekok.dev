@@ -165,7 +165,7 @@
                   title="Bitcoin"
                   @click="
                     copyTokenAddress(
-                      'bc1qqw9qsdh6l3mk78qczkjmpqpptvt3rv2hydhrr5'
+                      '3KBzvZ5K5cD7XRR4hLDHAFJW294WHk5pQV'
                     )
                   "
                 >
@@ -187,7 +187,7 @@
                   title="Ethereum"
                   @click="
                     copyTokenAddress(
-                      '0xBC5fb1a82dec2d728167AE46966E462F4F26bed7'
+                      '0x00a32783B77e4DAcF38c32B402d242D0cE21131C'
                     )
                   "
                 >
@@ -228,7 +228,7 @@ export default {
       email: "",
       amount: "5.00",
       stripeKey: process.env.STRIPE_PK,
-      showForm: true,
+      showForm: false,
       showThanks: false,
       paymentError: false,
       paymentErrorType: "",
