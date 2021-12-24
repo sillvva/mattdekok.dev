@@ -1,15 +1,13 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <hex-menu
+      <page-menu
         :items="items"
-        rotated
         :wrapperClasses="['page-menu']"
-        :svgClasses="['menu-shake']"
         color="var(--menuColor1)"
         activeColor="var(--menuColor2)"
         hoverColor="var(--menuColor2)"
-      ></hex-menu>
+      ></page-menu>
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="12" md="9" lg="9" xl="7">
@@ -229,7 +227,7 @@
 </template>
 
 <script lang="ts">
-import HexMenu from "@/components/hex-menu/hex-menu-svg.vue";
+import PageMenu from "@/components/page-menu/page-menu.vue";
 import PageArticle from "@/components/page-article/page-article.vue";
 import PageArticleSection from "@/components/page-article/page-article-section.vue";
 import PageArticleSectionItems from "@/components/page-article/page-article-section-items.vue";
@@ -237,7 +235,7 @@ import PageArticleSectionItem from "@/components/page-article/page-article-secti
 
 export default {
   components: {
-    HexMenu,
+    PageMenu,
     PageArticle,
     PageArticleSection,
     PageArticleSectionItems,

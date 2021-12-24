@@ -7,7 +7,7 @@ const storageDir = "blog/articles";
 
 (async () => {
   const dirRemoved = await new Promise((resolve, reject) => {
-    fs.rmdir(articleDir, { recursive: true }, err => {
+    fs.rm(articleDir, { recursive: true }, err => {
       if (err) {
         console.log(err);
         resolve(false);
