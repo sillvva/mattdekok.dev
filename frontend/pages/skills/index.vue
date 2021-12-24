@@ -1,15 +1,13 @@
 <template>
   <v-container fluid class="page">
     <v-row justify="center">
-      <hex-menu
+      <page-menu
         :items="items"
-        rotated
         :wrapperClasses="['page-menu']"
-        :svgClasses="['menu-shake']"
         color="var(--menuColor1)"
         activeColor="var(--menuColor2)"
         hoverColor="var(--menuColor2)"
-      ></hex-menu>
+      ></page-menu>
     </v-row>
     <v-row justify="center" align="center">
       <v-col sm="12" md="9">
