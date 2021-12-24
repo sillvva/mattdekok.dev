@@ -6,18 +6,22 @@ const articleDir = "content/articles";
 const storageDir = "blog/articles";
 
 (async () => {
-  const dirRemoved = await new Promise((resolve, reject) => {
-    fs.rm(articleDir, { recursive: true }, err => {
-      if (err) {
-        console.log(err);
-        resolve(false);
-      } else {
-        resolve(true);
-      }
+  try {
+    fs.accessSync(articleDir, fs.constants.R_OK);
+    const dirRemoved = await new Promise((resolve, reject) => {
+      fs.rm(articleDir, { recursive: true }, err => {
+        if (err) {
+          console.log(err);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
     });
-  });
-
-  if (!dirRemoved) return false;
+  
+    if (!dirRemoved) return false;
+  }
+  catch(err) {}
 
   const dirCreated = await new Promise((resolve, reject) => {
     fs.mkdir(articleDir, { recursive: true }, (err, path) => {
