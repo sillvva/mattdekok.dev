@@ -1,19 +1,13 @@
 services:
-  prod:
-    image: sillvva/mattdekok.dev
-    container_name: app.prod
-    build: .
-    environment:
-      - NUXT_HOST=0.0.0.0
-      - NUXT_PORT=3000
-    ports:
-      - "80:3000"
-  dev:
-    image: sillvva/mattdekok.dev
-    container_name: app.dev
+  app:
+    image: sillvva/mattdekok.dev:latest
+    container_name: app
     build: .
     environment:
       - NUXT_HOST=0.0.0.0
       - NUXT_PORT=3000
     ports:
       - "3000:3000"
+    volumes:
+      - .:/usr/mattdekok/app
+      - /user/mattdekok/app/node_modules

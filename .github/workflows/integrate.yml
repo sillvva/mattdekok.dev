@@ -26,8 +26,18 @@ jobs:
       - name: Build Functions
         run: cd functions && npm ci && npm run build
 
-      - name: Fetch Blog Posts
-        env:
-          FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
-          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-        run: cd frontend && npm ci && npm run update-blog
+      # - name: Fetch Blog Posts
+      #   env:
+      #     FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
+      #     FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+      #   run: cd frontend && npm ci && npm run update-blog
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
+          envkey_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          envkey_STRIPE_PK: ${{ secrets.STRIPE_PK }}
+          directory: frontend
+          file_name: .env
+          fail_on_empty: false

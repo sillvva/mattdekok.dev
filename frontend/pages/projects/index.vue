@@ -18,7 +18,7 @@
               image="me2"
               title="This Page"
               subtitle="Personal Website"
-              description="Firebase, Node.js, Vue, JavaScript, HTML, SCSS, Vuetify, Stripe"
+              description="Firebase, Node.js, Vue, JavaScript, HTML, SCSS, Vuetify, Docker Compose, Github Actions"
             />
           </v-col>
           <v-col cols="12" md="6" lg="4" class="project">
