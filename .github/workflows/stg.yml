@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
 
-      - name: Deploy to Heroku PROD
+      - name: Deploy to Heroku STG
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}

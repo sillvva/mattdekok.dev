@@ -9,6 +9,7 @@ const storageDir = "blog/articles";
   try {
     fs.accessSync(articleDir, fs.constants.R_OK);
     const dirRemoved = await new Promise((resolve, reject) => {
+      console.log(`Removing '${articleDir}'...`);
       fs.rm(articleDir, { recursive: true }, err => {
         if (err) {
           console.log(err);
@@ -24,6 +25,7 @@ const storageDir = "blog/articles";
   catch(err) {}
 
   const dirCreated = await new Promise((resolve, reject) => {
+    console.log(`Creating '${articleDir}'...`);
     fs.mkdir(articleDir, { recursive: true }, (err, path) => {
       if (err) {
         console.log(err);
