@@ -1,26 +1,24 @@
-apiVersion: apps/v1
-kind: Deployment
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
 metadata:
   name: stg
   namespace: "default"
+  labels:
+    app: "mattdekok.dev"
 spec:
-  replicas: 2
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+  replicas: 3
   selector:
     matchLabels:
-      app: mattdekok.dev
+      app: "mattdekok.dev"
   template:
     metadata:
       labels:
-        app: mattdekok.dev
+        app: "mattdekok.dev"
     spec:
       containers:
-      - name: app
-        image: gcr.io/PROJECT_ID/IMAGE:TAG
+      - name: "mattdekok-dev-sha256-1"
+        image: gcr.io/PROJECT_ID/IMAGE
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

@@ -2,5 +2,4 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - deployment-stg.yaml
-  - deployment-prod.yaml
-  - service.yaml
+  - service-stg.yaml
