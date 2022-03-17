@@ -7,7 +7,7 @@ services:
       - NUXT_HOST=0.0.0.0
       - NUXT_PORT=3000
     ports:
-      - "3000:3000"
+      - "80:3000"
     volumes:
       - .:/usr/mattdekok/app
-      - /user/mattdekok/app/node_modules
+      - /usr/mattdekok/app/frontend/node_modules
