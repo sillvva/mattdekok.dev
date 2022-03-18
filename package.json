@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build:docker": "cd frontend && npm ci",
-    "start:docker": "cd frontend && npm run start:dev",
+    "build:docker": "cd frontend && npm ci && npm run build:dev",
+    "start:docker": "cd frontend && npm run start",
+
+    "build:dev": "cd frontend && npm ci",
+    "start:dev": "cd frontend && npm run start:dev",
     
     "test": "cd frontend && npm run start:dev",
     "dev": "cd frontend && npm run dev",
