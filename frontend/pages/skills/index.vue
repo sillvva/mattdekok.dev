@@ -21,8 +21,6 @@
             <rated-item name="Bootstrap" :rating="4.5" :cols="cols" />
             <rated-item name="CI/CD" :rating="2.5" :cols="cols" />
             <rated-item name="CSS3" :rating="4.5" :cols="cols" />
-            <rated-item name="Docker" :rating="1" :cols="cols" />
-            <rated-item name="Docker Compose" :rating="1" :cols="cols" />
             <rated-item name="Express" :rating="3.5" :cols="cols" />
             <rated-item name="Github Actions" :rating="2.5" :cols="cols" />
             <rated-item name="Heroku" :rating="3.5" :cols="cols" />
