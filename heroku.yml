@@ -1,0 +1,5 @@
+build:
+   docker:
+      web: Dockerfile
+run:
+   web: docker run -d -it -p 80:3000

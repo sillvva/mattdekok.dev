@@ -35,15 +35,15 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
-          envkey_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
-          envkey_STRIPE_PK: ${{ secrets.STRIPE_PK }}
-          directory: frontend
-          file_name: .env
-          fail_on_empty: false
+      # - name: Make envfile
+      #   uses: SpicyPizza/create-envfile@v1.3
+      #   with:
+      #     envkey_FIREBASE_ADMIN_CREDENTIAL: ${{ secrets.FIREBASE_ADMIN_CREDENTIAL }}
+      #     envkey_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+      #     envkey_STRIPE_PK: ${{ secrets.STRIPE_PK }}
+      #     directory: frontend
+      #     file_name: .env
+      #     fail_on_empty: false
 
       - name: Deploy to Heroku PROD
         uses: akhileshns/heroku-deploy@v3.12.12
