@@ -10,7 +10,7 @@
     "start:dev": "npm run build:dev && nuxt start",
     "generate": "nuxt generate",
     "update-blog": "node updateBlog.js",
-    "update-blog-test": "node updateBlogTest"
+    "update-blog-test": "ls && node updateBlogTest"
   },
   "dependencies": {
     "@nuxt/content": "^1.14.0",
