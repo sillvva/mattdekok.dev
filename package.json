@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build:docker": "cd frontend && npm ci && npm run build:dev",
-    "start:docker": "cd frontend && npm run start",
+    "start:docker": "cd frontend && npm start",
 
     "build:dev": "cd frontend && npm ci",
     "start:dev": "cd frontend && npm run start:dev",
