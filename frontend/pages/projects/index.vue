@@ -5,7 +5,7 @@
         :items="items"
         :wrapperClasses="['page-menu']"
         color="var(--menuColor1)"
-        activeColor="var(--menuColor2)"
+        activeColor="transparent"
         hoverColor="var(--menuColor2)"
       ></page-menu>
     </v-row>
@@ -18,7 +18,7 @@
               image="me2"
               title="This Page"
               subtitle="Personal Website"
-              description="Firebase, Node.js, Vue, JavaScript, HTML, SCSS, Vuetify, Stripe"
+              description="Firebase, Heroku, Node.js, Vue, JavaScript, HTML, SCSS, Vuetify, Github Actions"
             />
           </v-col>
           <v-col cols="12" md="6" lg="4" class="project">

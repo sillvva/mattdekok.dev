@@ -12,7 +12,7 @@
         :activeColor="item.activeColor || activeColor"
         :hoverColor="item.hoverColor || hoverColor"
         :textColor="item.textColor || textColor"
-        :classes="itemClasses"
+        :itemClasses="itemClasses"
       ></page-menu-item>
     </div>
   </div>
@@ -92,5 +92,7 @@ export default {
 <style scoped>
 .menu-row {
   padding: 1em;
+  display: flex;
+  gap: 10px;
 }
 </style>
