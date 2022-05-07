@@ -1,10 +1,6 @@
 <template>
   <nuxt-link
-    :class="[
-      'menu-item',
-      active && 'active',
-      ...classes,
-    ]"
+    :class="classes"
     :style="{
       '--item-color': color,
       '--hover-color': hoverColor,
@@ -58,12 +54,23 @@ export default {
       required: false,
       default: "var(--text)",
     },
-    classes: {
+    itemClasses: {
       type: Array,
       required: false,
       default: () => [],
     },
   },
+  data() {
+    if (!this.itemClasses.find(c => /button\d+/.test(c))) this.itemClasses.push('button5');
+    
+    return {
+      classes: [
+        'button',
+        this.active && 'active',
+        ...this.itemClasses,
+      ]
+    };
+  }
 };
 </script>
 
@@ -81,6 +88,209 @@ export default {
     text-shadow: 1px 1px 1px black;
     span.item-label {
       color: white;
+    }
+  }
+}
+
+.button {
+  padding: 1rem 1.5rem;
+  display: block;
+  color: var(--text-color);
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+  transition: 0.2s linear;
+}
+
+.button1 {
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 #0ca;
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--item-color);
+    transition: 0.25s linear;
+  }
+  &.active {
+    background: var(--active-color);
+  }
+  &:hover {
+    background: var(--hover-color);
+    box-shadow: 0 0 10px var(--item-color);
+  }
+  &:hover, &.active, &:focus {
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+.button2 {
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 var(--item-color);
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: var(--item-color);
+    transition: 0.25s linear;
+  }
+  &.active {
+    background: var(--active-color);
+  }
+  &:hover {
+    background: var(--hover-color);
+    box-shadow: 0 0 10px var(--item-color);
+  }
+  &:hover, &.active, &:focus {
+    &::after {
+      left: 0;
+      width: 100%;
+    }
+  }
+}
+
+.button3 {
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    width: 0; // 1rem
+    height: 0; // 1rem
+    transition: 0.3s linear;
+  }
+  &::before {
+    top: 0;
+    left: 0;
+    border-top: 0 solid #1ca;
+    border-left: 0 solid var(--item-color);
+  }
+  &::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 0 solid #1ca;
+    border-right: 0 solid var(--item-color);
+  }
+  &.active {
+    background: var(--active-color);
+  }
+  &:hover {
+    background: var(--hover-color);
+    box-shadow: 0 0 10px var(--item-color);
+  }
+  &:hover, &.active, &:focus {
+    &::before, &::after {
+      width: 100%;
+      height: 100%;
+      border-width: 3px;
+    }
+  }
+}
+
+.button4 {
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    transition: 0.3s linear;
+  }
+  &::before {
+    top: 0;
+    left: 0;
+    border-top: 3px solid #1ca;
+    border-left: 3px solid var(--item-color);
+  }
+  &::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 3px solid #1ca;
+    border-right: 3px solid var(--item-color);
+  }
+  &.active {
+    background: var(--active-color);
+  }
+  &:hover {
+    background: var(--hover-color);
+    box-shadow: 0 0 10px var(--item-color);
+  }
+  &:hover, &.active, &:focus {
+    &::before, &::after {
+      width: 100%;
+      height: 100%;
+      border-width: 3px;
+    }
+  }
+}
+
+.button5 {
+  &::before, &::after {
+    transition: 0.35s linear;
+    content: "";
+    border: 1px solid var(--item-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    opacity: 0;
+  }
+  &.active {
+    background: var(--active-color);
+  }
+  &:hover:not(.active) {
+    background: var(--hover-color);
+    box-shadow: 0 0 10px var(--item-color);
+  }
+  &:hover, &:focus, &.active {
+    &::before, &::after {
+      opacity: 1;
+    }
+    &::before {
+      transform: translate(-3px, -3px);
+    }
+    &::after {
+      transform: translate(3px, 3px);
+    }
+  }
+}
+
+.button6 {
+  &::before, &::after {
+    transition: 0.35s linear;
+    content: "";
+    border: 1px solid var(--item-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    opacity: 0;
+  }
+  &.active {
+    background: var(--active-color);
+  }
+  &:hover:not(.active) {
+    background: var(--hover-color);
+  }
+  &:hover, &:focus, &.active {
+    &::before, &::after {
+      opacity: 1;
+      box-shadow: 0 0 10px var(--item-color);
+    }
+    &::before {
+      transform: translate(-3px, -3px);
+    }
+    &::after {
+      transform: translate(3px, 3px);
     }
   }
 }

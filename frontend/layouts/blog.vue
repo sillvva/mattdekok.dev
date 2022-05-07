@@ -19,12 +19,7 @@
       >
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-img
-        src="/images/me-icon.webp"
-        id="header-img"
-        class="hide-small-search"
-      />
-      <v-toolbar-title style="width: 120px" class="hide-small-search">
+      <v-toolbar-title style="width: 150px" class="hide-small-search">
         Matt's Blog
       </v-toolbar-title>
       <v-spacer :class="[searching() && 'd-none', 'd-sm-block']"></v-spacer>

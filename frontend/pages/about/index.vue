@@ -5,7 +5,7 @@
         :items="items"
         :wrapperClasses="['page-menu']"
         color="var(--menuColor1)"
-        activeColor="var(--menuColor2)"
+        activeColor="transparent"
         hoverColor="var(--menuColor2)"
       ></page-menu>
     </v-row>
@@ -27,62 +27,14 @@
               </v-col>
               <v-col cols="12" sm="6">
                 <v-row class="me-details">
-                  <v-col
-                    class="text-center text-sm-right"
-                    cols="12"
-                    sm="6"
-                    lg="3"
-                    >Name:</v-col
-                  >
-                  <v-col
-                    class="text-center text-sm-left"
-                    cols="12"
-                    sm="6"
-                    lg="3"
-                    >Matt DeKok</v-col
-                  >
-                  <v-col
-                    class="text-center text-sm-right"
-                    cols="12"
-                    sm="6"
-                    lg="3"
-                    >Age:</v-col
-                  >
-                  <v-col
-                    class="text-center text-sm-left"
-                    cols="12"
-                    sm="6"
-                    lg="3"
-                    >{{ age(new Date(1988, 5, 9)) }}</v-col
-                  >
-                  <v-col
-                    class="text-center text-sm-right"
-                    cols="12"
-                    sm="6"
-                    lg="3"
-                    >Location:</v-col
-                  >
-                  <v-col
-                    class="text-center text-sm-left"
-                    cols="12"
-                    sm="6"
-                    lg="3"
-                    >Huron, SD</v-col
-                  >
-                  <v-col
-                    class="text-center text-sm-right"
-                    cols="12"
-                    sm="6"
-                    lg="3"
-                    >Experience:</v-col
-                  >
-                  <v-col
-                    class="text-center text-sm-left"
-                    cols="12"
-                    sm="6"
-                    lg="3"
-                    >{{ age(new Date(2006, 6, 1)) }} years</v-col
-                  >
+                  <v-col class="text-center text-sm-right" cols="12" sm="6" lg="3">Name:</v-col>
+                  <v-col class="text-center text-sm-left" cols="12" sm="6" lg="3" >Matt DeKok</v-col>
+                  <v-col class="text-center text-sm-right" cols="12" sm="6" lg="3" >Age:</v-col>
+                  <v-col class="text-center text-sm-left" cols="12" sm="6" lg="3" >{{ age(new Date(1988, 5, 9)) }}</v-col>
+                  <v-col class="text-center text-sm-right" cols="12" sm="6" lg="3" >Location:</v-col>
+                  <v-col class="text-center text-sm-left" cols="12" sm="6" lg="3" >Huron, SD</v-col>
+                  <v-col class="text-center text-sm-right" cols="12" sm="6" lg="3" >Experience:</v-col>
+                  <v-col class="text-center text-sm-left" cols="12" sm="6" lg="3" >{{ age(new Date(2006, 6, 1)) }} years</v-col>
                 </v-row>
                 <div>&nbsp;</div>
                 <h4 class="text-center">
@@ -214,7 +166,17 @@
                 <div class="text-center">
                   <p>Like and want to support my work? No problem!</p>
                   <p>
-                    <v-btn to="/donate">Buy me a sandwich</v-btn>
+                    <!-- <v-btn to="/donate">Buy me a sandwich</v-btn> -->
+                    <v-row justify="center">
+                      <page-menu
+                        :items="[{ link: '/donate', label: 'Buy me a coffee' }]"
+                        :itemClasses="['button4']"
+                        :wrapperClasses="['page-menu']"
+                        color="var(--menuColor1)"
+                        activeColor="var(--menuColor2)"
+                        hoverColor="var(--menuColor2)"
+                      ></page-menu>
+                    </v-row>
                   </p>
                 </div>
               </v-col>

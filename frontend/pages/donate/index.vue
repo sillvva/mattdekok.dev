@@ -5,7 +5,7 @@
         :items="items"
         :wrapperClasses="['page-menu']"
         color="var(--menuColor1)"
-        activeColor="var(--menuColor2)"
+        activeColor="transparent"
         hoverColor="var(--menuColor2)"
       ></page-menu>
     </v-row>
